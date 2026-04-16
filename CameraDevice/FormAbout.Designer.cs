@@ -36,7 +36,8 @@
             // 
             // buttonClose
             // 
-            buttonClose.Location = new Point(310, 152);
+            buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            buttonClose.Location = new Point(190, 121);
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new Size(75, 23);
             buttonClose.TabIndex = 0;
@@ -47,30 +48,30 @@
             // labelText
             // 
             labelText.AutoSize = true;
-            labelText.Font = new Font("Segoe UI Semilight", 15.75F);
+            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText.Location = new Point(25, 21);
             labelText.Name = "labelText";
-            labelText.Size = new Size(253, 30);
+            labelText.Size = new Size(170, 17);
             labelText.TabIndex = 1;
             labelText.Text = "Camera Device version 1.3";
             // 
             // labelText2
             // 
             labelText2.AutoSize = true;
-            labelText2.Font = new Font("Segoe UI Semilight", 15.75F);
+            labelText2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText2.Location = new Point(25, 62);
             labelText2.Name = "labelText2";
-            labelText2.Size = new Size(335, 30);
+            labelText2.Size = new Size(225, 17);
             labelText2.TabIndex = 2;
             labelText2.Text = "Ken Ekholm, ken.ekholm@live.com";
             // 
             // labelText3
             // 
             labelText3.AutoSize = true;
-            labelText3.Font = new Font("Segoe UI Semilight", 15.75F);
+            labelText3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText3.Location = new Point(25, 102);
             labelText3.Name = "labelText3";
-            labelText3.Size = new Size(184, 30);
+            labelText3.Size = new Size(126, 17);
             labelText3.TabIndex = 3;
             labelText3.Text = "All rights reserved.";
             // 
@@ -78,7 +79,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(399, 188);
+            ClientSize = new Size(283, 157);
             Controls.Add(labelText3);
             Controls.Add(labelText2);
             Controls.Add(labelText);

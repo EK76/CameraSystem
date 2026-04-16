@@ -165,19 +165,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(129, 22);
+            clearLogsToolStripMenuItem.Size = new Size(180, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(126, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(129, 22);
+            boldTextToolStripMenuItem.Size = new Size(180, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -185,7 +185,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(129, 22);
+            fontSizeToolStripMenuItem.Size = new Size(180, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -214,7 +214,7 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(129, 22);
+            settingsToolStripMenuItem.Size = new Size(180, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
@@ -248,30 +248,30 @@
             // labelFileCount
             // 
             labelFileCount.AutoSize = true;
-            labelFileCount.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelFileCount.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelFileCount.Location = new Point(12, 611);
             labelFileCount.Name = "labelFileCount";
-            labelFileCount.Size = new Size(127, 17);
+            labelFileCount.Size = new Size(133, 17);
             labelFileCount.TabIndex = 4;
             labelFileCount.Text = "Numbers of videos: ";
             // 
             // labelFileDate
             // 
             labelFileDate.AutoSize = true;
-            labelFileDate.Font = new Font("Segoe UI", 9.75F);
+            labelFileDate.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelFileDate.Location = new Point(308, 112);
             labelFileDate.Name = "labelFileDate";
-            labelFileDate.Size = new Size(104, 17);
+            labelFileDate.Size = new Size(110, 17);
             labelFileDate.TabIndex = 5;
             labelFileDate.Text = "Video creation:  ";
             // 
             // labelFileSize
             // 
             labelFileSize.AutoSize = true;
-            labelFileSize.Font = new Font("Segoe UI", 9.75F);
+            labelFileSize.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelFileSize.Location = new Point(308, 156);
             labelFileSize.Name = "labelFileSize";
-            labelFileSize.Size = new Size(71, 17);
+            labelFileSize.Size = new Size(75, 17);
             labelFileSize.TabIndex = 6;
             labelFileSize.Text = "Video size:";
             // 

@@ -23,7 +23,7 @@ namespace CameraDevice
         string user = "loguser";
         string password = "Test0880!";
         string host = "cameradevice";
-        string gDrive, emailAlert, alertText, emailAdress, streamVideo;
+        string drive, emailAlert, alertText, emailAdress, streamVideo;
         int setLocation;
         bool checkChanges = false;
 
@@ -41,7 +41,7 @@ namespace CameraDevice
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    gDrive = reader.GetString("gdrive");
+                    drive = reader.GetString("drive");
                     emailAlert = reader.GetString("email");
                     textBoxEmailadress.Text = reader.GetString("sendemail");
                     textBoxAlerttext.Text = reader.GetString("alerttext");
@@ -51,17 +51,6 @@ namespace CameraDevice
                 conn.Close();
                 labelFolder.Text = Properties.Settings.Default.Folder;
 
-                if (setLocation == 1)
-                {
-                    radioButtonLocal.Checked = true;
-                    radioButtonGdrive.Checked = false;
-                }
-                else
-                { 
-                    radioButtonLocal.Checked = false;
-                    radioButtonGdrive.Checked = true;
-                }
-
                 if (emailAlert == "True")
                 {
                     checkBoxEmail.Checked = true;
@@ -69,6 +58,8 @@ namespace CameraDevice
                     textBoxEmailadress.Enabled = true;
                     textBoxAlerttext.ForeColor = Color.Black;
                     textBoxEmailadress.ForeColor = Color.Black;
+                    labelText.ForeColor = Color.Black;
+                    labelText2.ForeColor = Color.Black;
                 }
                 else
                 {
@@ -77,8 +68,18 @@ namespace CameraDevice
                     textBoxEmailadress.Enabled = false;
                     textBoxAlerttext.ForeColor = Color.Silver;
                     textBoxEmailadress.ForeColor = Color.Silver;
+                    labelText.ForeColor = Color.DimGray;
+                    labelText2.ForeColor = Color.DimGray;
                 }
 
+                if (drive == "True")
+                {
+                    checkBoxDrive.Checked = true;
+                }
+                else
+                {
+                    checkBoxDrive.Checked = false;
+                }
             }
             catch (Exception i)
             {
@@ -88,13 +89,13 @@ namespace CameraDevice
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            if (radioButtonLocal.Checked)
+            if (checkBoxDrive.Checked)
             {
-                setLocation = 1;
+                drive = "True";
             }
             else
             {
-                setLocation = 2;
+                drive = "False";
             }
 
             if (checkBoxEmail.Checked)
@@ -114,7 +115,7 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set location='" + setLocation + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', alerttext = '" + alertText + "', stream = '" + streamVideo + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', alerttext = '" + alertText + "', stream = '" + streamVideo + "' where id = 1;";
                 Clipboard.SetText(checkString);
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 MySqlDataReader reader = command.ExecuteReader();
@@ -132,7 +133,7 @@ namespace CameraDevice
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C ssh camerauser@cameradevíce sudo systemctl restart camerastystem.service";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo systemctl restart camerastystem.service";
                 process.StartInfo = startInfo;
                 process.Start();
             }

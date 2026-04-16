@@ -38,9 +38,10 @@
             // 
             // buttonClose
             // 
+            buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             buttonClose.Location = new Point(441, 669);
             buttonClose.Name = "buttonClose";
-            buttonClose.Size = new Size(75, 23);
+            buttonClose.Size = new Size(75, 25);
             buttonClose.TabIndex = 0;
             buttonClose.Text = "Close";
             buttonClose.UseVisualStyleBackColor = true;
@@ -49,6 +50,7 @@
             // listViewLogs
             // 
             listViewLogs.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
+            listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             listViewLogs.Location = new Point(9, 40);
             listViewLogs.Name = "listViewLogs";
             listViewLogs.Size = new Size(507, 623);
@@ -69,18 +71,19 @@
             // labelText
             // 
             labelText.AutoSize = true;
-            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText.Location = new Point(12, 9);
             labelText.Name = "labelText";
-            labelText.Size = new Size(71, 17);
+            labelText.Size = new Size(75, 17);
             labelText.TabIndex = 2;
             labelText.Text = "Show logs.";
             // 
             // buttonBackup
             // 
-            buttonBackup.Location = new Point(315, 669);
+            buttonBackup.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            buttonBackup.Location = new Point(336, 669);
             buttonBackup.Name = "buttonBackup";
-            buttonBackup.Size = new Size(99, 23);
+            buttonBackup.Size = new Size(99, 25);
             buttonBackup.TabIndex = 3;
             buttonBackup.Text = "Backup Logs";
             buttonBackup.UseVisualStyleBackColor = true;

@@ -37,16 +37,18 @@
             // 
             // textBoxConfirm
             // 
-            textBoxConfirm.Location = new Point(161, 66);
+            textBoxConfirm.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            textBoxConfirm.Location = new Point(186, 66);
             textBoxConfirm.Name = "textBoxConfirm";
-            textBoxConfirm.Size = new Size(100, 23);
+            textBoxConfirm.Size = new Size(91, 25);
             textBoxConfirm.TabIndex = 0;
             textBoxConfirm.TextChanged += textBoxConfirm_TextChanged;
             // 
             // buttonYes
             // 
             buttonYes.Enabled = false;
-            buttonYes.Location = new Point(89, 110);
+            buttonYes.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            buttonYes.Location = new Point(107, 112);
             buttonYes.Name = "buttonYes";
             buttonYes.Size = new Size(75, 23);
             buttonYes.TabIndex = 1;
@@ -56,7 +58,8 @@
             // 
             // buttonNo
             // 
-            buttonNo.Location = new Point(183, 110);
+            buttonNo.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            buttonNo.Location = new Point(201, 112);
             buttonNo.Name = "buttonNo";
             buttonNo.Size = new Size(75, 23);
             buttonNo.TabIndex = 2;
@@ -67,19 +70,20 @@
             // labelText
             // 
             labelText.AutoSize = true;
-            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText.Location = new Point(12, 27);
             labelText.Name = "labelText";
-            labelText.Size = new Size(206, 17);
+            labelText.Size = new Size(216, 17);
             labelText.TabIndex = 3;
             labelText.Text = "Are you sure to empty Logs data?";
             // 
             // labelText2
             // 
             labelText2.AutoSize = true;
+            labelText2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText2.Location = new Point(12, 74);
             labelText2.Name = "labelText2";
-            labelText2.Size = new Size(143, 15);
+            labelText2.Size = new Size(168, 17);
             labelText2.TabIndex = 4;
             labelText2.Text = "Write confirm to proceed.";
             // 
@@ -87,7 +91,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(264, 147);
+            ClientSize = new Size(288, 147);
             Controls.Add(labelText2);
             Controls.Add(labelText);
             Controls.Add(buttonNo);
