@@ -78,6 +78,7 @@
             textBoxEmailadress.Name = "textBoxEmailadress";
             textBoxEmailadress.Size = new Size(241, 25);
             textBoxEmailadress.TabIndex = 3;
+            textBoxEmailadress.TextChanged += textBoxEmailadress_TextChanged;
             // 
             // textBoxAlerttext
             // 
@@ -87,6 +88,7 @@
             textBoxAlerttext.Name = "textBoxAlerttext";
             textBoxAlerttext.Size = new Size(241, 25);
             textBoxAlerttext.TabIndex = 4;
+            textBoxAlerttext.TextChanged += textBoxAlerttext_TextChanged;
             // 
             // labelText
             // 
@@ -142,6 +144,8 @@
             textBoxStream.Name = "textBoxStream";
             textBoxStream.Size = new Size(54, 25);
             textBoxStream.TabIndex = 10;
+            textBoxStream.TextChanged += textBoxStream_TextChanged;
+            textBoxStream.KeyPress += textBoxStream_KeyPress;
             // 
             // labelText3
             // 

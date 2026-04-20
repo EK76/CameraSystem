@@ -56,7 +56,7 @@ namespace CameraDevice
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
         {
             string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text);
-            listAllVideos = videoFolder + comboBoxFolders.Text;
+            listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
             listBoxVideos.Items.Clear();
 
             foreach (string file in files)
@@ -196,7 +196,7 @@ namespace CameraDevice
 
                 for (int countCheck = 0; countCheck < counterItems; countCheck++)
                 {
-                    File.Delete(videoFolder + selectedFolder + "\\" + videoFiles[countCheck]);
+                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + videoFiles[countCheck]);
                 }
 
                 videoFiles.Clear();
@@ -210,7 +210,7 @@ namespace CameraDevice
                 }
 
                 listBoxVideos.Update();
-                DirectoryInfo folder = new DirectoryInfo(videoFolder +" \\" + comboBoxFolders.Text);
+                DirectoryInfo folder = new DirectoryInfo(videoFolder +"\\" + comboBoxFolders.Text);
                 countFiles = folder.GetFiles().Length;
                 labelFileCount.Text = "Number of videos: " + countFiles.ToString();
                 MessageBox.Show("Selected videos have been deleted.", "Camera Device");
@@ -271,7 +271,7 @@ namespace CameraDevice
 
         private void FormMain_Activated(object sender, EventArgs e)
         {
-            readFolder();
+         //   readFolder();
 
         }
 

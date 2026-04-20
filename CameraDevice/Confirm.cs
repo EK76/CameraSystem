@@ -20,10 +20,6 @@ namespace CameraDevice
 
        
         string checkString, connString;
-        string user = "loguser";
-        string password = "Test0880!";
-        string host = "cameradevice";
-
         
         private void buttonNo_Click(object sender, EventArgs e)
         {
@@ -34,7 +30,7 @@ namespace CameraDevice
         {
             try
             {
-                connString = "SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test0880!";
+                connString = Properties.Settings.Default.Database;
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "delete from cameralogs";

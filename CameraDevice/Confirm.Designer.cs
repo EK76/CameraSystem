@@ -83,9 +83,9 @@
             labelText2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText2.Location = new Point(12, 74);
             labelText2.Name = "labelText2";
-            labelText2.Size = new Size(168, 17);
+            labelText2.Size = new Size(176, 17);
             labelText2.TabIndex = 4;
-            labelText2.Text = "Write confirm to proceed.";
+            labelText2.Text = "Write 'confirm' to proceed.";
             // 
             // FormConfirm
             // 
