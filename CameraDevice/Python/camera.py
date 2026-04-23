@@ -4,7 +4,9 @@ from time import *
 from datetime import *
 import mysql.connector
 from gpiozero import MotionSensor
-import smtplib , shutil
+import smtplib 
+from rclone_python import rclone
+from rclone_python.remote_types import RemoteTypes
 
 dbconfig = mysql.connector.connect(
    host = "localhost",
@@ -25,31 +27,22 @@ try:
   dbconfig.commit()
 
   dbinfo = dbconfig.cursor(buffered=True)
-  query = "select email from settings where id = 1"
+  query = "select * from settings where id = 1"
   dbinfo.execute(query)
-  enableEmail = dbinfo.fetchone()[0]
+  row = dbinfo.fetchone()
+  enableEmail = row[1]
+  enableDrive = row[2]
+  alertText = row[4]
+  sendEmail = row[5]
+  setStreamtime = row[6]
   dbconfig.commit()
 
-  dbinfo = dbconfig.cursor(buffered=True)
-  query = "select location from settings where id = 1"
-  dbinfo.execute(query)
-  choice = dbinfo.fetchone()[0]
-  dbconfig.commit()
+  print(enableEmail)
+  print(enableDrive)
+  print(alertText)
+  print(sendEmail)
+  print(setStreamtime)
 
-  dbinfo = dbconfig.cursor(buffered=True)
-  query = "select sendemail from settings where id = 1"
-  dbinfo.execute(query)
-  sendEmail = dbinfo.fetchone()[0]
-  dbconfig.commit()
-
-  dbinfo = dbconfig.cursor(buffered=True)
-  query = "select alerttext from settings where id = 1"
-  dbinfo.execute(query)
-  alertText = dbinfo.fetchone()[0]
-  dbconfig.commit()
-
-  print (enableEmail)
-  print (choice)
 
   while True:
     pir.wait_for_motion()
@@ -66,28 +59,24 @@ try:
     dbinfo.execute(query)
     dbconfig.commit()
    
-    if choice == 1:
+    if not checkfolder:
+      os.mkdir(createfolder, mode=0o777)
+    else:
+      filecount = next(os.walk(createfolder))[2]
+      print(len(filecount))
+      filecount = len(filecount)
+      filecount = filecount + 1
+      showvideo.record_video(createfolder + "/video" + str(filecount) +".mp4", duration=setStreamtime)
+      print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
 
-      if not checkfolder:
-        os.mkdir(createfolder)
-      else:
-        filecount = next(os.walk(createfolder))[2]
-        print(len(filecount))
-        filecount = len(filecount)
-        filecount = filecount + 1
-        showvideo.record_video(createfolder + "/video" + str(filecount) +".mp4", duration=5)
-        print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
-     
-    if choice == 2:
+    if enableDrive == 'True':
       if not checkfolder2:
         os.mkdir(createfolder2)
       else:
-        print(createfolder2)
-        filecount = next(os.walk(createfolder2))[2]
-        print(len(filecount))
-        filecount = len(filecount)
-        filecount = filecount + 1
-        showvideo.record_video(createfolder2 + "/video" + str(filecount) +".mp4", duration=5)
+        print(checkfolder2)
+        print(createfolder + "/video" + str(filecount) +".mp4")
+        copyfrom = createfolder + "/video" + str(filecount) +".mp4"
+        rclone.copy(copyfrom, createfolder2)
         print("GDrive: +" + createfolder2 + "/video" + str(filecount) +".mp4")
           
     if enableEmail == 'True':
@@ -104,4 +93,4 @@ except mysql.connector.Error as error:
     print("Failed to insert record into table {}".format(error))
 except KeyboardInterrupt:
     print("Exit!")
-#    GPIO.cleanup()   
+#    GPIO.cleanup()  
