@@ -56,6 +56,8 @@ There are some settings, that you can change
 - Alert text when motion sensor is trigged.
 
 When one or more of these changes are made, a service is run that restart the python program, that I have created and in my case named it to camerasystem.service
+
+```
 [Unit]
 Description=Camera System
 After=multi-user.target
