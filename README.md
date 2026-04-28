@@ -125,6 +125,6 @@ MySql.Data makes it easier to read from and make changes to MySQL database when 
 
 
 
-You can clone this repository with git by using https://github.com/EK76/CameraSystem.git.
+You can clone this repository with git by using https://github.com/EK76/CameraSystem.git.<br />
 If you discover any fault or inaccurate information, feel free to contact me trough epost address: ken.ekholm@live.com
 
