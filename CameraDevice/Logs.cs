@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace CameraDevice
 {
-    public partial class FormLogs : Form
+    public partial class Logs : Form
     {
-        public FormLogs()
+        public Logs()
         {
             InitializeComponent();
 

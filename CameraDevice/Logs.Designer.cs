@@ -1,6 +1,6 @@
 ﻿namespace CameraDevice
 {
-    partial class FormLogs
+    partial class Logs
     {
         /// <summary>
         /// Required designer variable.

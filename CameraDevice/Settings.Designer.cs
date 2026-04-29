@@ -94,7 +94,7 @@
             // 
             labelText.AutoSize = true;
             labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelText.ForeColor = Color.DimGray;
+            labelText.ForeColor = Color.Black;
             labelText.Location = new Point(28, 51);
             labelText.Margin = new Padding(4, 0, 4, 0);
             labelText.Name = "labelText";
@@ -213,6 +213,7 @@
             checkBoxDrive.TabIndex = 15;
             checkBoxDrive.Text = "Remote Drive";
             checkBoxDrive.UseVisualStyleBackColor = true;
+            checkBoxDrive.Click += checkBoxDrive_Click;
             // 
             // FormSettings
             // 

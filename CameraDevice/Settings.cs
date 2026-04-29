@@ -20,19 +20,19 @@ namespace CameraDevice
             InitializeComponent();
         }
 
+
+        string[] videoFolder2 = File.ReadAllLines("settings.txt");
+        string videoFolder;
         string checkString, connString;
-        string user = "loguser";
-        string password = "Test0880!";
-        string host = "cameradevice";
-        string drive, emailAlert, alertText, emailAdress, streamVideo;
-        int setLocation;
-        bool checkChanges = false, checkStream = false, checkEmail;
+        string drive, emailAlert, alertText, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder;
+        int checkState = 0;
+        bool checkChanges = false, checkStream = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
         {
             connString = Properties.Settings.Default.Database;
             try
             {
-                labelFolder.Text = Properties.Settings.Default.Folder;
+                labelFolder.Text = "Video folder: " + videoFolder2[0];
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "select * from settings;";
@@ -47,30 +47,24 @@ namespace CameraDevice
                     textBoxEmailadress.Text = reader.GetString("sendemail");
                     textBoxAlerttext.Text = reader.GetString("alerttext");
                     textBoxStream.Text = reader.GetInt32("stream").ToString();
-                    setLocation = reader.GetInt32("location");
+                    streamVideo = reader.GetInt32("stream").ToString();
+                    streamVideo2 = reader.GetInt32("stream").ToString();
+                    emailAdress2 = reader.GetString("sendemail");
                 }
                 conn.Close();
-                labelFolder.Text = Properties.Settings.Default.Folder;
-
                 if (emailAlert == "True")
                 {
                     checkBoxEmail.Checked = true;
-                    textBoxAlerttext.Enabled = true;
                     textBoxEmailadress.Enabled = true;
-                    textBoxAlerttext.ForeColor = Color.Black;
-                    textBoxEmailadress.ForeColor = Color.Black;
                     labelText.ForeColor = Color.Black;
-                    labelText2.ForeColor = Color.Black;
+                    noneEmail = true;
                 }
                 else
                 {
                     checkBoxEmail.Checked = false;
-                    textBoxAlerttext.Enabled = false;
                     textBoxEmailadress.Enabled = false;
-                    textBoxAlerttext.ForeColor = Color.Silver;
-                    textBoxEmailadress.ForeColor = Color.Silver;
                     labelText.ForeColor = Color.DimGray;
-                    labelText2.ForeColor = Color.DimGray;
+                    noneEmail = false;
                 }
 
                 if (drive == "True")
@@ -101,16 +95,15 @@ namespace CameraDevice
 
             if (checkBoxEmail.Checked)
             {
-                emailAlert = "True";
+                emailAlert = "True";    
+                emailAdress = textBoxEmailadress.Text;
             }
             else
             {
                 emailAlert = "False";
+                emailAdress = emailAdress2;
             }
-
-            alertText = textBoxAlerttext.Text;
-            emailAdress = textBoxEmailadress.Text;
-            streamVideo = textBoxStream.Text;
+            alertText = textBoxAlerttext.Text;           
 
             try
             {
@@ -118,8 +111,7 @@ namespace CameraDevice
                 {
                     MySqlConnection conn = new MySqlConnection(connString);
                     conn.Open();
-                    checkString = "insert into cameralogs(logtext) values('Camera recording value was changed to " + streamVideo.ToString()+" seconds.');";
-                    Clipboard.SetText(checkString);
+                    checkString = "insert into cameralogs(logtext) values('Camera recording value was changed to " + streamVideo.ToString() + " seconds.');";
                     MySqlCommand command = new MySqlCommand(checkString, conn);
                     MySqlDataReader reader = command.ExecuteReader();
                     conn.Close();
@@ -145,6 +137,11 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
+            
+
+            string[] lines = File.ReadAllLines("settings.txt");
+            lines[0] = setFolder;
+            File.WriteAllLines("settings.txt", lines);
 
             try
             {
@@ -173,9 +170,7 @@ namespace CameraDevice
             if (checkBoxEmail.Checked)
             {
                 textBoxEmailadress.Enabled = true;
-                textBoxAlerttext.Enabled = true;
-                textBoxAlerttext.ForeColor = Color.Black;
-                textBoxEmailadress.ForeColor = Color.Black;
+                labelText.ForeColor = Color.Black;
                 if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
                 {
                     buttonOk.Enabled = true;
@@ -184,73 +179,57 @@ namespace CameraDevice
                 {
                     buttonOk.Enabled = false;
                 }
+                if (textBoxEmailadress.Text.Length > 0)
+                {
+                    noneEmail = false;
+                }
+                else
+                {
+                    noneEmail = true;
+                }
             }
             else
             {
                 textBoxEmailadress.Enabled = false;
-                textBoxAlerttext.Enabled = false;
-                textBoxAlerttext.ForeColor = Color.Silver;
-                textBoxEmailadress.ForeColor = Color.Silver;
-                if (textBoxStream.Text.Length > 0)
+                labelText.ForeColor = Color.Silver;
+                noneEmail = false;
+
+                if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0))
                 {
                     buttonOk.Enabled = true;
                 }
-                else
-                {
-                    buttonOk.Enabled = false;
-                }
             }
-          
+
         }
 
         private void buttonFolder_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialogVideo.ShowDialog() == DialogResult.OK)
             {
-                labelFolder.Text = folderBrowserDialogVideo.SelectedPath;
-                Properties.Settings.Default["Folder"] = folderBrowserDialogVideo.SelectedPath;
-                Properties.Settings.Default.Save();
+                labelFolder.Text = labelFolder.Text = "Video folder: " + folderBrowserDialogVideo.SelectedPath;
+                setFolder = folderBrowserDialogVideo.SelectedPath;
+                Main.checkFolder = true;
+
             }
         }
 
         private void textBoxStream_TextChanged(object sender, EventArgs e)
         {
-            if (textBoxStream.Text != streamVideo)
+            //  if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+         if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
             {
-                checkStream = true;
-            }
-            else
-            {
-                checkStream = false;
-            }
-
-            if (checkEmail == true)
-            {
-                if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
-                {
-                    buttonOk.Enabled = true;
-                }
-                else
-                {
-                    buttonOk.Enabled = false;
-                }
-            }
-            else
-            {
-                if (textBoxStream.Text.Length > 0)
-                {
-                    buttonOk.Enabled = true;
-                }
-                else
-                {
-                    buttonOk.Enabled = false;
-                }
-            }
+             buttonOk.Enabled = true;
+          }
+          else
+          {
+             buttonOk.Enabled = false;
+          }
+ 
         }
-
         private void textBoxEmailadress_TextChanged(object sender, EventArgs e)
         {
             if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+          
             {
                 buttonOk.Enabled = true;
             }
@@ -258,11 +237,23 @@ namespace CameraDevice
             {
                 buttonOk.Enabled = false;
             }
+
+            if (textBoxEmailadress.Text.Length > 0)
+            {
+                noneEmail = false;
+            }
+            else
+            {
+                noneEmail = true;
+            }
+
+
         }
 
         private void textBoxAlerttext_TextChanged(object sender, EventArgs e)
         {
-            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+            // if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
             {
                 buttonOk.Enabled = true;
             }
@@ -275,6 +266,11 @@ namespace CameraDevice
         private void textBoxStream_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void checkBoxDrive_Click(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
         }
     }
 }

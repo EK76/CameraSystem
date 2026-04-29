@@ -2,11 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CameraDevice.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Folder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\\Cameradevice\camerasystem</Value>
-    </Setting>
     <Setting Name="Database" Type="System.String" Scope="User">
       <Value Profile="(Default)">SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test0880!</Value>
+    </Setting>
+    <Setting Name="Folder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\Cameradevice\camerasystem</Value>
     </Setting>
   </Settings>
 </SettingsFile>

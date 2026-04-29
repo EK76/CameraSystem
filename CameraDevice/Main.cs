@@ -6,17 +6,17 @@ using System.Reflection;
 
 namespace CameraDevice
 {
-    public partial class FormMain : System.Windows.Forms.Form
+    public partial class Main : System.Windows.Forms.Form
     {
-        public FormMain()
+        public Main()
         {
             InitializeComponent();
         }
 
-        static string videoFolder = Properties.Settings.Default.Folder;
-    //    string[] folders = Directory.GetDirectories(videoFolder);
+        string videoFolder;
         int countFiles, counterItems, countVideos = 0;
-        bool setBold = false, checkFolder = false;
+        bool setBold = false;
+        public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos;
         List<string> videoFiles = new List<string>();
 
@@ -26,7 +26,8 @@ namespace CameraDevice
             listBoxVideos.Items.Clear();
             comboBoxFolders.Items.Clear();
             comboBoxFolders.Text = "";
-            videoFolder = Properties.Settings.Default.Folder;
+            string[] videoFolder2 = File.ReadAllLines("settings.txt");
+            videoFolder = videoFolder2[0];
             string[] folders = Directory.GetDirectories(videoFolder);
             foreach (string folder in folders)
             {
@@ -55,18 +56,19 @@ namespace CameraDevice
 
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text);
+            string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text,"*.mp4");
             listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
             listBoxVideos.Items.Clear();
+            countFiles = 0;
 
             foreach (string file in files)
             {
                 var file2 = new FileInfo(file);
                 listBoxVideos.Items.Add(file2.Name);
+                countFiles++;
             }
 
-            DirectoryInfo folder = new DirectoryInfo(videoFolder + "\\" + comboBoxFolders.Text);
-            countFiles = folder.GetFiles().Length;
+
             labelFileCount.Text = "Number of videos: " + countFiles.ToString();
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
@@ -162,7 +164,7 @@ namespace CameraDevice
 
         private void logsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormLogs logs = new FormLogs();
+            Logs logs = new Logs();
             logs.ShowDialog();
         }
 
@@ -228,7 +230,7 @@ namespace CameraDevice
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAbout about = new FormAbout();
+            About about = new About();
             about.ShowDialog();
         }
 
@@ -240,27 +242,30 @@ namespace CameraDevice
 
         private void listBoxVideos_Click(object sender, EventArgs e)
         {
-            countVideos = listBoxVideos.SelectedItems.Count;
-            if (countVideos == 1)
+            if (listBoxVideos.SelectedItem != null)
             {
-                playVideoToolStripMenuItem.Enabled = true;
+                countVideos = listBoxVideos.SelectedItems.Count;
+                if (countVideos == 1)
+                {
+                    playVideoToolStripMenuItem.Enabled = true;
+                }
+                else
+                {
+                    playVideoToolStripMenuItem.Enabled = false;
+                }
+
+                FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                DateTime getDate = fileDate.CreationTime;
+                labelFileDate.Text = "Video creation date: " + getDate.ToString();
+
+                FileInfo fileSize = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                var getSize = fileSize.Length / 1024;
+                labelFileSize.Text = "Video creation date: " + getSize + " KB";
+
+                axWindowsMediaPlayer1.URL = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
+                axWindowsMediaPlayer1.Ctlcontrols.stop();
+                selectedVideo = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
             }
-            else
-            {
-                playVideoToolStripMenuItem.Enabled = false;
-            }
-
-            FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
-            DateTime getDate = fileDate.CreationTime;
-            labelFileDate.Text = "Video creation date: " + getDate.ToString();
-
-            FileInfo fileSize = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
-            var getSize = fileSize.Length / 1024;
-            labelFileSize.Text = "Video creation date: " + getSize + " KB";
-
-            axWindowsMediaPlayer1.URL = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
-            axWindowsMediaPlayer1.Ctlcontrols.stop();
-            selectedVideo = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -271,10 +276,12 @@ namespace CameraDevice
 
         private void FormMain_Activated(object sender, EventArgs e)
         {
-         //   readFolder();
-
+            if (checkFolder == true)
+            {
+                readFolder();
+            }
+            checkFolder = false;
         }
-
         private void comboBoxFolders_Click(object sender, EventArgs e)
         {
            
