@@ -1,12 +1,19 @@
 # CameraDevice
 
-The goal with this Visual Studio C# (Github) project was to record a video with certain length when a motion sensor was triggered. The recordings are saved automatically to local hard drive. You can also optionally 
+The goal with this IT project project was to record a video with certain length when a motion sensor was triggered. The recordings are saved automatically to local hard drive. 
+
+
+### Requirements for this Visual Studio C# project.
+- .NET 9.0
+-  C# language version 13.0
+
+You can also optionally 
 - Copy the same recording at same time when the sensor motion is trigged to a cloud share. For cloud share I have used Gdrive. Search online with the phrase "How to setup Gdrive share in linux" to learn more about to setup Gdrive in linux.
 - Send notifications to a email adress of your choosing. Search online with the phrase "How to setup email notifications in linux" to learn more about to setup email notifications In my case I used a Google account.
 
 Both camera and sensor motion are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the recordings, when a motion sensor is trigged.
 
-The python code can be found (located) at the folder Python within this project.
+The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
 
 ### List over the hardware for this project.
 - Raspberry Pi 5
@@ -56,6 +63,13 @@ sudo apt install python3-gpiozero
 ```
 sudo pip3 install gpiozero
 ```
+Camera Device application work only with computers that run under Windows operating system. But the web version can be run on all most common operating system (Windows, Linux, MacOS). In order to use the webvserver version, 
+you haft to also install also PHP besides Apache and MySQL on the device. PHP reads the results from MySQL table and display the contents to web browser trough the Apache webserver. 
+PHP files are included with this project under HomePage folder. For my php script I used the PHP version. 8.4.16 
+
+Homepage folder's content.
+
+
 ### This project contains of two mysql tables.
 
 - cameralogs – where the alert text is saved to the when motion sensor is triggeded.
@@ -85,6 +99,8 @@ datecreated datetime default (current_timestamp),
 primary key(id)
 );
 ```
+The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this project.
+
 #### There are some settings, that you can change
 - Enable email notification.
 - Change email address.
