@@ -68,7 +68,12 @@ you haft to also install also PHP besides Apache and MySQL on the device. PHP re
 PHP files are included with this project under HomePage folder. For my php script I used the PHP version. 8.4.16 
 
 Homepage folder's content.
-
+- index.php
+- logs.php
+- files.php
+- settings.php
+- config.php
+- style.css
 
 ### This project contains of two mysql tables.
 
