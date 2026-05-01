@@ -68,12 +68,12 @@ you haft to also install also PHP besides Apache and MySQL on the device. PHP re
 PHP files are included with this project under HomePage folder. For my php script I used the PHP version. 8.4.16 
 
 Homepage folder's content.
-- index.php
-- logs.php
-- files.php
-- settings.php
-- config.php
-- style.css
+- index.php -> Shows a list over folders that contain video recordnings. 
+- logs.php- > Shows log info from database when something was triggered, for example motion sensor trigger.
+- files.php -< Shows the video recordings for certain folder.
+- settings.php -> Where you can make changes for how the python script runs.
+- config.php -> Where the database configuration is stored.
+- style.css -> Where the design of the homepages is configured.
 
 ### This project contains of two mysql tables.
 
