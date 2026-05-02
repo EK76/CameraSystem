@@ -43,7 +43,7 @@ sudo apt install python3-python3-picamzero
 sudo pip3 install picamzero
 ```
 ### Motion sensor
-
+I used the this PIR HC-SR501 as my sensor motion.
 <img width="143" height="123" alt="image" src="https://github.com/user-attachments/assets/d85f2d60-32a4-4a5e-932e-370d10e6ed53" />
 
 The following schema below this text shows how Raspberry Pi 5 and motion sensor are connected to each other.
