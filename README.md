@@ -8,9 +8,9 @@ video recordings eihter with the Visual Studio C# project or the web files conta
 -  C# language version 13.0
 
 You can also optionally 
-- Copy the same recording at same time when the sensor motion is trigged to a cloud share. For cloud share I have used Gdrive. Search online with the phrase "How to setup Gdrive share in linux" to learn more about to setup Gdrive in linux.
-  For moment you can't view cloud shares eiher with help of the Visual Studio C# project or the webfiles.
-- Send notifications to a email adress of your choosing. Search online with the phrase "How to setup email notifications in linux" to learn more about to setup email notifications In my case I used a Google account.
+- Copy the same recording at same time when the sensor motion is trigged to a cloud share. For cloud share I have used Google drive. Search online with the phrase "How to setup Google drive share in linux" to learn more about to setup Google drive in linux.
+  (For moment you can't view cloud shares eiher with help of the Visual Studio C# project or the webfiles).
+- Send notifications to a email adress of your choosing. Search online with the phrase "How to setup email notifications in linux" to learn more about to setup email notifications. In my case I used a Google account.
 - Delete video recordings (It works only with Visual Studio C# project).
 
 ### List over the hardware for this project.
@@ -95,7 +95,7 @@ primary key(id)
 ```
 The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this project.
 
-#### The settings that can be changed.
+#### The settings that can be changed how the python script is run.
 - Enable email notification.
 - Change email address.
 - The recording length for video.
@@ -106,7 +106,7 @@ You can make these setting with both a Visual Studio C# project and trough web b
 The Visual Studio C# project works only with computers that run under Windows 11 operating system. But the web version can be run on all most common operating systems (Windows, Linux, MacOS). In order to use the webvserver version, 
 you haft to also install the PHP and Apache besides MySQL on the device. For this project I used Apache version 2.4.66. PHP files are included with this project under HomePage folder. For my php script I used the PHP version. 8.4.16 
 
-Homepage folder's content.
+#### Homepage folder's content.
 - index.php -> Shows a list over folders that contain video recordnings. 
 - logs.php- > Shows log info from database when something was triggered, for example motion sensor trigger.
 - files.php -> Shows the video recordings for a certain folder.
