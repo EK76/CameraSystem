@@ -1,8 +1,10 @@
+using Microsoft.VisualBasic.ApplicationServices;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using Renci.SshNet;
 
 namespace CameraDevice
 {
@@ -17,7 +19,8 @@ namespace CameraDevice
         int countFiles, counterItems, countVideos = 0;
         bool setBold = false;
         public static bool checkFolder = false;
-        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos;
+        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password;
+        string host = "cameradevice", user = "camerauser";
         List<string> videoFiles = new List<string>();
 
 
@@ -26,13 +29,20 @@ namespace CameraDevice
             listBoxVideos.Items.Clear();
             comboBoxFolders.Items.Clear();
             comboBoxFolders.Text = "";
-            string[] videoFolder2 = File.ReadAllLines("settings.txt");
-            videoFolder = videoFolder2[0];
-            string[] folders = Directory.GetDirectories(videoFolder);
-            foreach (string folder in folders)
+            try
             {
-                var folder2 = new DirectoryInfo(folder);
-                comboBoxFolders.Items.Add(folder2.Name);
+                string[] videoFolder2 = File.ReadAllLines("settings.txt");
+                videoFolder = videoFolder2[0];
+                string[] folders = Directory.GetDirectories(videoFolder);
+                foreach (string folder in folders)
+                {
+                    var folder2 = new DirectoryInfo(folder);
+                    comboBoxFolders.Items.Add(folder2.Name);
+                }
+            }
+            catch (Exception info)
+            {
+                MessageBox.Show("he path to video recordings is not available");
             }
         }
 
@@ -56,7 +66,7 @@ namespace CameraDevice
 
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text,"*.mp4");
+            string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text, "*.mp4");
             listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
             listBoxVideos.Items.Clear();
             countFiles = 0;
@@ -212,7 +222,7 @@ namespace CameraDevice
                 }
 
                 listBoxVideos.Update();
-                DirectoryInfo folder = new DirectoryInfo(videoFolder +"\\" + comboBoxFolders.Text);
+                DirectoryInfo folder = new DirectoryInfo(videoFolder + "\\" + comboBoxFolders.Text);
                 countFiles = folder.GetFiles().Length;
                 labelFileCount.Text = "Number of videos: " + countFiles.ToString();
                 MessageBox.Show("Selected videos have been deleted.", "Camera Device");
@@ -230,7 +240,7 @@ namespace CameraDevice
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            About about = new About();
+            FormAbout about = new FormAbout();
             about.ShowDialog();
         }
 
@@ -284,7 +294,23 @@ namespace CameraDevice
         }
         private void comboBoxFolders_Click(object sender, EventArgs e)
         {
-           
+
+        }
+
+        private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            password = Properties.Settings.Default.password;
+            DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                using (var client = new SshClient(host, user, password))
+                {
+                    client.Connect();
+                    var output = client.RunCommand("sudo shutdown now");
+                    client.Disconnect();
+                }
+                MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!");
+            }
         }
     }
 }

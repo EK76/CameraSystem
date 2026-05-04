@@ -8,5 +8,8 @@
     <Setting Name="Folder" Type="System.String" Scope="User">
       <Value Profile="(Default)">\\Cameradevice\camerasystem</Value>
     </Setting>
+    <Setting Name="password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test11</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
