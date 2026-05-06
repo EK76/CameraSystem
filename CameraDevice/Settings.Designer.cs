@@ -89,6 +89,7 @@
             textBoxAlerttext.Size = new Size(241, 25);
             textBoxAlerttext.TabIndex = 4;
             textBoxAlerttext.TextChanged += textBoxAlerttext_TextChanged;
+            textBoxAlerttext.KeyPress += textBoxAlerttext_KeyPress;
             // 
             // labelText
             // 

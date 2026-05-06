@@ -20,7 +20,6 @@ Camera Device System.
 
 <form action="logs.php" method="post"> 
 Give a number.
-
 <input type="number" name="selectlimit" id="quantity" size="5" min="1" max="3000">
 <br /><br />
 <input type="submit" value = " Show selected rows " name ="showRows">

@@ -5,6 +5,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using Renci.SshNet;
+using System.Collections;
 
 namespace CameraDevice
 {
@@ -66,16 +67,28 @@ namespace CameraDevice
 
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ArrayList listItems = new ArrayList();
             string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text, "*.mp4");
             listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
             listBoxVideos.Items.Clear();
             countFiles = 0;
 
+
             foreach (string file in files)
             {
                 var file2 = new FileInfo(file);
-                listBoxVideos.Items.Add(file2.Name);
+                listItems.Add(file2.Name);
                 countFiles++;
+
+            }
+
+            listItems.Sort();
+           
+            foreach (var item in listItems)
+            {
+                
+                listBoxVideos.Items.Add(item);
+              
             }
 
 

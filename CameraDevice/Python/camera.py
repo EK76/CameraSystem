@@ -33,16 +33,12 @@ try:
   enableEmail = row[1]
   enableDrive = row[2]
   alertText = row[4]
+  alertText2 = row[4]
   sendEmail = row[5]
   setStreamtime = row[6]
   dbconfig.commit()
 
-  print(enableEmail)
-  print(enableDrive)
-  print(alertText)
-  print(sendEmail)
-  print(setStreamtime)
-
+  print(alertText);
 
   while True:
     pir.wait_for_motion()
@@ -54,11 +50,8 @@ try:
     createfolder2 = "/home/camerauser/gdrive/"+datefolder
     checkfolder = os.path.isdir(createfolder)
     checkfolder2 = os.path.isdir(createfolder2)
-
-    query = "insert into cameralogs(logtext) values ('Motion detected.')"
-    dbinfo.execute(query)
-    dbconfig.commit()
-   
+  
+    alertText = alertText2
     if not checkfolder:
       os.mkdir(createfolder, mode=0o777)
     else:
@@ -69,6 +62,11 @@ try:
       showvideo.record_video(createfolder + "/video" + str(filecount) +".mp4", duration=setStreamtime)
       print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
 
+    alertText = alertText + " " + datefolder + "/video" + str(filecount);
+    query = "insert into cameralogs (logtext) values (%s)"
+    dbinfo.execute(query, [alertText])
+    dbconfig.commit()
+
     if enableDrive == 'True':
       if not checkfolder2:
         os.mkdir(createfolder2)
@@ -77,7 +75,7 @@ try:
         print(createfolder + "/video" + str(filecount) +".mp4")
         copyfrom = createfolder + "/video" + str(filecount) +".mp4"
         rclone.copy(copyfrom, createfolder2)
-        print("GDrive: +" + createfolder2 + "/video" + str(filecount) +".mp4")
+        print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")
           
     if enableEmail == 'True':
       try:

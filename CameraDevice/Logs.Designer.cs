@@ -34,6 +34,7 @@
             columnHeader2 = new ColumnHeader();
             labelText = new Label();
             buttonBackup = new Button();
+            comboBoxSelection = new ComboBox();
             SuspendLayout();
             // 
             // buttonClose
@@ -89,11 +90,21 @@
             buttonBackup.UseVisualStyleBackColor = true;
             buttonBackup.Click += buttonBackup_Click;
             // 
-            // FormLogs
+            // comboBoxSelection
+            // 
+            comboBoxSelection.FormattingEnabled = true;
+            comboBoxSelection.Location = new Point(149, 8);
+            comboBoxSelection.Name = "comboBoxSelection";
+            comboBoxSelection.Size = new Size(367, 23);
+            comboBoxSelection.TabIndex = 4;
+            comboBoxSelection.SelectedIndexChanged += comboBoxSelection_SelectedIndexChanged;
+            // 
+            // Logs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(528, 704);
+            Controls.Add(comboBoxSelection);
             Controls.Add(buttonBackup);
             Controls.Add(labelText);
             Controls.Add(listViewLogs);
@@ -101,7 +112,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "FormLogs";
+            Name = "Logs";
             ShowIcon = false;
             Text = "Camera Device";
             Load += FormLogs_Load;
@@ -117,5 +128,6 @@
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private Button buttonBackup;
+        private ComboBox comboBoxSelection;
     }
 }

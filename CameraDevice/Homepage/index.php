@@ -18,7 +18,6 @@ Contents over video folders.
 <center>
 <table>
 
-
 <?php
 $folders = glob('/media/usbdrive/camerasystem' . '/*' , GLOB_ONLYDIR);
 foreach($folders as $folders2)  
@@ -29,7 +28,7 @@ foreach($folders as $folders2)
   echo "Folder ". basename($folders2);
   ?>
   </td>
-    <td class="tdname">
+  <td class="tdname">
   <form action="files.php" method="post" class="formfiles">
   <input type="hidden" name="openvideo" value="<?php echo basename($folders2)?>">
   <input type="submit" value = " Open " name="openFile"/>
@@ -44,6 +43,9 @@ foreach($folders as $folders2)
 <br /><br /><br /><br />
 <form action="logs.php" method="post"> 
 <input type="submit" value = " Show logs ">
+</form>
+<form action="settings.php" method="post"> 
+<input type="submit" value = " Settings ">
 </form>
 </center>
 </body>

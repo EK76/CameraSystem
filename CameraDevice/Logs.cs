@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CameraDevice
 {
@@ -19,11 +20,10 @@ namespace CameraDevice
 
         }
 
-        string checkString, connString;
-        string user = "loguser";
-        string password = "Test0880!";
-        string host = "cameradevice";
-        int counterItems = 0;
+        string checkString, checkItem, compareString;
+        int counterItems = 0, indexItem;
+        bool answer;
+        string connString = "SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test0880!";
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
@@ -31,11 +31,12 @@ namespace CameraDevice
         }
 
         private void FormLogs_Load(object sender, EventArgs e)
-        {
-            connString = "SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test0880!";
+        {    
+            MySqlConnection conn = new MySqlConnection(connString);
+            compareString = "Camera recording value was changed";
+            
             try
             {
-                MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "select * from cameralogs order by datecreated desc;";
                 Clipboard.SetText(checkString);
@@ -43,12 +44,7 @@ namespace CameraDevice
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    counterItems++;
-                    if (counterItems == 1)
-                    {
-                        listViewLogs.Items.Clear();
-                    }
-                    listViewLogs.Items.Add(new ListViewItem(new string[] { reader.GetString("logtext").ToString(), reader.GetDateTime("datecreated").ToString("dd-MM-yyyy HH:mm") }));
+                  listViewLogs.Items.Add(new ListViewItem(new string[] { reader.GetString("logtext").ToString(), reader.GetDateTime("datecreated").ToString("dd-MM-yyyy HH:mm") }));
                 }
                 conn.Close();
             }
@@ -56,6 +52,33 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
+
+            try
+            {
+                conn.Open();
+                checkString = "select distinct left(logtext, instr(logtext,'.')) as 'logtext' from cameralogs;";
+                Clipboard.SetText(checkString);
+                MySqlCommand command = new MySqlCommand(checkString, conn);
+                MySqlDataReader reader = command.ExecuteReader();
+                comboBoxSelection.Items.Add(compareString);
+                while (reader.Read())
+                {
+                    checkItem = reader.GetString("logtext").ToString();
+                    answer = checkItem.Contains(compareString);
+                    if (!answer)
+                    {
+                        comboBoxSelection.Items.Add(reader.GetString("logtext").ToString());
+                    }
+
+                }
+                conn.Close();
+                comboBoxSelection.Items.Add("All items");
+            }
+            catch (Exception i)
+            {
+                MessageBox.Show(i.Message);
+            }
+
 
         }
 
@@ -88,6 +111,54 @@ namespace CameraDevice
             catch (Exception i)
             {
                 MessageBox.Show(i.Message);
+            }
+        }
+
+        private void comboBoxSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MySqlConnection conn = new MySqlConnection(connString);
+
+            if (comboBoxSelection.SelectedItem == "All items")
+            {
+                try
+                {
+                    listViewLogs.Items.Clear();
+                    conn.Open();
+                    checkString = "select * from cameralogs order by datecreated desc;";
+                    Clipboard.SetText(checkString);
+                    MySqlCommand command = new MySqlCommand(checkString, conn);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        listViewLogs.Items.Add(new ListViewItem(new string[] { reader.GetString("logtext").ToString(), reader.GetDateTime("datecreated").ToString("dd-MM-yyyy HH:mm") }));
+                    }
+                    conn.Close();
+                }
+                catch (Exception i)
+                {
+                    MessageBox.Show(i.Message);
+                }
+            }
+            else
+            {
+                try
+                {
+                    listViewLogs.Items.Clear();
+                    conn.Open();
+                    checkString = "select * from cameralogs where logtext like '" + comboBoxSelection.SelectedItem + "%'order by datecreated desc;";
+                    Clipboard.SetText(checkString);
+                    MySqlCommand command = new MySqlCommand(checkString, conn);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        listViewLogs.Items.Add(new ListViewItem(new string[] { reader.GetString("logtext").ToString(), reader.GetDateTime("datecreated").ToString("dd-MM-yyyy HH:mm") }));
+                    }
+                    conn.Close();
+                }
+                catch (Exception i)
+                {
+                    MessageBox.Show(i.Message);
+                }
             }
         }
     }

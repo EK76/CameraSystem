@@ -26,7 +26,7 @@ namespace CameraDevice
         string checkString, connString;
         string drive, emailAlert, alertText, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder;
         int checkState = 0;
-        bool checkChanges = false, checkStream = false, checkEmail, noneEmail;
+        bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
         {
             connString = Properties.Settings.Default.Database;
@@ -95,7 +95,7 @@ namespace CameraDevice
 
             if (checkBoxEmail.Checked)
             {
-                emailAlert = "True";    
+                emailAlert = "True";
                 emailAdress = textBoxEmailadress.Text;
             }
             else
@@ -103,15 +103,17 @@ namespace CameraDevice
                 emailAlert = "False";
                 emailAdress = emailAdress2;
             }
-            alertText = textBoxAlerttext.Text;           
+            alertText = textBoxAlerttext.Text;
+            streamVideo = textBoxStream.Text;
 
             try
             {
-                if (checkStream == true)
+                if (streamVideo != streamVideo2)
                 {
                     MySqlConnection conn = new MySqlConnection(connString);
                     conn.Open();
                     checkString = "insert into cameralogs(logtext) values('Camera recording value was changed to " + streamVideo.ToString() + " seconds.');";
+                //   MessageBox.Show(checkString);
                     MySqlCommand command = new MySqlCommand(checkString, conn);
                     MySqlDataReader reader = command.ExecuteReader();
                     conn.Close();
@@ -137,7 +139,7 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
-            
+
 
             string[] lines = File.ReadAllLines("settings.txt");
             lines[0] = setFolder;
@@ -209,27 +211,25 @@ namespace CameraDevice
                 labelFolder.Text = labelFolder.Text = "Video folder: " + folderBrowserDialogVideo.SelectedPath;
                 setFolder = folderBrowserDialogVideo.SelectedPath;
                 Main.checkFolder = true;
-
             }
         }
 
         private void textBoxStream_TextChanged(object sender, EventArgs e)
         {
-            //  if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
-         if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
+            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
             {
-             buttonOk.Enabled = true;
-          }
-          else
-          {
-             buttonOk.Enabled = false;
-          }
- 
+                buttonOk.Enabled = true;
+            }
+            else
+            {
+                buttonOk.Enabled = false;
+            }
+
         }
         private void textBoxEmailadress_TextChanged(object sender, EventArgs e)
         {
             if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
-          
+
             {
                 buttonOk.Enabled = true;
             }
@@ -246,13 +246,10 @@ namespace CameraDevice
             {
                 noneEmail = true;
             }
-
-
         }
 
         private void textBoxAlerttext_TextChanged(object sender, EventArgs e)
         {
-            // if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
             if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
             {
                 buttonOk.Enabled = true;
@@ -271,6 +268,14 @@ namespace CameraDevice
         private void checkBoxDrive_Click(object sender, EventArgs e)
         {
             buttonOk.Enabled = true;
+        }
+
+        private void textBoxAlerttext_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((!char.IsLetter(e.KeyChar)) && (!char.IsWhiteSpace(e.KeyChar)) && (!char.IsControl(e.KeyChar)))
+            {
+                e.Handled |= true;
+            }
         }
     }
 }
