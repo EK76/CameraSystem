@@ -11,7 +11,7 @@ from rclone_python.remote_types import RemoteTypes
 dbconfig = mysql.connector.connect(
    host = "localhost",
    user = "loguser",
-   password = "Test0880!",
+   password = os.environ["sqlpass"],
    database = "camerasystem"
 )
 
@@ -62,7 +62,7 @@ try:
       showvideo.record_video(createfolder + "/video" + str(filecount) +".mp4", duration=setStreamtime)
       print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
 
-    alertText = alertText + " " + datefolder + "/video" + str(filecount);
+    alertText = alertText + ". '" + datefolder + "/video" + str(filecount) + "'";
     query = "insert into cameralogs (logtext) values (%s)"
     dbinfo.execute(query, [alertText])
     dbconfig.commit()
