@@ -23,7 +23,7 @@ namespace CameraDevice
         string checkString, checkItem, compareString;
         int counterItems = 0, indexItem;
         bool answer;
-        string connString = "SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test0880!";
+        string connString;
 
         private void buttonClose_Click(object sender, EventArgs e)
         {
@@ -31,7 +31,8 @@ namespace CameraDevice
         }
 
         private void FormLogs_Load(object sender, EventArgs e)
-        {    
+        {
+            connString = Properties.Settings.Default.Database;
             MySqlConnection conn = new MySqlConnection(connString);
             compareString = "Camera recording value was changed";
             

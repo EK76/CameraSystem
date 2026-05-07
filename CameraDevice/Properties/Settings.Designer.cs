@@ -25,19 +25,6 @@ namespace CameraDevice.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test088" +
-            "0!")]
-        public string Database {
-            get {
-                return ((string)(this["Database"]));
-            }
-            set {
-                this["Database"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\\\\Cameradevice\\camerasystem")]
         public string Folder {
             get {
@@ -57,6 +44,19 @@ namespace CameraDevice.Properties {
             }
             set {
                 this["password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("SERVER = cameradevice; DATABASE = camerasystem; UID = loguser; PASSWORD = Test088" +
+            "0!")]
+        public string Database {
+            get {
+                return ((string)(this["Database"]));
+            }
+            set {
+                this["Database"] = value;
             }
         }
     }
