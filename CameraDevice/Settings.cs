@@ -103,6 +103,12 @@ namespace CameraDevice
                 emailAlert = "False";
                 emailAdress = emailAdress2;
             }
+
+            if (textBoxEmailadress.Text == "")
+            {
+                emailAdress = emailAdress2;
+            }
+
             alertText = textBoxAlerttext.Text;
             streamVideo = textBoxStream.Text;
 
@@ -154,6 +160,7 @@ namespace CameraDevice
                 startInfo.Arguments = "/C ssh camerauser@cameradevice sudo systemctl restart camerastystem.service";
                 process.StartInfo = startInfo;
                 process.Start();
+                MessageBox.Show("Test");
             }
             catch
             {
@@ -181,7 +188,7 @@ namespace CameraDevice
                 {
                     buttonOk.Enabled = false;
                 }
-                if (textBoxEmailadress.Text.Length > 0)
+               if (textBoxEmailadress.Text.Length > 0)
                 {
                     noneEmail = false;
                 }
@@ -250,7 +257,7 @@ namespace CameraDevice
 
         private void textBoxAlerttext_TextChanged(object sender, EventArgs e)
         {
-            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
+            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail==false))
             {
                 buttonOk.Enabled = true;
             }

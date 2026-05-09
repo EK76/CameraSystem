@@ -17,7 +17,7 @@ dbconfig = mysql.connector.connect(
 
 pir = MotionSensor(12)
 username = 'ken.ekholm76@gmail.com'
-password = os.environ["googlepass"],
+password = os.environ["googlepass"]
 
 try:
   showvideo = Camera()
