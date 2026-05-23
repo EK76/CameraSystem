@@ -1,7 +1,7 @@
 # CameraDevice
 
 The goal with this IT project project was to record videos with certain length when a motion sensor was triggered. The recordings are saved automatically to local hard drive. It is possible to watch these
-video recordings eihter with the Visual Studio C# project or the web files containded in this project.
+video recordings eihter with the Visual Studio C# project or the web files contained in this project.
  
 ### Requirements for this Visual Studio C# project.
 - .NET 9.0
@@ -15,20 +15,22 @@ You can also optionally
 
 ### List over the hardware for this project.
 - Raspberry Pi 5
-- Camera module 3
-- Motion sensor
+- Raspberry Pi camera module 3
+- PIR motion sensor
 
 Both camera and sensor motion are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged.
 The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
 
-### Camera module 3
+### Raspberry Pi camera module 3
 
 <img width="126" height="119" alt="cameramodule3" src="https://github.com/user-attachments/assets/83a743a1-d3f6-4641-ba1c-f902c450003d" />
 
-Camera Module 3 comes with an improved 12MP IMX708 Quad Bayer sensor and features a high dynamic range mode.
-The following schema below this text shows how Raspberry Pi 5 and Camera Module 3 are connected to each other using a 15-22pin FPC cable. The MIPI-csi connector of the Raspberry Pi 5 is 22pin, while the Camera Module 3 uses a 15pin connector.
+Camera module 3 comes with an improved 12MP IMX708 Quad Bayer sensor and features a high dynamic range mode.
+The following schema below this text shows how Raspberry Pi 5 and Raspberry Pi camera module 3 are connected to each other using a 15-22pin FPC cable. The MIPI-csi connector of the Raspberry Pi 5 is 22pin, while the Camera Module 3 uses a 15pin connector.
 
 <img width="338" height="146" alt="cameraschema" src="https://github.com/user-attachments/assets/35b0accc-21f2-4893-b123-261b108a4a0d" />
+
+### The installation of Raspberry Pi camera module 3 library.
 
 In my case I used the picamzero library for controlling the Camera Module 3 with python.
 How to install the picamzero library for python.
@@ -42,12 +44,16 @@ sudo apt install python3-python3-picamzero
 ```
 sudo pip3 install picamzero
 ```
-### Motion sensor
-I used the this PIR HC-SR501 as my sensor motion.
+### PIR motion sensor
+
 <img width="143" height="123" alt="image" src="https://github.com/user-attachments/assets/d85f2d60-32a4-4a5e-932e-370d10e6ed53" />
+
+I used the this PIR HC-SR501 as my sensor motion. At the core of many smart automation devices lies the powerful PIR Sensor. 
+It stands for Passive Infrared Sensor and relies on infrared sensing technology to detect the motion of objects.
 
 The following schema below this text shows how Raspberry Pi 5 and motion sensor are connected to each other.
 <img width="362" height="257" alt="image" src="https://github.com/user-attachments/assets/b0f1249e-f78d-47fb-a6ee-357365dfe7b3" />
+
 The connection between Raspberry PI5 and sensor motion.
 - Motion sensor's pin labelled VCC is connected to the 5V pin on the Raspberry Pi5. 
 - Motion sensor's pin labelled GND is connected to a ground pin on the Raspberry Pi5. 
@@ -114,7 +120,7 @@ you haft to also install the PHP and Apache besides MySQL on the device. For thi
 - config.php -> Where the database configuration is stored.
 - style.css -> Where the design of the homepages is configured.
 
-I have created a service (camerasystem.service that when one or more of these changes are changed, it restarts the python program.
+I have created a service with I have named camerasystem.service that when one or more of these changes are changed, it restarts the python program.
 ```
 [Unit]
 Description=Camera System
