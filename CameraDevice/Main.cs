@@ -1,11 +1,12 @@
 using Microsoft.VisualBasic.ApplicationServices;
+using ReadTemp;
+using Renci.SshNet;
+using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
-using Renci.SshNet;
-using System.Collections;
 
 namespace CameraDevice
 {
@@ -62,6 +63,8 @@ namespace CameraDevice
 
         private void FormMain_Load(object sender, EventArgs e)
         {
+
+
             readFolder();
         }
 
@@ -83,12 +86,12 @@ namespace CameraDevice
             }
 
             listItems.Sort();
-           
+
             foreach (var item in listItems)
             {
-                
+
                 listBoxVideos.Items.Add(item);
-              
+
             }
 
 
@@ -324,6 +327,12 @@ namespace CameraDevice
                 }
                 MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!");
             }
+        }
+
+        private void hardwareInfoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormTechnicalInfo hardware = new FormTechnicalInfo();
+            hardware.ShowDialog();
         }
     }
 }

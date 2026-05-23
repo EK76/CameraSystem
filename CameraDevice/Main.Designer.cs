@@ -50,6 +50,7 @@
             mediumToolStripMenuItem = new ToolStripMenuItem();
             largeToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
+            shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             listBoxVideos = new ListBox();
@@ -57,7 +58,7 @@
             labelFileDate = new Label();
             labelFileSize = new Label();
             axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
-            shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
+            hardwareInfoToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
             SuspendLayout();
@@ -120,7 +121,7 @@
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshVideosToolStripMenuItem, logsToolStripMenuItem, showVideoDetailsToolStripMenuItem, playVideoToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshVideosToolStripMenuItem, logsToolStripMenuItem, showVideoDetailsToolStripMenuItem, playVideoToolStripMenuItem, hardwareInfoToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "View";
@@ -128,14 +129,14 @@
             // refreshVideosToolStripMenuItem
             // 
             refreshVideosToolStripMenuItem.Name = "refreshVideosToolStripMenuItem";
-            refreshVideosToolStripMenuItem.Size = new Size(174, 22);
+            refreshVideosToolStripMenuItem.Size = new Size(180, 22);
             refreshVideosToolStripMenuItem.Text = "Refresh Videos";
             refreshVideosToolStripMenuItem.Click += refreshVideosToolStripMenuItem_Click;
             // 
             // logsToolStripMenuItem
             // 
             logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            logsToolStripMenuItem.Size = new Size(174, 22);
+            logsToolStripMenuItem.Size = new Size(180, 22);
             logsToolStripMenuItem.Text = "Logs";
             logsToolStripMenuItem.Click += logsToolStripMenuItem_Click;
             // 
@@ -144,7 +145,7 @@
             showVideoDetailsToolStripMenuItem.Checked = true;
             showVideoDetailsToolStripMenuItem.CheckState = CheckState.Checked;
             showVideoDetailsToolStripMenuItem.Name = "showVideoDetailsToolStripMenuItem";
-            showVideoDetailsToolStripMenuItem.Size = new Size(174, 22);
+            showVideoDetailsToolStripMenuItem.Size = new Size(180, 22);
             showVideoDetailsToolStripMenuItem.Text = "Show Video Details";
             showVideoDetailsToolStripMenuItem.Click += showVideoDetailsToolStripMenuItem_Click;
             // 
@@ -152,7 +153,7 @@
             // 
             playVideoToolStripMenuItem.Enabled = false;
             playVideoToolStripMenuItem.Name = "playVideoToolStripMenuItem";
-            playVideoToolStripMenuItem.Size = new Size(174, 22);
+            playVideoToolStripMenuItem.Size = new Size(180, 22);
             playVideoToolStripMenuItem.Text = "Play Video";
             playVideoToolStripMenuItem.Click += playVideoToolStripMenuItem_Click;
             // 
@@ -218,6 +219,13 @@
             settingsToolStripMenuItem.Size = new Size(180, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
+            // 
+            // shutdownDeviceToolStripMenuItem
+            // 
+            shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
+            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
+            shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
+            shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -285,12 +293,12 @@
             axWindowsMediaPlayer1.Size = new Size(812, 571);
             axWindowsMediaPlayer1.TabIndex = 7;
             // 
-            // shutdownDeviceToolStripMenuItem
+            // hardwareInfoToolStripMenuItem
             // 
-            shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
-            shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
-            shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
+            hardwareInfoToolStripMenuItem.Name = "hardwareInfoToolStripMenuItem";
+            hardwareInfoToolStripMenuItem.Size = new Size(180, 22);
+            hardwareInfoToolStripMenuItem.Text = "Hardware Info";
+            hardwareInfoToolStripMenuItem.Click += hardwareInfoToolStripMenuItem_Click;
             // 
             // Main
             // 
@@ -350,5 +358,6 @@
         private ToolStripMenuItem playVideoToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
+        private ToolStripMenuItem hardwareInfoToolStripMenuItem;
     }
 }
