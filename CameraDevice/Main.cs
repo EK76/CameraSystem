@@ -44,7 +44,7 @@ namespace CameraDevice
             }
             catch (Exception info)
             {
-                MessageBox.Show("he path to video recordings is not available");
+                MessageBox.Show("The path to video recordings is not available");
             }
         }
 
@@ -63,8 +63,6 @@ namespace CameraDevice
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-
-
             readFolder();
         }
 

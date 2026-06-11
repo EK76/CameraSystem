@@ -27,18 +27,23 @@ if ($dbconnect->connect_error)
 if(isset($_POST['setSettings']))
 { 
 
+   $streamVideo = $_POST['streamVideo'];
+   $alertText = $_POST['alertText'];
+   $sendEmail = $_POST['sendEmail'];
+
    $allowEmail = (isset($_POST['enableEmail'])?"checked":"");
    if ($allowEmail == "checked")
    {
       $enableEmail = "True";
+    
    }
    else
    {
       $enableEmail= "False";
    } 
 
-   $allowEmail = (isset($_POST['enableDrive'])?"checked":"");
-   if ($allowEmail == "checked")
+   $allowDrive = (isset($_POST['enableDrive'])?"checked":"");
+   if ($allowDrive == "checked")
    {
       $enableDrive = "True";
    }
@@ -47,12 +52,12 @@ if(isset($_POST['setSettings']))
       $enableDrive = "False";
    } 
 
-   $streamVideo = $_POST['streamVideo'];
-   $sendEmail = $_POST['sendEmail'];
-   $alertText = $_POST['alertText'];
-
    $query = mysqli_query($dbconnect, "update settings set email = '".$enableEmail."', drive = '".$enableDrive."', stream = ".$streamVideo.", sendemail= '".$sendEmail."', alerttext = '".$alertText."' where id = 1;")
    or die (mysqli_error($dbconnect));
+
+   echo "Settings updated. Service restarted.";
+
+   shell_exec('./restartdevice.sh');
 }   
 
 $query = mysqli_query($dbconnect, "select email, drive, stream, sendemail, alerttext from settings;")
@@ -86,9 +91,9 @@ else
 ?>
 
 <form action="settings.php" method="post" class="formfiles2">
-<input name="enableEmail" type="checkbox" id ="checkthis" <?php echo $checkboxvalue == 1 ? 'checked' : ''  ?> onclick="disableMyText(this)"/>Enable email alert. <br /><br />
+<input name="enableEmail" type="checkbox" id ="checkthis" <?php echo $checkboxvalue == 1 ? 'checked' : ''  ?>/>Enable email alert. <br /><br />
 Type email adress.<br /><br />
-<input name="sendEmail" type="text" id ="enabletext" value = "<?php echo $sendEmail ?>" disabled="disabled"/><br /><br />
+<input name="sendEmail" type="text" value = "<?php echo $sendEmail ?>" /><br /><br />
 Type alert text.<br /><br />
 <input name="alertText" type="text"  value = "<?php echo $alertText ?>"/><br /><br />
 Put a stream value.<br /><br />
@@ -96,19 +101,9 @@ Put a stream value.<br /><br />
 <input name="enableDrive" type="checkbox" <?php echo $checkboxvalue2 == 1 ? 'checked' : ''  ?>/>Enable drive.<br /><br />
 <input type="submit" value = " Set settings " name ="setSettings">
 <br /><br /><br /><br />
-<form action="index.php" method="post"> 
+</form>
+<form action="index.php" method="post" class="formfiles2"> 
 <input type="submit" value = " Back ">
 </form>
-<script type="text/javascript" >  
-      function disableMyText()
-      {  
-         var enabletext = documnent.getElementById("enabletext");
-         enabletext.disabled = checkthis.checked ? false : true;
-         if (enabletext.disabled)
-         {
-            enabletext.focus();
-         }
-      }  
-     </script> 
 </body>
 </html>
