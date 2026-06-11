@@ -120,27 +120,40 @@ you haft to also install the PHP and Apache besides MySQL on the device. For thi
 - config.php -> Where the database configuration is stored.
 - style.css -> Where the design of the homepages is configured.
 
-I have created a service with I have named camerasystem.service that when one or more of these changes are changed, it restarts the python program.
+I have created a service which I have named camerasystem.service that when one or more of these changes are changed, it restarts the python program.
 ```
 [Unit]
-Description=Camera System
+Description=Enable/disable camerasystem.
 After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=python3 /home/camerauser/camerasystem/camera.py
+EnvironmentFile=/etc/controldevice/controldevice.conf
+WorkingDirectory=/home/camerauser/camerasystem/
+user=sensoruser
+ExecStart=/usr/bin/python3 /home/camerauser/camerasystem/camera.py
 Restart=on-abort
 
 [Install]
 WantedBy=multi-user.target
 ```
+I have my mysql password and email token for the pyhton script located at /etc/controldevice/controldevice.conf file.
+
+To be able to automatically restart camerasystem.service when one or more settings are changed trough web browser I have created
+this small bash script, which I have named restartdevice.sh
+```
+#!/bin/sh
+sudo /usr/bin/systemctl restart camerasystem
+```
+You also have to include **www-data ALL=NOPASSWD: /usr/bin/systemctl restart camerasystem** at the bottom of your /etc/sudoers file.
+The user of Apache webserver is in my case www-data. Now you can run the bash script trough the webserver with help of this single php code **shell_exec('./restartdevice.sh');**
 
 I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
 MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
 
 ### Two pictures about this project.
 
-##### Visual Studio C# verion.
+##### Visual Studio C# version.
 <img width="1442" height="671" alt="Screenshot 2026-04-26 174605" src="https://github.com/user-attachments/assets/6c0a1456-8bd8-4dc8-99d2-a5981a2dae00" />
 
 ##### Web version.
