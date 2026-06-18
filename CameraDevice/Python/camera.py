@@ -1,9 +1,10 @@
-from picamzero import Camera
+import cv2
 import os
-from time import *
-from datetime import *
+import time
+import datetime
 import mysql.connector
 from gpiozero import MotionSensor
+from gpiozero.tools import any_values
 import smtplib 
 from rclone_python import rclone
 from rclone_python.remote_types import RemoteTypes
@@ -15,12 +16,36 @@ dbconfig = mysql.connector.connect(
    database = "camerasystem"
 )
 
-pir = MotionSensor(12)
+def streamVideo():
+   global filecount
+   global starttime
+   global delaytime
+   global stream
+   global frame_width
+   global frame_height
+   frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
+   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
+   fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+   output = cv2.VideoWriter(createfolder + '/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+   test = 0
+   startTime = time.time()
+   while(int(time.time() - startTime) < recordingTime):
+      ret, frame = stream.read()
+      output.write(frame)
+      test = 1
+   output.release()
+
+recordingTime = 10
+stream = cv2.VideoCapture(0)
+
+motionSensor1 = MotionSensor(12)
+motionSensor2 = MotionSensor(16)
 username = 'ken.ekholm76@gmail.com'
 password = os.environ["googlepass"]
 
+
 try:
-  showvideo = Camera()
+
   dbinfo = dbconfig.cursor()
   query = "insert into cameralogs(logtext) values ('Camera device started.')"
   dbinfo.execute(query)
@@ -32,26 +57,42 @@ try:
   row = dbinfo.fetchone()
   enableEmail = row[1]
   enableDrive = row[2]
-  alertText = row[4]
-  alertText2 = row[4]
-  sendEmail = row[5]
-  setStreamtime = row[6]
+  sendEmail = row[3]
+  setStreamtime = row[4]
+  motionChoice = row[7]
   dbconfig.commit()
 
-  print(alertText);
+
+  print(motionChoice);
+  delaytime = time.time() + setStreamtime
 
   while True:
-    pir.wait_for_motion()
+    match motionChoice:
+      case 1:
+        print("Waiting for motion on sensor 1.")
+        alertText = "Motion detected on sensor 1. "
+        motionSensor1.wait_for_motion()
+      case 2:
+        print("Waiting for motion on sensor 2.")  
+        alertText = "Motion detected on sensor 2. "
+        motionSensor2.wait_for_motion()
+      case 3:
+        print("Waiting for motion on either sensor.")
+        alertText = "Motion detected on both sensor. "
+        while not motionSensor1.motion_detected and not motionSensor2.motion_detected:
+          time.sleep(0.1)
+          continue 
+     
+
     print("Recording feed.")
-    now = datetime.now()
+    now = datetime.datetime.now()
     datefolder = now.strftime("%d_%m_%Y")
     timefile = now.strftime("%H:%M:%S")
     createfolder = "/media/usbdrive/camerasystem/"+datefolder
-    createfolder2 = "/home/camerauser/gdrive/"+datefolder
+    createfolder2 = "/home/camerauser/gdrive/Recordings/"+datefolder
     checkfolder = os.path.isdir(createfolder)
     checkfolder2 = os.path.isdir(createfolder2)
   
-    alertText = alertText2
     if not checkfolder:
       os.mkdir(createfolder, mode=0o777)
     else:
@@ -59,10 +100,10 @@ try:
       print(len(filecount))
       filecount = len(filecount)
       filecount = filecount + 1
-      showvideo.record_video(createfolder + "/video" + str(filecount) +".mp4", duration=setStreamtime)
+      streamVideo()
       print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
 
-    alertText = alertText + ". '" + datefolder + "/video" + str(filecount) + "'";
+    alertText = alertText + " '" + datefolder + "/video" + str(filecount) + "'";
     query = "insert into cameralogs (logtext) values (%s)"
     dbinfo.execute(query, [alertText])
     dbconfig.commit()
@@ -86,7 +127,8 @@ try:
         print("Email sent")
       except Exception as e:
         print(f"Error: {e}")
-    pir.wait_for_no_motion()  
+#    pir.wait_for_no_motion()  
+  stream.release()
 except mysql.connector.Error as error:
     print("Failed to insert record into table {}".format(error))
 except KeyboardInterrupt:

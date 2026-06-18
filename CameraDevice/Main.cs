@@ -17,24 +17,24 @@ namespace CameraDevice
             InitializeComponent();
         }
 
-        string videoFolder;
+        string videoFolder, driverPath;
         int countFiles, counterItems, countVideos = 0;
         bool setBold = false;
         public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password;
+        int selectedStorage = 1;
         string host = "cameradevice", user = "camerauser";
         List<string> videoFiles = new List<string>();
 
 
-        void readFolder()
+        void readFolder(string setFolder)
         {
             listBoxVideos.Items.Clear();
             comboBoxFolders.Items.Clear();
             comboBoxFolders.Text = "";
             try
             {
-                string[] videoFolder2 = File.ReadAllLines("settings.txt");
-                videoFolder = videoFolder2[0];
+                videoFolder = setFolder;
                 string[] folders = Directory.GetDirectories(videoFolder);
                 foreach (string folder in folders)
                 {
@@ -63,7 +63,7 @@ namespace CameraDevice
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            readFolder();
+            readFolder("\\\\cameradevice\\camerasystem");
         }
 
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
@@ -97,7 +97,15 @@ namespace CameraDevice
         }
         private void refreshVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            readFolder();
+            switch (selectedStorage)
+            {
+                case 1:
+                   readFolder("\\\\cameradevice\\camerasystem");
+                   break;
+                case 2:
+                   readFolder(driverPath);
+                   break;
+            }
         }
 
         private void listBoxVideos_SelectedIndexChanged(object sender, EventArgs e)
@@ -298,11 +306,11 @@ namespace CameraDevice
 
         private void FormMain_Activated(object sender, EventArgs e)
         {
-            if (checkFolder == true)
-            {
-                readFolder();
-            }
-            checkFolder = false;
+            /*  if (checkFolder == true)
+              {
+                  readFolder("\\\\cameradevice\\camerasystem");
+              }
+              checkFolder = false;*/
         }
 
         private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -326,6 +334,37 @@ namespace CameraDevice
         {
             FormTechnicalInfo hardware = new FormTechnicalInfo();
             hardware.ShowDialog();
+        }
+
+        private void localStorageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            readFolder("\\\\cameradevice\\camerasystem");
+            labelStorage.Text = "Storage type: Local Storage";
+            cloudStorageToolStripMenuItem.Checked = false;
+            localStorageToolStripMenuItem.Checked = true;
+            selectedStorage = 1;
+        }
+
+        private void cloudStorageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            
+            foreach (DriveInfo drives in allDrives)
+            {
+                if (drives.IsReady)
+                {
+                    if (drives.VolumeLabel == "GoogleDrive")
+                    {
+                        driverPath = drives.Name + "\\My Drive\\Recordings";
+                        MessageBox.Show(driverPath);
+                        readFolder(driverPath);
+                        labelStorage.Text = "Storage type: Cloud Storage";
+                        cloudStorageToolStripMenuItem.Checked = true;
+                        localStorageToolStripMenuItem.Checked = false;
+                        selectedStorage = 2;
+                    }
+                }
+            }
         }
     }
 }

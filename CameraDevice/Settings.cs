@@ -24,11 +24,8 @@ namespace CameraDevice
         {
             InitializeComponent();
         }
-
-        string[] videoFolder2 = File.ReadAllLines("settings.txt");
-        string videoFolder;
         string checkString, connString;
-        string drive, emailAlert, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder, rowsOfNumbers;
+        string drive, emailAlert, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder, rowsOfNumbers, changeDate;
         string user = "cameraruser";
         string password;
         string host = "cameradevice";
@@ -40,7 +37,6 @@ namespace CameraDevice
             connString = Properties.Settings.Default.Database;
             try
             {
-                labelFolder.Text = "Video folder: " + videoFolder2[0];
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "select * from settings;";
@@ -59,6 +55,7 @@ namespace CameraDevice
                     streamVideo2 = reader.GetInt32("stream").ToString();
                     textBoxRows.Text = reader.GetInt32("numberofrows").ToString();
                     emailAdress2 = reader.GetString("sendemail");
+                    changeDate = reader.GetDateTime("datechanged").ToString();
                 }
                 conn.Close();
 
@@ -111,6 +108,7 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
+            labelDateModified.Text = "Settingd last modified: " + changeDate;
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
@@ -178,11 +176,6 @@ namespace CameraDevice
                 MessageBox.Show(i.Message);
             }
 
-
-            string[] lines = File.ReadAllLines("settings.txt");
-            lines[0] = setFolder;
-            File.WriteAllLines("settings.txt", lines);
-
             try
             {
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
@@ -241,16 +234,6 @@ namespace CameraDevice
                 }
             }
 
-        }
-
-        private void buttonFolder_Click(object sender, EventArgs e)
-        {
-            if (folderBrowserDialogVideo.ShowDialog() == DialogResult.OK)
-            {
-                labelFolder.Text = labelFolder.Text = "Video folder: " + folderBrowserDialogVideo.SelectedPath;
-                setFolder = folderBrowserDialogVideo.SelectedPath;
-                Main.checkFolder = true;
-            }
         }
 
         private void textBoxStream_TextChanged(object sender, EventArgs e)

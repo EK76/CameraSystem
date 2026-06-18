@@ -21,7 +21,7 @@ namespace CameraDevice
         }
 
         string checkString, checkItem, compareString;
-        int counterItems = 0, indexItem;
+        int counterItems = 0, indexItemm, countRows;
         bool answer;
         string connString;
 
@@ -79,6 +79,13 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
+            conn.Open();
+            using (var cmd = new MySqlCommand("SELECT COUNT(*) FROM cameralogs", conn))
+            {
+                countRows = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            conn.Close();
+            labelCountRows.Text = "Total logs: " + countRows.ToString();
         }
 
         private void buttonBackup_Click(object sender, EventArgs e)

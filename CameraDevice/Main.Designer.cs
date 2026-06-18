@@ -33,6 +33,9 @@
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             saveVideosToolStripMenuItem = new ToolStripMenuItem();
+            openStorageToolStripMenuItem = new ToolStripMenuItem();
+            localStorageToolStripMenuItem = new ToolStripMenuItem();
+            cloudStorageToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             deleteVideosToolStripMenuItem = new ToolStripMenuItem();
@@ -59,6 +62,7 @@
             labelFileDate = new Label();
             labelFileSize = new Label();
             axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
+            labelStorage = new Label();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
             SuspendLayout();
@@ -83,7 +87,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveVideosToolStripMenuItem, exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveVideosToolStripMenuItem, openStorageToolStripMenuItem, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
@@ -92,14 +96,37 @@
             // 
             saveVideosToolStripMenuItem.Enabled = false;
             saveVideosToolStripMenuItem.Name = "saveVideosToolStripMenuItem";
-            saveVideosToolStripMenuItem.Size = new Size(136, 22);
+            saveVideosToolStripMenuItem.Size = new Size(180, 22);
             saveVideosToolStripMenuItem.Text = "Save Videos";
             saveVideosToolStripMenuItem.Click += saveVideosToolStripMenuItem_Click;
+            // 
+            // openStorageToolStripMenuItem
+            // 
+            openStorageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { localStorageToolStripMenuItem, cloudStorageToolStripMenuItem });
+            openStorageToolStripMenuItem.Name = "openStorageToolStripMenuItem";
+            openStorageToolStripMenuItem.Size = new Size(180, 22);
+            openStorageToolStripMenuItem.Text = "Open Storage";
+            // 
+            // localStorageToolStripMenuItem
+            // 
+            localStorageToolStripMenuItem.Checked = true;
+            localStorageToolStripMenuItem.CheckState = CheckState.Checked;
+            localStorageToolStripMenuItem.Name = "localStorageToolStripMenuItem";
+            localStorageToolStripMenuItem.Size = new Size(180, 22);
+            localStorageToolStripMenuItem.Text = "Local Storage";
+            localStorageToolStripMenuItem.Click += localStorageToolStripMenuItem_Click;
+            // 
+            // cloudStorageToolStripMenuItem
+            // 
+            cloudStorageToolStripMenuItem.Name = "cloudStorageToolStripMenuItem";
+            cloudStorageToolStripMenuItem.Size = new Size(180, 22);
+            cloudStorageToolStripMenuItem.Text = "Cloud Storage";
+            cloudStorageToolStripMenuItem.Click += cloudStorageToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(136, 22);
+            exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
@@ -173,19 +200,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(180, 22);
+            clearLogsToolStripMenuItem.Size = new Size(165, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(162, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(180, 22);
+            boldTextToolStripMenuItem.Size = new Size(165, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -193,7 +220,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(180, 22);
+            fontSizeToolStripMenuItem.Size = new Size(165, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -222,14 +249,14 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(165, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
+            shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
             // 
@@ -299,11 +326,22 @@
             axWindowsMediaPlayer1.Size = new Size(812, 571);
             axWindowsMediaPlayer1.TabIndex = 7;
             // 
+            // labelStorage
+            // 
+            labelStorage.AutoSize = true;
+            labelStorage.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelStorage.Location = new Point(301, 615);
+            labelStorage.Name = "labelStorage";
+            labelStorage.Size = new Size(177, 17);
+            labelStorage.TabIndex = 8;
+            labelStorage.Text = "Storage type: Local Storage";
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1446, 646);
+            Controls.Add(labelStorage);
             Controls.Add(axWindowsMediaPlayer1);
             Controls.Add(labelFileSize);
             Controls.Add(labelFileDate);
@@ -358,5 +396,9 @@
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
         private ToolStripMenuItem hardwareInfoToolStripMenuItem;
+        private Label labelStorage;
+        private ToolStripMenuItem openStorageToolStripMenuItem;
+        private ToolStripMenuItem localStorageToolStripMenuItem;
+        private ToolStripMenuItem cloudStorageToolStripMenuItem;
     }
 }

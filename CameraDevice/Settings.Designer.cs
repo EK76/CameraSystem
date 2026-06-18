@@ -39,9 +39,6 @@
             labelText3 = new Label();
             panel2 = new Panel();
             folderBrowserDialogVideo = new FolderBrowserDialog();
-            buttonFolder = new Button();
-            labelText4 = new Label();
-            labelFolder = new Label();
             checkBoxDrive = new CheckBox();
             textBoxRows = new TextBox();
             labelText5 = new Label();
@@ -54,7 +51,7 @@
             // buttonOk
             // 
             buttonOk.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonOk.Location = new Point(210, 482);
+            buttonOk.Location = new Point(211, 409);
             buttonOk.Margin = new Padding(4, 3, 4, 3);
             buttonOk.Name = "buttonOk";
             buttonOk.Size = new Size(96, 25);
@@ -66,7 +63,7 @@
             // buttonCancel
             // 
             buttonCancel.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonCancel.Location = new Point(327, 482);
+            buttonCancel.Location = new Point(328, 409);
             buttonCancel.Margin = new Padding(4, 3, 4, 3);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(96, 25);
@@ -163,40 +160,6 @@
             panel2.Size = new Size(475, 1);
             panel2.TabIndex = 9;
             // 
-            // buttonFolder
-            // 
-            buttonFolder.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonFolder.Location = new Point(23, 382);
-            buttonFolder.Margin = new Padding(4, 3, 4, 3);
-            buttonFolder.Name = "buttonFolder";
-            buttonFolder.Size = new Size(96, 25);
-            buttonFolder.TabIndex = 12;
-            buttonFolder.Text = "Browse";
-            buttonFolder.UseVisualStyleBackColor = true;
-            buttonFolder.Click += buttonFolder_Click;
-            // 
-            // labelText4
-            // 
-            labelText4.AutoSize = true;
-            labelText4.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelText4.Location = new Point(23, 362);
-            labelText4.Margin = new Padding(4, 0, 4, 0);
-            labelText4.Name = "labelText4";
-            labelText4.Size = new Size(144, 17);
-            labelText4.TabIndex = 13;
-            labelText4.Text = "Set main video folder.";
-            // 
-            // labelFolder
-            // 
-            labelFolder.AutoSize = true;
-            labelFolder.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelFolder.Location = new Point(28, 419);
-            labelFolder.Margin = new Padding(4, 0, 4, 0);
-            labelFolder.Name = "labelFolder";
-            labelFolder.Size = new Size(45, 17);
-            labelFolder.TabIndex = 14;
-            labelFolder.Text = "label1";
-            // 
             // checkBoxDrive
             // 
             checkBoxDrive.AutoSize = true;
@@ -265,7 +228,7 @@
             // labelDateModified
             // 
             labelDateModified.AutoSize = true;
-            labelDateModified.Location = new Point(29, 462);
+            labelDateModified.Location = new Point(25, 384);
             labelDateModified.Name = "labelDateModified";
             labelDateModified.Size = new Size(50, 16);
             labelDateModified.TabIndex = 21;
@@ -275,7 +238,7 @@
             // 
             AutoScaleDimensions = new SizeF(9F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(459, 519);
+            ClientSize = new Size(459, 450);
             Controls.Add(labelDateModified);
             Controls.Add(radioButtonBothSensors);
             Controls.Add(radioButtonSensor2);
@@ -283,9 +246,6 @@
             Controls.Add(labelText5);
             Controls.Add(textBoxRows);
             Controls.Add(checkBoxDrive);
-            Controls.Add(labelFolder);
-            Controls.Add(labelText4);
-            Controls.Add(buttonFolder);
             Controls.Add(panel2);
             Controls.Add(labelText3);
             Controls.Add(textBoxStream);
@@ -321,9 +281,6 @@
         private Label labelText3;
         private Panel panel2;
         private FolderBrowserDialog folderBrowserDialogVideo;
-        private Button buttonFolder;
-        private Label labelText4;
-        private Label labelFolder;
         private CheckBox checkBoxDrive;
         private TextBox textBoxRows;
         private Label labelText5;

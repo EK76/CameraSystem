@@ -35,12 +35,13 @@
             labelText = new Label();
             buttonBackup = new Button();
             comboBoxSelection = new ComboBox();
+            labelCountRows = new Label();
             SuspendLayout();
             // 
             // buttonClose
             // 
             buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonClose.Location = new Point(441, 669);
+            buttonClose.Location = new Point(516, 675);
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new Size(75, 25);
             buttonClose.TabIndex = 0;
@@ -54,7 +55,7 @@
             listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             listViewLogs.Location = new Point(9, 40);
             listViewLogs.Name = "listViewLogs";
-            listViewLogs.Size = new Size(507, 623);
+            listViewLogs.Size = new Size(583, 623);
             listViewLogs.TabIndex = 1;
             listViewLogs.UseCompatibleStateImageBehavior = false;
             listViewLogs.View = View.Details;
@@ -82,7 +83,7 @@
             // buttonBackup
             // 
             buttonBackup.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonBackup.Location = new Point(336, 669);
+            buttonBackup.Location = new Point(411, 675);
             buttonBackup.Name = "buttonBackup";
             buttonBackup.Size = new Size(99, 25);
             buttonBackup.TabIndex = 3;
@@ -95,15 +96,26 @@
             comboBoxSelection.FormattingEnabled = true;
             comboBoxSelection.Location = new Point(149, 8);
             comboBoxSelection.Name = "comboBoxSelection";
-            comboBoxSelection.Size = new Size(367, 23);
+            comboBoxSelection.Size = new Size(443, 23);
             comboBoxSelection.TabIndex = 4;
             comboBoxSelection.SelectedIndexChanged += comboBoxSelection_SelectedIndexChanged;
+            // 
+            // labelCountRows
+            // 
+            labelCountRows.AutoSize = true;
+            labelCountRows.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelCountRows.Location = new Point(12, 680);
+            labelCountRows.Name = "labelCountRows";
+            labelCountRows.Size = new Size(45, 17);
+            labelCountRows.TabIndex = 5;
+            labelCountRows.Text = "label1";
             // 
             // Logs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(528, 704);
+            ClientSize = new Size(604, 712);
+            Controls.Add(labelCountRows);
             Controls.Add(comboBoxSelection);
             Controls.Add(buttonBackup);
             Controls.Add(labelText);
@@ -129,5 +141,6 @@
         private ColumnHeader columnHeader2;
         private Button buttonBackup;
         private ComboBox comboBoxSelection;
+        private Label labelCountRows;
     }
 }
