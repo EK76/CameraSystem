@@ -166,7 +166,7 @@ mysqli_query($dbconnect, "delete from cameralogs where id not in (select id from
 or die (mysqli_error($dbconnect));
 ?>
 ```
-You can use crontab to run this updatesql for example every night at 2 o'clock.
+You can use crontab to run this updatesql for example every night at 2 o'clock. <br />
 **0 2 * * *  /home/camerauser/camerasystem/updatetable**
 
 I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
