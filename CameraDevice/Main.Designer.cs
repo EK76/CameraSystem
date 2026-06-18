@@ -41,6 +41,7 @@
             logsToolStripMenuItem = new ToolStripMenuItem();
             showVideoDetailsToolStripMenuItem = new ToolStripMenuItem();
             playVideoToolStripMenuItem = new ToolStripMenuItem();
+            hardwareInfoToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             clearLogsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -58,7 +59,6 @@
             labelFileDate = new Label();
             labelFileSize = new Label();
             axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
-            hardwareInfoToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
             SuspendLayout();
@@ -71,7 +71,6 @@
             comboBoxFolders.Size = new Size(279, 23);
             comboBoxFolders.TabIndex = 0;
             comboBoxFolders.SelectedIndexChanged += comboBoxFolders_SelectedIndexChanged;
-            comboBoxFolders.Click += comboBoxFolders_Click;
             // 
             // menuStrip1
             // 
@@ -129,14 +128,14 @@
             // refreshVideosToolStripMenuItem
             // 
             refreshVideosToolStripMenuItem.Name = "refreshVideosToolStripMenuItem";
-            refreshVideosToolStripMenuItem.Size = new Size(180, 22);
+            refreshVideosToolStripMenuItem.Size = new Size(174, 22);
             refreshVideosToolStripMenuItem.Text = "Refresh Videos";
             refreshVideosToolStripMenuItem.Click += refreshVideosToolStripMenuItem_Click;
             // 
             // logsToolStripMenuItem
             // 
             logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            logsToolStripMenuItem.Size = new Size(180, 22);
+            logsToolStripMenuItem.Size = new Size(174, 22);
             logsToolStripMenuItem.Text = "Logs";
             logsToolStripMenuItem.Click += logsToolStripMenuItem_Click;
             // 
@@ -145,7 +144,7 @@
             showVideoDetailsToolStripMenuItem.Checked = true;
             showVideoDetailsToolStripMenuItem.CheckState = CheckState.Checked;
             showVideoDetailsToolStripMenuItem.Name = "showVideoDetailsToolStripMenuItem";
-            showVideoDetailsToolStripMenuItem.Size = new Size(180, 22);
+            showVideoDetailsToolStripMenuItem.Size = new Size(174, 22);
             showVideoDetailsToolStripMenuItem.Text = "Show Video Details";
             showVideoDetailsToolStripMenuItem.Click += showVideoDetailsToolStripMenuItem_Click;
             // 
@@ -153,9 +152,16 @@
             // 
             playVideoToolStripMenuItem.Enabled = false;
             playVideoToolStripMenuItem.Name = "playVideoToolStripMenuItem";
-            playVideoToolStripMenuItem.Size = new Size(180, 22);
+            playVideoToolStripMenuItem.Size = new Size(174, 22);
             playVideoToolStripMenuItem.Text = "Play Video";
             playVideoToolStripMenuItem.Click += playVideoToolStripMenuItem_Click;
+            // 
+            // hardwareInfoToolStripMenuItem
+            // 
+            hardwareInfoToolStripMenuItem.Name = "hardwareInfoToolStripMenuItem";
+            hardwareInfoToolStripMenuItem.Size = new Size(174, 22);
+            hardwareInfoToolStripMenuItem.Text = "Hardware Info";
+            hardwareInfoToolStripMenuItem.Click += hardwareInfoToolStripMenuItem_Click;
             // 
             // toolsToolStripMenuItem
             // 
@@ -292,13 +298,6 @@
             axWindowsMediaPlayer1.OcxState = (AxHost.State)resources.GetObject("axWindowsMediaPlayer1.OcxState");
             axWindowsMediaPlayer1.Size = new Size(812, 571);
             axWindowsMediaPlayer1.TabIndex = 7;
-            // 
-            // hardwareInfoToolStripMenuItem
-            // 
-            hardwareInfoToolStripMenuItem.Name = "hardwareInfoToolStripMenuItem";
-            hardwareInfoToolStripMenuItem.Size = new Size(180, 22);
-            hardwareInfoToolStripMenuItem.Text = "Hardware Info";
-            hardwareInfoToolStripMenuItem.Click += hardwareInfoToolStripMenuItem_Click;
             // 
             // Main
             // 

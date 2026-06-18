@@ -79,8 +79,6 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
-
-
         }
 
         private void buttonBackup_Click(object sender, EventArgs e)

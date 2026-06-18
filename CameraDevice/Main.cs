@@ -91,8 +91,6 @@ namespace CameraDevice
                 listBoxVideos.Items.Add(item);
 
             }
-
-
             labelFileCount.Text = "Number of videos: " + countFiles.ToString();
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
@@ -306,10 +304,6 @@ namespace CameraDevice
             }
             checkFolder = false;
         }
-        private void comboBoxFolders_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -317,12 +311,13 @@ namespace CameraDevice
             DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                using (var client = new SshClient(host, user, password))
-                {
-                    client.Connect();
-                    var output = client.RunCommand("sudo shutdown now");
-                    client.Disconnect();
-                }
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo shutdown now";
+                process.StartInfo = startInfo;
+                process.Start();
                 MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!");
             }
         }
