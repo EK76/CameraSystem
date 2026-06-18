@@ -1,48 +1,37 @@
 # CameraDevice
 
-The goal with this IT project project was to record videos with certain length when a motion sensor was triggered. This project contains of two motion sensors. 
-The recordings are saved automatically to local hard drive. It is possible to watch these video recordings with the Visual Studio C# project or with a 3rd-party application
+The goal with this IT project project was to record videos with a certain length when a motion sensor was triggered. This project contains of two motion sensors. 
+The recordings are saved automatically to local hard drive and optionally to cloud share with help of a usb camera. For cloud share I have used Google drive. Search online with the phrase 
+*"How to setup Google drive share in linux"* to learn more about to setup Google drive in linux. 
+
+It is also possible to watch or delete these video recordings from local storage or 
+from cloushare with the Visual Studio C# project or with a 3rd-party application. It is even possible to send notifications to a email adress of your choosing. Search online with the phrase 
+*"How to setup email notifications in linux"* to learn more about to setup email notifications. In my case I used a Google account.
  
 ### Requirements for this Visual Studio C# project.
 - .NET 9.0
 -  C# language version 13.0
 
-You can also optionally 
-- Copy the same recording at same time when the sensor motion is trigged to a cloud share. For cloud share I have used Google drive. Search online with the phrase "How to setup Google drive share in linux" to learn more about to setup Google drive in linux.
-  (For moment you can't view cloud shares with help of the Visual Studio C# project). But the next version will be able to manage also the cloudshare.
-- Send notifications to a email adress of your choosing. Search online with the phrase "How to setup email notifications in linux" to learn more about to setup email notifications. In my case I used a Google account.
-- Delete video recordings.
-
 ### List over the hardware for this project.
 - Raspberry Pi 5
-- Raspberry Pi camera module 3
+- Usb camera
 - 2 PIR motion sensors
 
-Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged.
-The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
+Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged. The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
 
-### Raspberry Pi camera module 3
+### The installation of library for using usb camera.
 
-<img width="126" height="119" alt="cameramodule3" src="https://github.com/user-attachments/assets/83a743a1-d3f6-4641-ba1c-f902c450003d" />
+In my case I used the opencv library for controlling the usb camera with python.
+How to install the opencv library for python.
 
-Camera module 3 comes with an improved 12MP IMX708 Quad Bayer sensor and features a high dynamic range mode.
-The following schema below this text shows how Raspberry Pi 5 and Raspberry Pi camera module 3 are connected to each other using a 15-22pin FPC cable. The MIPI-csi connector of the Raspberry Pi 5 is 22pin, while the Camera Module 3 uses a 15pin connector.
-
-<img width="338" height="146" alt="cameraschema" src="https://github.com/user-attachments/assets/35b0accc-21f2-4893-b123-261b108a4a0d" />
-
-### The installation of Raspberry Pi camera module 3 library.
-
-In my case I used the picamzero library for controlling the Camera Module 3 with python.
-How to install the picamzero library for python.
-
-#### Raspberry Pi OS (Recommended):
+#### Raspberry Pi OS (Recommended).
 ```
 sudo apt update
-sudo apt install python3-python3-picamzero
+sudo apt install python3-opencv
 ```
 #### Using pip (For other OS or virtual environments):
 ```
-sudo pip3 install picamzero
+sudo pip3 install python3-opencv-python
 ```
 ### PIR motion sensor
 
@@ -130,7 +119,7 @@ Restart=on-aboirt
 WantedBy=multi-user.target
 ```
 Both my mysql password and email token for the pyhton script are located at /etc/controldevice/controldevice.conf file.
-You should always consider to hide senstavie information, for example password. On way to achieve this is to use environment variables.
+You should always consider to hide sensative information, for example password. On way to achieve this is to use environment variables.
 I also created another service, gdrive.service that controls the cloudshare, in my case Google drive.
 ```
 [Unit]
@@ -177,10 +166,12 @@ mysqli_query($dbconnect, "delete from cameralogs where id not in (select id from
 or die (mysqli_error($dbconnect));
 ?>
 ```
+You can use crontab to run this updatesql for example every night at 2 o'clock.
+**0 2 * * *  /home/camerauser/camerasystem/updatetable**
+
 I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
 MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
 
 ### Picture about this project.
 
-##### Visual Studio C# version.
 <img width="1442" height="671" alt="Screenshot 2026-04-26 174605" src="https://github.com/user-attachments/assets/6c0a1456-8bd8-4dc8-99d2-a5981a2dae00" />
