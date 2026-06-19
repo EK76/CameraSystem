@@ -4,7 +4,7 @@ The goal with this IT project project was to record videos with a certain length
 The recordings are saved automatically to local hard drive and optionally to cloud share with help of a usb camera. For cloud share I have used Google drive. Search online with the phrase 
 *"How to setup Google drive share in linux"* to learn more about to setup Google drive in linux. 
 
-It is also possible to watch or delete these video recordings from local storage or 
+It is also possible to watch or delete these video recordings both from local storage and
 from cloushare with the Visual Studio C# project or with a 3rd-party application. It is even possible to send notifications to a email adress of your choosing. Search online with the phrase 
 *"How to setup email notifications in linux"* to learn more about to setup email notifications. In my case I used a Google account.
  
@@ -19,10 +19,12 @@ from cloushare with the Visual Studio C# project or with a 3rd-party application
 
 Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged. The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
 
-### The installation of library for using usb camera.
+### USB camera.
 
 In my case I used the opencv library for controlling the usb camera with python.
 How to install the opencv library for python.
+
+### The installation of library for using usb camera.
 
 #### Raspberry Pi OS (Recommended).
 ```
@@ -140,8 +142,9 @@ ExecStop=fusermount -u /home/camerauser/gdrive
 [Install]
 WantedBy=multi-user.target
 ```
-This project also cointain of php file (updatesql) that works like a cli application, which purpose is to delete all rows for the table cameralogs, except the newest rows according to the value $row[6]
-In order for updatesql can run as cli application you must put #!/usr/bin/env php as the first row in updatesql and make the file runnable with chmod 777 updatesql.  You also must install php for example
+This project also cointain of php file (updatesql) that works like a cli application, which purpose is to delete all rows for the table cameralogs, except the newest rows according to the value **$row[6]**
+In order for updatesql can run as cli application you must put **#!/usr/bin/env php** as the first row in updatesql and make the file runnable with **chmod 777 updatesql**.  You also must install php to your
+operatings system.
 
 ```
 sudo apt install php php-cli php-fpm
@@ -166,7 +169,7 @@ mysqli_query($dbconnect, "delete from cameralogs where id not in (select id from
 or die (mysqli_error($dbconnect));
 ?>
 ```
-You can use crontab to run this updatesql for example every night at 2 o'clock. <br />
+You can use crontab to run this updatesql for example every night at 2 o'clock, by adding this line to rhe crontab config file. <br />
 **0 2 * * *  /home/camerauser/camerasystem/updatetable**
 
 I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
