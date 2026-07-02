@@ -35,6 +35,7 @@ namespace CameraDevice
         private void FormSettings_Load(object sender, EventArgs e)
         {
             connString = Properties.Settings.Default.Database;
+            password = Properties.Settings.Default.Password;
             try
             {
                 MySqlConnection conn = new MySqlConnection(connString);
@@ -162,7 +163,7 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice = '" + setChoice +"', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice = '" + setChoice + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "' where id = 1;";
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 command.ExecuteReader();
                 conn.Close();
@@ -182,7 +183,7 @@ namespace CameraDevice
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo systemctl restart cameradevice.service";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerarestart.sh";
                 process.StartInfo = startInfo;
                 process.Start();
             }
@@ -238,7 +239,7 @@ namespace CameraDevice
 
         private void textBoxStream_TextChanged(object sender, EventArgs e)
         {
-            if ((textBoxStream.Text.Length > 0) && (noneEmail == false))
+            if (textBoxStream.Text.Length > 0)
             {
                 buttonOk.Enabled = true;
             }
@@ -310,6 +311,23 @@ namespace CameraDevice
             radioButtonSensor1.Checked = false;
             radioButtonSensor2.Checked = false;
             radioButtonBothSensors.Checked = true;
+        }
+
+        private void textBoxRows_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxRows.Text.Length > 0)
+            {
+                buttonOk.Enabled = true;
+            }
+            else
+            {
+                buttonOk.Enabled = false;
+            }
+        }
+
+        private void textBoxRows_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
     }
 }

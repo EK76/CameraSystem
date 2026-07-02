@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CameraDevice.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="password" Type="System.String" Scope="User">
+    <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)">test11</Value>
     </Setting>
     <Setting Name="Database" Type="System.String" Scope="User">

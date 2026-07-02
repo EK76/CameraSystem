@@ -26,12 +26,12 @@ namespace CameraDevice.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("test11")]
-        public string password {
+        public string Password {
             get {
-                return ((string)(this["password"]));
+                return ((string)(this["Password"]));
             }
             set {
-                this["password"] = value;
+                this["Password"] = value;
             }
         }
         

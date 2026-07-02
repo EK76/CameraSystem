@@ -179,6 +179,8 @@
             textBoxRows.Name = "textBoxRows";
             textBoxRows.Size = new Size(54, 22);
             textBoxRows.TabIndex = 16;
+            textBoxRows.TextChanged += textBoxRows_TextChanged;
+            textBoxRows.KeyPress += textBoxRows_KeyPress;
             // 
             // labelText5
             // 

@@ -4,7 +4,8 @@ import time
 import datetime
 import mysql.connector
 from gpiozero import MotionSensor
-from gpiozero.tools import any_values
+from gpiozero import LED
+
 import smtplib 
 from rclone_python import rclone
 from rclone_python.remote_types import RemoteTypes
@@ -34,18 +35,57 @@ def streamVideo():
       output.write(frame)
       test = 1
    output.release()
-
-recordingTime = 10
 stream = cv2.VideoCapture(0)
+
+def motionShow():
+   global alertText
+   match motionChoice:
+      case 1:
+        print("Waiting for motion on sensor 1.")
+        alertText = "Motion detected on sensor 1. "
+        motionLed1.on()
+        motionLed2.off()
+        motionSensor1.wait_for_motion()
+      case 2:
+        print("Waiting for motion on sensor 2.")  
+        alertText = "Motion detected on sensor 2. "
+        motionLed1.off()
+        motionLed2.on()
+        motionSensor2.wait_for_motion()
+      case 3:
+        print("Waiting for motion on either sensor.")
+        alertText = "Motion detected on both sensor. "
+        motionLed1.on()
+        motionLed2.on()
+        while not motionSensor1.motion_detected and not motionSensor2.motion_detected:
+          time.sleep(0.1)
+          continue 
+
+def enableChoice():
+  if enableDrive == 'True':
+    if not checkfolder2:
+      os.mkdir(createfolder2)   
+    print(checkfolder2)
+    print(createfolder + "/video" + str(filecount) +".mp4")
+    copyfrom = createfolder + "/video" + str(filecount) +".mp4"
+    rclone.copy(copyfrom, createfolder2)
+    print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")    
+  if enableEmail == 'True':
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(username, password)
+    server.sendmail('Camera alert',sendEmail, alertText)
+    print("Email sent")
 
 motionSensor1 = MotionSensor(12)
 motionSensor2 = MotionSensor(16)
+motionLed1 = LED(23)
+motionLed2 = LED(24)
 username = 'ken.ekholm76@gmail.com'
-password = os.environ["googlepass"]
+password = os.environ["googlemessage"]
 
 
 try:
-
   dbinfo = dbconfig.cursor()
   query = "insert into cameralogs(logtext) values ('Camera device started.')"
   dbinfo.execute(query)
@@ -58,31 +98,12 @@ try:
   enableEmail = row[1]
   enableDrive = row[2]
   sendEmail = row[3]
-  setStreamtime = row[4]
+  recordingTime = row[4]
   motionChoice = row[7]
   dbconfig.commit()
 
-
-  print(motionChoice);
-  delaytime = time.time() + setStreamtime
-
   while True:
-    match motionChoice:
-      case 1:
-        print("Waiting for motion on sensor 1.")
-        alertText = "Motion detected on sensor 1. "
-        motionSensor1.wait_for_motion()
-      case 2:
-        print("Waiting for motion on sensor 2.")  
-        alertText = "Motion detected on sensor 2. "
-        motionSensor2.wait_for_motion()
-      case 3:
-        print("Waiting for motion on either sensor.")
-        alertText = "Motion detected on both sensor. "
-        while not motionSensor1.motion_detected and not motionSensor2.motion_detected:
-          time.sleep(0.1)
-          continue 
-     
+    motionShow()
 
     print("Recording feed.")
     now = datetime.datetime.now()
@@ -95,42 +116,25 @@ try:
   
     if not checkfolder:
       os.mkdir(createfolder, mode=0o777)
-    else:
-      filecount = next(os.walk(createfolder))[2]
-      print(len(filecount))
-      filecount = len(filecount)
-      filecount = filecount + 1
-      streamVideo()
-      print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
+      print("Folder created.")
+
+    filecount = next(os.walk(createfolder))[2]
+    print(len(filecount))
+    filecount = len(filecount)
+    filecount = filecount + 1
+    streamVideo()
+    print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
 
     alertText = alertText + " '" + datefolder + "/video" + str(filecount) + "'";
     query = "insert into cameralogs (logtext) values (%s)"
     dbinfo.execute(query, [alertText])
     dbconfig.commit()
 
-    if enableDrive == 'True':
-      if not checkfolder2:
-        os.mkdir(createfolder2)
-      else:
-        print(checkfolder2)
-        print(createfolder + "/video" + str(filecount) +".mp4")
-        copyfrom = createfolder + "/video" + str(filecount) +".mp4"
-        rclone.copy(copyfrom, createfolder2)
-        print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")
-          
-    if enableEmail == 'True':
-      try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(username, password)
-        server.sendmail('Camera alert',sendEmail, alertText)
-        print("Email sent")
-      except Exception as e:
-        print(f"Error: {e}")
-#    pir.wait_for_no_motion()  
+    enableChoice()
+    
   stream.release()
 except mysql.connector.Error as error:
     print("Failed to insert record into table {}".format(error))
 except KeyboardInterrupt:
     print("Exit!")
-#    GPIO.cleanup()  
+    GPIO.cleanup()  

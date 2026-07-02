@@ -80,7 +80,7 @@ namespace CameraDevice
                 MessageBox.Show(i.Message);
             }
             conn.Open();
-            using (var cmd = new MySqlCommand("SELECT COUNT(*) FROM cameralogs", conn))
+            using (var cmd = new MySqlCommand("select count(*) from cameralogs", conn))
             {
                 countRows = Convert.ToInt32(cmd.ExecuteScalar());
             }
