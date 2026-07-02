@@ -17,12 +17,14 @@ from cloushare with the Visual Studio C# project or with a 3rd-party application
 - Usb camera
 - 2 PIR motion sensors
 
-Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged. The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project.
+Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged. 
+The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project. In my case the python script is located at /home/camerauser/camerasystem and I have chosen
+camerauser as my username for Raspberry Pi 5 device.
 
 ### USB camera.
+<img width="202" height="182" alt="usbcamera" src="https://github.com/user-attachments/assets/17e0fe59-68d8-4e98-9dc2-6c02407fb6fc" />
 
 In my case I used the opencv library for controlling the usb camera with python.
-How to install the opencv library for python.
 
 ### The installation of library for using usb camera.
 
@@ -41,9 +43,6 @@ sudo pip3 install python3-opencv-python
 
 I used the this PIR HC-SR501 as my sensor motion. At the core of many smart automation devices lies the powerful PIR Sensor. 
 It stands for Passive Infrared Sensor and relies on infrared sensing technology to detect the motion of objects.
-
-The following schema below this text shows how Raspberry Pi 5 and motion sensor are connected to each other.
-<img width="362" height="257" alt="image" src="https://github.com/user-attachments/assets/b0f1249e-f78d-47fb-a6ee-357365dfe7b3" />
 
 The connection between Raspberry PI5 and sensor motions.
 - Both motion sensor's pin labelled VCC is connected to the 5V pin on the Raspberry Pi5. 
@@ -107,21 +106,40 @@ I have created a service which I have named camerasystem.service that when one o
 ```
 [Unit]
 Description=Control Cameradevice.
-After=network.target
+After=gdrive.service
 
 [Service]
 Type=simple
+ExecStartPre=/bin/sleep 30
 EnvironmentFile=/etc/cameradevice/cameradevice.conf
 WorkingDirectory=/home/camerauser/camerasystem/
 User=camerauser
 ExecStart=/usr/bin/python3 /home/camerauser/camerasystem/camera.py
-Restart=on-aboirt
+Restart=on-abort
 
 [Install]
 WantedBy=multi-user.target
 ```
 Both my mysql password and email token for the pyhton script are located at /etc/controldevice/controldevice.conf file.
 You should always consider to hide sensative information, for example password. On way to achieve this is to use environment variables.
+
+To use this cameradevice service without sudo password from Visual Studio C# project, I created a simple bash script, **camerarestart.sh**
+```
+sudo systemctl restart cameradevice
+```
+As the next step I put this line at bottom of /etc/sudoers file with the help of sudo visudo.
+```
+camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/camerarestart.sh
+```
+The same procedure is also done if you wan't to shutdown the device from Visual Studio C# project, then you can create a bashscript  **camerashutdown.sh**
+```
+sudo shutdown now
+```
+Put this line at bottom of /etc/sudoers file with the help of sudo visudo.
+```
+camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/camerarshutdown.sh
+```
+
 I also created another service, gdrive.service that controls the cloudshare, in my case Google drive.
 ```
 [Unit]
@@ -171,6 +189,11 @@ or die (mysqli_error($dbconnect));
 ```
 You can use crontab to run this updatesql for example every night at 2 o'clock, by adding this line to rhe crontab config file. <br />
 **0 2 * * *  /home/camerauser/camerasystem/updatetable**
+
+To use this updatesql without sudo password, put this line at bottom of /etc/sudoers file with the help of sudo visudo.
+```
+camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/updatesql
+```
 
 I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
 MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
