@@ -36,8 +36,8 @@ namespace CameraDevice
         bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
         {
-            connString = Properties.Settings.Default.Database;
-            password = Properties.Settings.Default.Password;
+            connString = HomeAssistant.Properties.Settings.Default.Database;
+            password = HomeAssistant.Properties.Settings.Default.Password;
             try
             {
                 MySqlConnection conn = new MySqlConnection(connString);
