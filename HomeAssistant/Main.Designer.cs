@@ -386,7 +386,7 @@
             MaximizeBox = false;
             Name = "Main";
             ShowIcon = false;
-            Text = "Camera Device";
+            Text = "Home Assistant";
             Activated += FormMain_Activated;
             Load += FormMain_Load;
             menuStrip1.ResumeLayout(false);

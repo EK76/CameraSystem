@@ -32,7 +32,7 @@ namespace CameraDevice
 
         private void FormLogs_Load(object sender, EventArgs e)
         {
-            connString = Properties.Settings.Default.Database;
+            connString = HomeAssistant.Properties.Settings.Default.Database;
             MySqlConnection conn = new MySqlConnection(connString);
             compareString = "Camera recording value was changed";
             

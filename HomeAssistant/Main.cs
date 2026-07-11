@@ -51,7 +51,7 @@ namespace CameraDevice
 
         void showSensorValue()
         {
-            connString = Properties.Settings.Default.Database;
+            connString = HomeAssistant.Properties.Settings.Default.Database;
             MySqlConnection conn = new MySqlConnection(connString);
             try
             {
@@ -354,7 +354,7 @@ namespace CameraDevice
 
         private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            password = Properties.Settings.Default.Password;
+            password = HomeAssistant.Properties.Settings.Default.Password;
             DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
@@ -438,8 +438,8 @@ namespace CameraDevice
         {
             try
             {
-                connString = Properties.Settings.Default.Database;
-                password = Properties.Settings.Default.Password;
+                connString = HomeAssistant.Properties.Settings.Default.Database;
+                password = HomeAssistant.Properties.Settings.Default.Password;
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "select * from settings;";

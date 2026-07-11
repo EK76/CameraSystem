@@ -20,7 +20,9 @@ namespace CameraDevice
 
        
         string checkString, connString;
-        
+
+        public object HomeAssistProperties { get; private set; }
+
         private void buttonNo_Click(object sender, EventArgs e)
         {
             Close();
@@ -30,7 +32,7 @@ namespace CameraDevice
         {
             try
             {
-                connString = Properties.Settings.Default.Database;
+                connString = HomeAssistant.Properties.Settings.Default.Database;
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "delete from cameralogs";
