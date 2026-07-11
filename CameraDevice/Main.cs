@@ -13,7 +13,6 @@ namespace CameraDevice
 {
     public partial class Main : System.Windows.Forms.Form
     {
-
         public Main()
         {
             InitializeComponent();
@@ -26,7 +25,6 @@ namespace CameraDevice
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString;
         int selectedStorage = 1, setChoice, showMotionValue;
         List<string> videoFiles = new List<string>();
-
 
         void readFolder(string setFolder)
         {
