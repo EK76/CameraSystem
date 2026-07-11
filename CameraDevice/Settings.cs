@@ -10,6 +10,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace CameraDevice
 {
     public partial class FormSettings : Form
     {
+        public static bool checkSensors = false;
         public FormSettings()
         {
             InitializeComponent();
@@ -295,6 +297,7 @@ namespace CameraDevice
             radioButtonSensor1.Checked = true;
             radioButtonSensor2.Checked = false;
             radioButtonBothSensors.Checked = false;
+            checkSensors = true;
         }
 
         private void radioButtonSensor2_Click(object sender, EventArgs e)
@@ -303,6 +306,7 @@ namespace CameraDevice
             radioButtonSensor1.Checked = false;
             radioButtonSensor2.Checked = true;
             radioButtonBothSensors.Checked = false;
+            checkSensors = true;
         }
 
         private void radioButtonBothSensors_Click(object sender, EventArgs e)
@@ -311,6 +315,7 @@ namespace CameraDevice
             radioButtonSensor1.Checked = false;
             radioButtonSensor2.Checked = false;
             radioButtonBothSensors.Checked = true;
+            checkSensors = true;
         }
 
         private void textBoxRows_TextChanged(object sender, EventArgs e)

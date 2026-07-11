@@ -13,6 +13,7 @@ namespace CameraDevice
 {
     public partial class Main : System.Windows.Forms.Form
     {
+
         public Main()
         {
             InitializeComponent();
@@ -23,7 +24,7 @@ namespace CameraDevice
         bool setBold = false;
         public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString;
-        int selectedStorage = 1, setChoice;
+        int selectedStorage = 1, setChoice, showMotionValue;
         List<string> videoFiles = new List<string>();
 
 
@@ -48,6 +49,52 @@ namespace CameraDevice
             }
         }
 
+        void showSensorValue()
+        {
+            connString = Properties.Settings.Default.Database;
+            MySqlConnection conn = new MySqlConnection(connString);
+            try
+            {
+                conn.Open();
+                checkString = "select * from settings;";
+                Clipboard.SetText(checkString);
+                MySqlCommand command = new MySqlCommand(checkString, conn);
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    showMotionValue = reader.GetInt32("motionchoice");
+                }
+                conn.Close();
+            }
+            catch (Exception i)
+            {
+                MessageBox.Show(i.Message);
+            }
+
+            switch (showMotionValue)
+            {
+                case 1:
+                    labelSensor.Text = "Motion sensor 1 is enabled";
+                    labelSensor.ForeColor = Color.Green;
+                    labelSensor2.Text = "Motion sensor 2 is disabled";
+                    labelSensor2.ForeColor = Color.Red;
+                    break;
+                case 2:
+                    labelSensor.Text = "Motion sensor 1 is disabled";
+                    labelSensor.ForeColor = Color.Red;
+                    labelSensor2.Text = "Motion sensor 2 is enabled";
+                    labelSensor2.ForeColor = Color.Green;
+                    break;
+                case 3:
+                    labelSensor.Text = "Motion sensor 1 is enabled";
+                    labelSensor.ForeColor = Color.Green;
+                    labelSensor2.Text = "Motion sensor 2 is enabled";
+                    labelSensor2.ForeColor = Color.Green;
+                    break;
+            }
+        }
+
+
         void playVideo()
         {
             var playVideo = new ProcessStartInfo(selectedVideo)
@@ -63,6 +110,7 @@ namespace CameraDevice
 
         private void FormMain_Load(object sender, EventArgs e)
         {
+            showSensorValue();
             readFolder("\\\\cameradevice\\camerasystem");
         }
 
@@ -77,7 +125,6 @@ namespace CameraDevice
             FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
             foreach (FileInfo file in files)
             {
-                //    var file2 = new FileInfo(file);
                 if (file.Extension == ".mp4")
                 {
                     listBoxVideos.Items.Add(file.Name);
@@ -296,11 +343,13 @@ namespace CameraDevice
 
         private void FormMain_Activated(object sender, EventArgs e)
         {
-            /*  if (checkFolder == true)
-              {
-                  readFolder("\\\\cameradevice\\camerasystem");
-              }
-              checkFolder = false;*/
+            if (FormSettings.checkSensors == true)
+            {
+               showSensorValue();
+               readFolder("\\\\cameradevice\\camerasystem");
+               MessageBox.Show("Settings have been updated, please check the changes", "Camera Device");
+            }
+            FormSettings.checkSensors = false;
         }
 
         private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)

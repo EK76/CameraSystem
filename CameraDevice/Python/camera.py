@@ -28,12 +28,10 @@ def streamVideo():
    frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
    output = cv2.VideoWriter(createfolder + '/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
-   test = 0
    startTime = time.time()
    while(int(time.time() - startTime) < recordingTime):
       ret, frame = stream.read()
       output.write(frame)
-      test = 1
    output.release()
 stream = cv2.VideoCapture(0)
 
@@ -74,7 +72,9 @@ def enableChoice():
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(username, password)
-    server.sendmail('Camera alert',sendEmail, alertText)
+    message = 'Subject: {}\n\n{}'.format("Camera alert", alertText)
+#   server.sendmail("Camera alert",sendEmail, alertText)
+    server.sendmail("Camera alert",sendEmail, message)
     print("Email sent")
 
 motionSensor1 = MotionSensor(12)
@@ -83,7 +83,6 @@ motionLed1 = LED(23)
 motionLed2 = LED(24)
 username = 'ken.ekholm76@gmail.com'
 password = os.environ["googlemessage"]
-
 
 try:
   dbinfo = dbconfig.cursor()
@@ -109,8 +108,8 @@ try:
     now = datetime.datetime.now()
     datefolder = now.strftime("%d_%m_%Y")
     timefile = now.strftime("%H:%M:%S")
-    createfolder = "/media/usbdrive/camerasystem/"+datefolder
-    createfolder2 = "/home/camerauser/gdrive/Recordings/"+datefolder
+    createfolder = "/media/usbdrive/camerasystem/camera1/"+datefolder
+    createfolder2 = "/home/camerauser/gdrive/Recordings/camera1/"+datefolder
     checkfolder = os.path.isdir(createfolder)
     checkfolder2 = os.path.isdir(createfolder2)
   
