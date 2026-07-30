@@ -1,4 +1,5 @@
 using Microsoft.VisualBasic.ApplicationServices;
+using MySql.Data.MySqlClient;
 using ReadTemp;
 using Renci.SshNet;
 using System.Collections;
@@ -10,31 +11,31 @@ using System.Reflection;
 
 namespace CameraDevice
 {
-    public partial class Main : System.Windows.Forms.Form
+    public partial class FormMain : System.Windows.Forms.Form
     {
-        public Main()
+        public FormMain()
         {
             InitializeComponent();
         }
 
-        string videoFolder;
+        string videoFolder, driverPath;
         int countFiles, counterItems, countVideos = 0;
         bool setBold = false;
         public static bool checkFolder = false;
-        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password;
-        string host = "cameradevice", user = "camerauser";
+        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString;
+        public static string selectedStoragePath;
+        int setChoice, showMotionValue, showDetectionValue;
+        public static int selectedStorage = 1;
         List<string> videoFiles = new List<string>();
 
-
-        void readFolder()
+        void readFolder(string setFolder)
         {
             listBoxVideos.Items.Clear();
             comboBoxFolders.Items.Clear();
             comboBoxFolders.Text = "";
             try
             {
-                string[] videoFolder2 = File.ReadAllLines("settings.txt");
-                videoFolder = videoFolder2[0];
+                videoFolder = setFolder;
                 string[] folders = Directory.GetDirectories(videoFolder);
                 foreach (string folder in folders)
                 {
@@ -44,9 +45,74 @@ namespace CameraDevice
             }
             catch (Exception info)
             {
-                MessageBox.Show("he path to video recordings is not available");
+                MessageBox.Show("The path to video recordings is not available");
             }
         }
+
+        void showSensorValue()
+        {
+            connString = HomeAssistant.Properties.Settings.Default.Database;
+            MySqlConnection conn = new MySqlConnection(connString);
+            try
+            {
+                conn.Open();
+                checkString = "select * from settings;";
+                Clipboard.SetText(checkString);
+                MySqlCommand command = new MySqlCommand(checkString, conn);
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    showMotionValue = reader.GetInt32("motionchoice");
+                    showDetectionValue = reader.GetInt32("openstatus");
+                }
+                conn.Close();
+            }
+            catch (Exception i)
+            {
+                MessageBox.Show(i.Message);
+            }
+
+            switch (showMotionValue)
+            {
+                case 1:
+                    labelSensor.Text = "Motion sensor 1 is enabled";
+                    labelSensor.ForeColor = Color.Green;
+                    labelSensor2.Text = "Motion sensor 2 is disabled";
+                    labelSensor2.ForeColor = Color.Red;
+                    break;
+                case 2:
+                    labelSensor.Text = "Motion sensor 1 is disabled";
+                    labelSensor.ForeColor = Color.Red;
+                    labelSensor2.Text = "Motion sensor 2 is enabled";
+                    labelSensor2.ForeColor = Color.Green;
+                    break;
+                case 3:
+                    labelSensor.Text = "Motion sensor 1 is enabled";
+                    labelSensor.ForeColor = Color.Green;
+                    labelSensor2.Text = "Motion sensor 2 is enabled";
+                    labelSensor2.ForeColor = Color.Green;
+                    break;
+                case 4:
+                    labelSensor.Text = "Motion sensor 1 is disabled";
+                    labelSensor.ForeColor = Color.Red;
+                    labelSensor2.Text = "Motion sensor 2 is disabled";
+                    labelSensor2.ForeColor = Color.Red;
+                    break;
+            }
+
+            switch (showDetectionValue)
+            {
+                case 1:
+                    labelDetection.Text = "Open detection is enabled";
+                    labelDetection.ForeColor = Color.Green;
+                    break;
+                case 2:
+                    labelDetection.Text = "Open detection is disabled";
+                    labelDetection.ForeColor = Color.Red;
+                    break;
+            }
+        }
+
 
         void playVideo()
         {
@@ -63,51 +129,56 @@ namespace CameraDevice
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-
-
-            readFolder();
+            showSensorValue();
+            selectedStoragePath = "\\\\cameradevice\\camerasystem";
+            readFolder(selectedStoragePath);
         }
 
         private void comboBoxFolders_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ArrayList listItems = new ArrayList();
-            string[] files = Directory.GetFiles(videoFolder + "\\" + comboBoxFolders.Text, "*.mp4");
             listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
             listBoxVideos.Items.Clear();
             countFiles = 0;
 
-
-            foreach (string file in files)
+            listBoxVideos.Items.Clear();
+            DirectoryInfo info = new DirectoryInfo(listAllVideos);
+            FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
+            foreach (FileInfo file in files)
             {
-                var file2 = new FileInfo(file);
-                listItems.Add(file2.Name);
-                countFiles++;
-
+                if (file.Extension == ".mp4")
+                {
+                    listBoxVideos.Items.Add(file.Name);
+                    countFiles++;
+                }
+                else
+                {
+                    MessageBox.Show(file.Name);
+                }
             }
 
-            listItems.Sort();
-
-            foreach (var item in listItems)
-            {
-
-                listBoxVideos.Items.Add(item);
-
-            }
-
-
+            listBoxVideos.Update();
             labelFileCount.Text = "Number of videos: " + countFiles.ToString();
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
+            deleteFolderToolStripMenuItem.Enabled = true;
         }
         private void refreshVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            readFolder();
+            switch (selectedStorage)
+            {
+                case 1:
+                    readFolder("\\\\cameradevice\\camerasystem");
+                    break;
+                case 2:
+                    readFolder(driverPath);
+                    break;
+            }
         }
 
         private void listBoxVideos_SelectedIndexChanged(object sender, EventArgs e)
         {
             deleteVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
-            saveVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            copyVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
         }
 
         private void showVideoDetailsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -196,18 +267,7 @@ namespace CameraDevice
 
         private void saveVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-            folderDialog.ShowNewFolderButton = true;
-            DialogResult result = folderDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                copyToVideoFolder = folderDialog.SelectedPath;
-                foreach (object copyValue in listBoxVideos.SelectedItems)
-                {
-                    File.Copy(videoFolder + "\\" + selectedFolder + "\\" + copyValue, copyToVideoFolder + "\\" + copyValue);
-                }
-                MessageBox.Show("Selected videos have been saved", "Camera Device");
-            }
+
         }
 
         private void deleteVideosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -218,30 +278,30 @@ namespace CameraDevice
                 counterItems = 0;
                 foreach (object deleteValue in listBoxVideos.SelectedItems)
                 {
-                    counterItems++;
-                    videoFiles.Add(deleteValue.ToString());
+                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + deleteValue.ToString());
                 }
 
-                for (int countCheck = 0; countCheck < counterItems; countCheck++)
-                {
-                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + videoFiles[countCheck]);
-                }
-
-                videoFiles.Clear();
-                string[] listFiles = Directory.GetFiles(listAllVideos);
                 listBoxVideos.Items.Clear();
-
-                foreach (string file in listFiles)
+                countFiles = 0;
+                DirectoryInfo info = new DirectoryInfo(listAllVideos);
+                FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
+                foreach (FileInfo file in files)
                 {
-                    var file2 = new FileInfo(file);
-                    listBoxVideos.Items.Add(file2.Name);
+                    //    var file2 = new FileInfo(file);
+                    if (file.Extension == ".mp4")
+                    {
+                        listBoxVideos.Items.Add(file.Name);
+                        countFiles++;
+                    }
+                    else
+                    {
+                        MessageBox.Show(file.Name);
+                    }
                 }
 
                 listBoxVideos.Update();
-                DirectoryInfo folder = new DirectoryInfo(videoFolder + "\\" + comboBoxFolders.Text);
-                countFiles = folder.GetFiles().Length;
                 labelFileCount.Text = "Number of videos: " + countFiles.ToString();
-                MessageBox.Show("Selected videos have been deleted.", "Camera Device");
+                MessageBox.Show("Selected videos have been deleted.", "Home Assistant");
             }
         }
         private void listBoxVideos_DoubleClick(object sender, EventArgs e)
@@ -274,19 +334,21 @@ namespace CameraDevice
                 if (countVideos == 1)
                 {
                     playVideoToolStripMenuItem.Enabled = true;
+
+                    FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                    DateTime getDate = fileDate.CreationTime;
+                    labelFileDate.Text = "Video creation date: " + getDate.ToString();
+
+                    FileInfo fileSize = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                    var getSize = fileSize.Length / 1024;
+                    labelFileSize.Text = "Video size: " + getSize + " KB";
                 }
                 else
                 {
                     playVideoToolStripMenuItem.Enabled = false;
+                    labelFileDate.Text = "Video creation date: ";
+                    labelFileSize.Text = "Video size: ";
                 }
-
-                FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
-                DateTime getDate = fileDate.CreationTime;
-                labelFileDate.Text = "Video creation date: " + getDate.ToString();
-
-                FileInfo fileSize = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
-                var getSize = fileSize.Length / 1024;
-                labelFileSize.Text = "Video creation date: " + getSize + " KB";
 
                 axWindowsMediaPlayer1.URL = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
                 axWindowsMediaPlayer1.Ctlcontrols.stop();
@@ -302,29 +364,28 @@ namespace CameraDevice
 
         private void FormMain_Activated(object sender, EventArgs e)
         {
-            if (checkFolder == true)
+            if (FormSettings.checkSensors == true)
             {
-                readFolder();
+                showSensorValue();
+                readFolder("\\\\cameradevice\\camerasystem");
+                MessageBox.Show("Settings have been updated, please check the changes", "Camera Device");
             }
-            checkFolder = false;
-        }
-        private void comboBoxFolders_Click(object sender, EventArgs e)
-        {
-
+            FormSettings.checkSensors = false;
         }
 
         private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            password = Properties.Settings.Default.password;
+            password = HomeAssistant.Properties.Settings.Default.Password;
             DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                using (var client = new SshClient(host, user, password))
-                {
-                    client.Connect();
-                    var output = client.RunCommand("sudo shutdown now");
-                    client.Disconnect();
-                }
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerashutdown.sh";
+                process.StartInfo = startInfo;
+                process.Start();
                 MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!");
             }
         }
@@ -333,6 +394,127 @@ namespace CameraDevice
         {
             FormTechnicalInfo hardware = new FormTechnicalInfo();
             hardware.ShowDialog();
+        }
+
+        private void localStorageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            selectedStoragePath = "\\\\cameradevice\\camerasystem";
+            readFolder(selectedStoragePath);
+            labelStorage.Text = "Storage type: Local Storage";
+            cloudStorageToolStripMenuItem.Checked = false;
+            localStorageToolStripMenuItem.Checked = true;
+            selectedStorage = 1;
+        }
+
+        private void cloudStorageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            string[] lines = File.ReadAllLines("settings.txt");
+            bool checkDrive = false;
+
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo drives in allDrives)
+            {
+                if (drives.IsReady)
+                {
+                    if (drives.VolumeLabel == lines[0])
+                    {
+                        selectedStoragePath = drives.Name + lines[1];
+                        readFolder(selectedStoragePath);
+                        labelStorage.Text = "Storage type: Cloud Storage";
+                        cloudStorageToolStripMenuItem.Checked = true;
+                        localStorageToolStripMenuItem.Checked = false;
+                        selectedStorage = 2;
+                        checkDrive = true;
+                    }
+                }
+            }
+            if (!checkDrive)
+            {
+                MessageBox.Show("Cloud storage is not available, please check the connection", "Camera Device");
+            }
+        }
+
+        private void copyVideosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (MessageBox.Show("Copy selected videos?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                var folderDialog = new FolderBrowserDialog();
+                DialogResult result = folderDialog.ShowDialog();
+                folderDialog.ShowNewFolderButton = true;
+                if (result == DialogResult.OK)
+                {
+                    foreach (object copyValue in listBoxVideos.SelectedItems)
+                    {
+                        string sourceFile = videoFolder + "\\" + selectedFolder + "\\" + copyValue.ToString();
+                        string destFile = Path.Combine(folderDialog.SelectedPath, copyValue.ToString());
+                        File.Copy(sourceFile, destFile, true);
+                    }
+                    MessageBox.Show("Selected videos have been copied.", "Camera Device");
+                }
+            }
+        }
+
+        private void motionSensorStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                connString = HomeAssistant.Properties.Settings.Default.Database;
+                password = HomeAssistant.Properties.Settings.Default.Password;
+                MySqlConnection conn = new MySqlConnection(connString);
+                conn.Open();
+                checkString = "select * from settings;";
+                Clipboard.SetText(checkString);
+                MySqlCommand command = new MySqlCommand(checkString, conn);
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    setChoice = reader.GetInt32("motionchoice");
+
+                }
+                conn.Close();
+
+                switch (setChoice)
+                {
+                    case 1:
+                        MessageBox.Show("Motion sensor 1 is enabled", "Camera Device");
+                        break;
+
+                    case 2:
+                        MessageBox.Show("Motion sensor 2 is emabled", "Camera Device");
+                        break;
+
+                    case 3:
+                        MessageBox.Show("Both motion sensora are enabled", "Camera Device");
+                        break;
+                }
+            }
+            catch (Exception i)
+            {
+                MessageBox.Show(i.Message);
+            }
+        }
+
+        private void deleteFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(videoFolder + "\\" + selectedFolder);
+            if (MessageBox.Show("Delete selected folder " + videoFolder + "\\" + selectedFolder + "?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Directory.Delete(videoFolder + "\\" + selectedFolder, true);
+                readFolder(selectedStoragePath);
+            }
+        }
+
+        private void comboBoxFolders_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deleteVideostoolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            FormVideoFolders videofolder = new FormVideoFolders();
+            videofolder.ShowDialog();
         }
     }
 }

@@ -56,10 +56,8 @@
             buttonClose.Text = "Close";
             buttonClose.UseVisualStyleBackColor = true;
             buttonClose.Click += buttonClose_Click;
-            // 
             // pictureBox1
             // 
-            pictureBox1.Image = CameraDevice.Properties.Resources.raspberrypi5;
             pictureBox1.Location = new Point(19, 83);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(319, 207);
@@ -69,7 +67,6 @@
             // pictureBox2
             // 
             pictureBox2.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox2.Image = CameraDevice.Properties.Resources.cameramodule3;
             pictureBox2.Location = new Point(358, 83);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(151, 147);
@@ -79,8 +76,7 @@
             // 
             // pictureBox3
             // 
-            pictureBox3.Image = CameraDevice.Properties.Resources.raspberrypi;
-            pictureBox3.Location = new Point(135, 349);
+                 pictureBox3.Location = new Point(135, 349);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(430, 381);
             pictureBox3.TabIndex = 3;
@@ -147,7 +143,6 @@
             // 
             // pictureBox4
             // 
-            pictureBox4.Image = CameraDevice.Properties.Resources.motionsensor;
             pictureBox4.Location = new Point(525, 83);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(154, 147);

@@ -1,4 +1,8 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
+using Org.BouncyCastle.Crypto;
+using Renci.SshNet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +10,8 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
+using System.Reflection.Emit;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,24 +21,25 @@ namespace CameraDevice
 {
     public partial class FormSettings : Form
     {
+        public static bool checkSensors = false;
         public FormSettings()
         {
             InitializeComponent();
         }
-
-
-        string[] videoFolder2 = File.ReadAllLines("settings.txt");
-        string videoFolder;
         string checkString, connString;
-        string drive, emailAlert, alertText, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder;
+        string drive, emailAlert, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder, rowsOfNumbers, changeDate, openStatus;
+        string user = "cameraruser";
+        string password;
+        string host = "cameradevice";
+        int setChoice, setChoice2;
         int checkState = 0;
         bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
         {
-            connString = Properties.Settings.Default.Database;
+            connString = HomeAssistant.Properties.Settings.Default.Database;
+            password = HomeAssistant.Properties.Settings.Default.Password;
             try
             {
-                labelFolder.Text = "Video folder: " + videoFolder2[0];
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "select * from settings;";
@@ -45,13 +52,47 @@ namespace CameraDevice
                     emailAlert = reader.GetString("email");
                     checkEmail = reader.GetBoolean("email");
                     textBoxEmailadress.Text = reader.GetString("sendemail");
-                    textBoxAlerttext.Text = reader.GetString("alerttext");
+                    setChoice = reader.GetInt32("motionchoice");
                     textBoxStream.Text = reader.GetInt32("stream").ToString();
                     streamVideo = reader.GetInt32("stream").ToString();
                     streamVideo2 = reader.GetInt32("stream").ToString();
+                    textBoxRows.Text = reader.GetInt32("numberofrows").ToString();
                     emailAdress2 = reader.GetString("sendemail");
+                    changeDate = reader.GetDateTime("datechanged").ToString();
+                    setChoice2 = reader.GetInt32("openstatus");
                 }
                 conn.Close();
+
+                switch (setChoice)
+                {
+                    case 1:
+                        radioButtonSensor1.Checked = true;
+                        radioButtonSensor2.Checked = false;
+                        radioButtonBothSensors.Checked = false;
+                        radioButtonNoneSensors.Checked = false;
+                        break;
+
+                    case 2:
+                        radioButtonSensor1.Checked = false;
+                        radioButtonSensor2.Checked = true;
+                        radioButtonBothSensors.Checked = false;
+                        radioButtonNoneSensors.Checked = false;
+                        break;
+
+                    case 3:
+                        radioButtonSensor1.Checked = false;
+                        radioButtonSensor2.Checked = false;
+                        radioButtonBothSensors.Checked = true;
+                        radioButtonNoneSensors.Checked = false;
+                        break;
+                    case 4:
+                        radioButtonSensor1.Checked = false;
+                        radioButtonSensor2.Checked = false;
+                        radioButtonBothSensors.Checked = false;
+                        radioButtonNoneSensors.Checked = true;
+                        break;
+                }
+
                 if (emailAlert == "True")
                 {
                     checkBoxEmail.Checked = true;
@@ -75,11 +116,25 @@ namespace CameraDevice
                 {
                     checkBoxDrive.Checked = false;
                 }
+                switch (setChoice2)
+                {
+                    case 1:
+                        radioButtonDetect1.Checked = true;
+                        radioButtonNoneDetection.Checked = false;
+                        break;
+
+                    case 2:
+                        radioButtonDetect1.Checked = false;
+                        radioButtonNoneDetection.Checked = true;
+                        break;
+                }
+
             }
             catch (Exception i)
             {
                 MessageBox.Show(i.Message);
             }
+            labelDateModified.Text = "Settings last modified: " + changeDate;
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
@@ -109,8 +164,8 @@ namespace CameraDevice
                 emailAdress = emailAdress2;
             }
 
-            alertText = textBoxAlerttext.Text;
             streamVideo = textBoxStream.Text;
+            rowsOfNumbers = textBoxRows.Text;
 
             try
             {
@@ -119,7 +174,6 @@ namespace CameraDevice
                     MySqlConnection conn = new MySqlConnection(connString);
                     conn.Open();
                     checkString = "insert into cameralogs(logtext) values('Camera recording value was changed to " + streamVideo.ToString() + " seconds.');";
-                //   MessageBox.Show(checkString);
                     MySqlCommand command = new MySqlCommand(checkString, conn);
                     MySqlDataReader reader = command.ExecuteReader();
                     conn.Close();
@@ -134,10 +188,12 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', alerttext = '" + alertText + "', stream = '" + streamVideo + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice = '" + setChoice + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice2 + "' where id = 1;";
                 MySqlCommand command = new MySqlCommand(checkString, conn);
-                MySqlDataReader reader = command.ExecuteReader();
+                command.ExecuteReader();
                 conn.Close();
+                conn.Open();
+
                 MessageBox.Show("Settings updated.", "Camera Device");
 
             }
@@ -146,25 +202,20 @@ namespace CameraDevice
                 MessageBox.Show(i.Message);
             }
 
-
-            string[] lines = File.ReadAllLines("settings.txt");
-            lines[0] = setFolder;
-            File.WriteAllLines("settings.txt", lines);
-
             try
             {
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
                 startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo systemctl restart camerastystem.service";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerarestart.sh";
                 process.StartInfo = startInfo;
                 process.Start();
-                MessageBox.Show("Test");
             }
-            catch
+            catch (Exception i)
             {
-                MessageBox.Show("The Camera device is down!", "Camera Device");
+                MessageBox.Show("The Camera device is down! ", "Camera Device");
+                Clipboard.SetText(i.ToString());
             }
             Close();
         }
@@ -180,7 +231,7 @@ namespace CameraDevice
             {
                 textBoxEmailadress.Enabled = true;
                 labelText.ForeColor = Color.Black;
-                if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+                if ((textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
                 {
                     buttonOk.Enabled = true;
                 }
@@ -188,7 +239,7 @@ namespace CameraDevice
                 {
                     buttonOk.Enabled = false;
                 }
-               if (textBoxEmailadress.Text.Length > 0)
+                if (textBoxEmailadress.Text.Length > 0)
                 {
                     noneEmail = false;
                 }
@@ -203,7 +254,7 @@ namespace CameraDevice
                 labelText.ForeColor = Color.Silver;
                 noneEmail = false;
 
-                if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0))
+                if (textBoxStream.Text.Length > 0)
                 {
                     buttonOk.Enabled = true;
                 }
@@ -211,19 +262,9 @@ namespace CameraDevice
 
         }
 
-        private void buttonFolder_Click(object sender, EventArgs e)
-        {
-            if (folderBrowserDialogVideo.ShowDialog() == DialogResult.OK)
-            {
-                labelFolder.Text = labelFolder.Text = "Video folder: " + folderBrowserDialogVideo.SelectedPath;
-                setFolder = folderBrowserDialogVideo.SelectedPath;
-                Main.checkFolder = true;
-            }
-        }
-
         private void textBoxStream_TextChanged(object sender, EventArgs e)
         {
-            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail == false))
+            if (textBoxStream.Text.Length > 0)
             {
                 buttonOk.Enabled = true;
             }
@@ -235,7 +276,7 @@ namespace CameraDevice
         }
         private void textBoxEmailadress_TextChanged(object sender, EventArgs e)
         {
-            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
+            if ((textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
 
             {
                 buttonOk.Enabled = true;
@@ -255,18 +296,6 @@ namespace CameraDevice
             }
         }
 
-        private void textBoxAlerttext_TextChanged(object sender, EventArgs e)
-        {
-            if ((textBoxAlerttext.Text.Length > 0) && (textBoxStream.Text.Length > 0) && (noneEmail==false))
-            {
-                buttonOk.Enabled = true;
-            }
-            else
-            {
-                buttonOk.Enabled = false;
-            }
-        }
-
         private void textBoxStream_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
@@ -282,6 +311,97 @@ namespace CameraDevice
             if ((!char.IsLetter(e.KeyChar)) && (!char.IsWhiteSpace(e.KeyChar)) && (!char.IsControl(e.KeyChar)))
             {
                 e.Handled |= true;
+            }
+        }
+
+        private void radioButtonSensor1_Click(object sender, EventArgs e)
+        {
+            setChoice = 1;
+            radioButtonSensor1.Checked = true;
+            radioButtonSensor2.Checked = false;
+            radioButtonBothSensors.Checked = false;
+            radioButtonNoneSensors.Checked = false;
+            radioButtonNoneDetection.Enabled = true;
+            checkSensors = true;
+        }
+
+        private void radioButtonSensor2_Click(object sender, EventArgs e)
+        {
+            setChoice = 2;
+            radioButtonSensor1.Checked = false;
+            radioButtonSensor2.Checked = true;
+            radioButtonBothSensors.Checked = false;
+            radioButtonNoneSensors.Checked = false;
+            radioButtonNoneDetection.Enabled = true;
+            checkSensors = true;
+        }
+
+        private void radioButtonBothSensors_Click(object sender, EventArgs e)
+        {
+            setChoice = 3;
+            radioButtonSensor1.Checked = false;
+            radioButtonSensor2.Checked = false;
+            radioButtonBothSensors.Checked = true;
+            radioButtonNoneSensors.Checked = false;
+            radioButtonNoneDetection.Enabled = true;
+            checkSensors = true;
+        }
+
+        private void textBoxRows_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxRows.Text.Length > 0)
+            {
+                buttonOk.Enabled = true;
+            }
+            else
+            {
+                buttonOk.Enabled = false;
+            }
+        }
+
+        private void textBoxRows_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+        }
+
+        private void radioButtonNoneSensors_Click(object sender, EventArgs e)
+        {
+            setChoice = 4;
+            radioButtonSensor1.Checked = false;
+            radioButtonSensor2.Checked = false;
+            radioButtonBothSensors.Checked = false;
+            radioButtonNoneSensors.Checked = true;
+            checkSensors = true;
+        }
+
+        private void radioButtonDetect1_Click(object sender, EventArgs e)
+        {
+            setChoice2 = 1;
+            radioButtonDetect1.Checked = true;
+            radioButtonNoneDetection.Checked = false;
+            radioButtonNoneSensors.Enabled = true;
+        }
+
+        private void radioButtonNoneDetection_Click(object sender, EventArgs e)
+        {
+            setChoice2= 2;
+            radioButtonDetect1.Checked = false;
+            radioButtonNoneDetection.Checked = true;
+        }
+
+        private void radioButtonNoneDetection_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonNoneDetection.Checked)
+            {
+                radioButtonNoneSensors.Enabled = false;
+            }
+        }
+
+        private void radioButtonNoneSensors_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonNoneSensors.Checked)
+            {
+                radioButtonNoneDetection.Enabled= false;
             }
         }
     }

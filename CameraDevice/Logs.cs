@@ -21,7 +21,7 @@ namespace CameraDevice
         }
 
         string checkString, checkItem, compareString;
-        int counterItems = 0, indexItem;
+        int counterItems = 0, indexItemm, countRows;
         bool answer;
         string connString;
 
@@ -32,7 +32,7 @@ namespace CameraDevice
 
         private void FormLogs_Load(object sender, EventArgs e)
         {
-            connString = Properties.Settings.Default.Database;
+            connString = HomeAssistant.Properties.Settings.Default.Database;
             MySqlConnection conn = new MySqlConnection(connString);
             compareString = "Camera recording value was changed";
             
@@ -79,8 +79,13 @@ namespace CameraDevice
             {
                 MessageBox.Show(i.Message);
             }
-
-
+            conn.Open();
+            using (var cmd = new MySqlCommand("select count(*) from cameralogs", conn))
+            {
+                countRows = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            conn.Close();
+            labelCountRows.Text = "Total logs: " + countRows.ToString();
         }
 
         private void buttonBackup_Click(object sender, EventArgs e)
