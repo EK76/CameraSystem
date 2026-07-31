@@ -110,7 +110,7 @@ namespace CameraDevice
                                 sw.WriteLine("{0}{1}", item.SubItems[0].Text + "  ", item.SubItems[1].Text);
                             }
                         }
-                        MessageBox.Show("File " + filename + " is susccessfully saved!");
+                        MessageBox.Show("File " + filename + " is susccessfully saved!", "Camera Device");
                     }
                 }
             }

@@ -102,7 +102,6 @@
             Name = "FormConfirm";
             ShowIcon = false;
             Text = "Camera Device";
-            Load += Confirm_Load;
             ResumeLayout(false);
             PerformLayout();
         }

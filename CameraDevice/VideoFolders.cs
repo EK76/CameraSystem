@@ -54,7 +54,7 @@ namespace CameraDevice
         private void buttonDelete_Click(object sender, EventArgs e)
         {
 
-            if (MessageBox.Show("Delete selected video folders?", "Home Assistant", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Delete selected video folders?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 counterItems = 0;
                 foreach (object deleteValue in listBoxVideoFolders.SelectedItems)
@@ -70,7 +70,7 @@ namespace CameraDevice
                     counterItems++;
                 }
                 toolStripStatusLabelNumbers.Text = "Numbers of video folders: " + counterItems.ToString();
-                MessageBox.Show("Selected video folders have been deleted.", "Home Assistant");
+                MessageBox.Show("Selected video folders have been deleted.", "Camera Device");
             }
         }
     }

@@ -120,7 +120,7 @@
             panel1.Location = new Point(3, 255);
             panel1.Margin = new Padding(4, 3, 4, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(475, 1);
+            panel1.Size = new Size(550, 1);
             panel1.TabIndex = 8;
             // 
             // checkBoxEmail
@@ -165,7 +165,7 @@
             panel2.Location = new Point(3, 416);
             panel2.Margin = new Padding(4, 3, 4, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(475, 1);
+            panel2.Size = new Size(550, 1);
             panel2.TabIndex = 9;
             // 
             // checkBoxDrive

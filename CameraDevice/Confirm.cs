@@ -60,10 +60,5 @@ namespace CameraDevice
                 buttonYes.Enabled = false;
             }
         }
-
-        private void Confirm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

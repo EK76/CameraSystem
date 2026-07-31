@@ -27,12 +27,10 @@ def recordVideo():
   global checkfolder
   global checkfolder2
   global checkspace
-  global statusspace
-
 
   print("Recording feed.")
   now = datetime.datetime.now()
-  datefolder = now.strftime("%d_%m_%Y")
+  datefolder = now.strftime("%Y_%m_%d")
   timefile = now.strftime("%H:%M:%S")
   createfolder = "/media/usbdrive/camerasystem/"+datefolder
   createfolder2 = "/home/camerauser/gdrive/Recordings/"+datefolder
@@ -42,18 +40,16 @@ def recordVideo():
   if not checkfolder and checkspace > 99:
     os.mkdir(createfolder, mode=0o777)
  
-  if checkspace > 99 and statusspace == 0:
-    filecount = next(os.walk(createfolder))[2]
-    print(len(filecount))
-    filecount = len(filecount)
-    filecount = filecount + 1
-    print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
-    alertText = alertText + " '" + datefolder + "/video" + str(filecount) + "'";
-    query = "insert into cameralogs (logtext) values (%s)"
-    dbinfo.execute(query, [alertText])
-    dbconfig.commit()
-  else:
-    print("Check space")
+  filecount = next(os.walk(createfolder))[2]
+  print(len(filecount))
+  filecount = len(filecount)
+  filecount = filecount + 1
+  print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
+  alertText = alertText + " '" + datefolder + "/video" + str(filecount) + "'";
+  query = "insert into cameralogs (logtext) values (%s)"
+  dbinfo.execute(query, [alertText])
+  dbconfig.commit()
+
 
 def streamVideo():
   global filecount
@@ -64,13 +60,6 @@ def streamVideo():
   global frame_height
   global createfolder
   global alertText  
-  global checkspace
-  global statusspace
-  global index
-
-  index = index + 1
-
-  print("Status: " + str(index))
 
   frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -115,7 +104,7 @@ def motionShow():
         detectStatus = False
 
 def enableChoice():
-  if enableDrive == 'True' and checkspace > 99:
+  if enableDrive == 'True':
     if not checkfolder2:
       os.mkdir(createfolder2)   
     print(checkfolder2)
@@ -150,10 +139,15 @@ motionSensor2 = MotionSensor(16)
 motionLed1 = LED(23)
 motionLed2 = LED(24)
 detectLed1 = LED(21)
+statusLed1 = LED(17)
+
+statusLed1.off()
 
 statusOpen = Button(5,pull_up = True,bounce_time= 0.2)
 username = 'ken.ekholm76@gmail.com'
 password = os.environ["googlemessage"]
+
+statusspace = 1
 
 try:
   dbinfo = dbconfig.cursor()
@@ -172,8 +166,6 @@ try:
   motionChoice = row[7]
   detectChoice = row[8]
   dbconfig.commit()
-  statusspace = 0
-  index = 0
  
   if detectChoice == 1:
     detectLed1.on()
@@ -182,23 +174,24 @@ try:
 
   total, used, free = shutil.disk_usage("/media/usbdrive/camerasystem")
   checkspace = free / total * 100
-  if checkspace > 99:
-    while True:
-
+  while True:
+    if checkspace > 99:
       statusOpen.when_released = doorStatus
       motionShow()
-
       if detectStatus == True:
         recordVideo()
         streamVideo()
         enableChoice()
-    stream.release()
-  else:
-    print("Not enough space on local drive. " + str(statusspace) + "% free space remaining.")
-    dbinfo = dbconfig.cursor()
-    query = "insert into cameralogs(logtext) values ('Not enough space on local drive.')"
-    dbinfo.execute(query)
-    dbconfig.commit()    
+      stream.release()
+    else:
+      if statusspace == 1:
+        print("Not enough space on local drive. " + str(statusspace) + "% free space remaining.")
+        dbinfo = dbconfig.cursor()
+        query = "insert into cameralogs(logtext) values ('Not enough space on local drive.')"
+        dbinfo.execute(query)
+        dbconfig.commit()    
+        statusLed1.on()
+        statusspace = 0
 
 
 except mysql.connector.Error as error:

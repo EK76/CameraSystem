@@ -111,7 +111,7 @@
             MinimizeBox = false;
             Name = "FormVideoFolders";
             ShowIcon = false;
-            Text = "Home Assistant";
+            Text = "Camera Device";
             Load += VideoFolders_Load;
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();

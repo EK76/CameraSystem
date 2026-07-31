@@ -38,9 +38,7 @@
             exitToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             deleteVideosToolStripMenuItem = new ToolStripMenuItem();
-            deleteFolderToolStripMenuItem = new ToolStripMenuItem();
             deleteVideostoolStripMenuItem2 = new ToolStripMenuItem();
-            toolStripMenuItem1 = new ToolStripSeparator();
             copyVideosToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             refreshVideosToolStripMenuItem = new ToolStripMenuItem();
@@ -60,6 +58,7 @@
             shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
             listBoxVideos = new ListBox();
             labelFileCount = new Label();
             labelFileDate = new Label();
@@ -103,7 +102,7 @@
             // 
             openStorageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { localStorageToolStripMenuItem, cloudStorageToolStripMenuItem });
             openStorageToolStripMenuItem.Name = "openStorageToolStripMenuItem";
-            openStorageToolStripMenuItem.Size = new Size(180, 22);
+            openStorageToolStripMenuItem.Size = new Size(146, 22);
             openStorageToolStripMenuItem.Text = "Open Storage";
             // 
             // localStorageToolStripMenuItem
@@ -125,13 +124,13 @@
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(146, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // toolStripMenuItem3
             // 
-            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { deleteVideosToolStripMenuItem, deleteFolderToolStripMenuItem, deleteVideostoolStripMenuItem2, toolStripMenuItem1, copyVideosToolStripMenuItem });
+            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { deleteVideosToolStripMenuItem, deleteVideostoolStripMenuItem2, copyVideosToolStripMenuItem });
             toolStripMenuItem3.Name = "toolStripMenuItem3";
             toolStripMenuItem3.Size = new Size(39, 20);
             toolStripMenuItem3.Text = "Edit";
@@ -144,25 +143,12 @@
             deleteVideosToolStripMenuItem.Text = "Delete Videos";
             deleteVideosToolStripMenuItem.Click += deleteVideosToolStripMenuItem_Click;
             // 
-            // deleteFolderToolStripMenuItem
-            // 
-            deleteFolderToolStripMenuItem.Enabled = false;
-            deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
-            deleteFolderToolStripMenuItem.Size = new Size(195, 22);
-            deleteFolderToolStripMenuItem.Text = "Delete Selected Folder";
-            deleteFolderToolStripMenuItem.Click += deleteFolderToolStripMenuItem_Click;
-            // 
             // deleteVideostoolStripMenuItem2
             // 
             deleteVideostoolStripMenuItem2.Name = "deleteVideostoolStripMenuItem2";
             deleteVideostoolStripMenuItem2.Size = new Size(195, 22);
             deleteVideostoolStripMenuItem2.Text = "Delete Multiple Folders";
             deleteVideostoolStripMenuItem2.Click += deleteVideostoolStripMenuItem2_Click;
-            // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(192, 6);
             // 
             // copyVideosToolStripMenuItem
             // 
@@ -227,19 +213,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(180, 22);
+            clearLogsToolStripMenuItem.Size = new Size(165, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(162, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(180, 22);
+            boldTextToolStripMenuItem.Size = new Size(165, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -247,7 +233,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(180, 22);
+            fontSizeToolStripMenuItem.Size = new Size(165, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -276,14 +262,14 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(165, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
+            shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
             // 
@@ -300,6 +286,11 @@
             aboutToolStripMenuItem.Size = new Size(107, 22);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(192, 6);
             // 
             // listBoxVideos
             // 
@@ -414,7 +405,7 @@
             MaximizeBox = false;
             Name = "FormMain";
             ShowIcon = false;
-            Text = "Home Assistant";
+            Text = "Camera Device";
             Activated += FormMain_Activated;
             Load += FormMain_Load;
             menuStrip1.ResumeLayout(false);
