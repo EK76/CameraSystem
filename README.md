@@ -1,7 +1,7 @@
 # CameraDevice
 
-The goal with this IT project project was to record videos with a certain length when a motion sensor was triggered. This project contains of two motion sensors. 
-The recordings are saved automatically to local hard drive and optionally to cloud share with help of a usb camera. For cloud share I have used Google drive. Search online with the phrase 
+The goal with this IT project project was to record videos with a certain length when a motion sensor or magnetic connector switch was triggered. This project contains of two motion sensors and a magnetic connector switch
+that control the usb camera. The recordings are saved automatically to local hard drive and optionally to cloud share. For cloud share I have used Google drive. Search online with the phrase 
 *"How to setup Google drive share in linux"* to learn more about to setup Google drive in linux. 
 
 It is also possible to watch or delete these video recordings both from local storage and
@@ -12,14 +12,20 @@ from cloushare with the Visual Studio C# project or with a 3rd-party application
 - .NET 9.0
 -  C# language version 13.0
 
+I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
+MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
+
 ### List over the hardware for this project.
 - Raspberry Pi 5
 - Usb camera
 - 2 PIR motion sensors
-
-Both camera and sensor motions are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, when a motion sensor is trigged. 
-The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project. In my case the python script is located at /home/camerauser/camerasystem and I have chosen
-camerauser as my username for Raspberry Pi 5 device.
+- Magnetic connector switch
+- 4 leds
+  
+Usb camera, motion sensors and magnetic connector switch are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, 
+when a motion sensor or a magnetic connection switch is trigged. 
+The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project. In my case the python script is located at **/home/camerauser/camerasystem** and I have chosen
+**camerauser** as my username for Raspberry Pi 5 device.
 
 ### USB camera.
 <img width="202" height="182" alt="usbcamera" src="https://github.com/user-attachments/assets/17e0fe59-68d8-4e98-9dc2-6c02407fb6fc" />
@@ -46,11 +52,12 @@ It stands for Passive Infrared Sensor and relies on infrared sensing technology 
 
 The connection between Raspberry PI5 and sensor motions.
 - Both motion sensor's pin labelled VCC is connected to the 5V pin on the Raspberry Pi5. 
-- both motion sensor's pin labelled GND is connected to a ground pin on the Raspberry Pi5. 
+- Both motion sensor's pin labelled GND is connected to a ground pin on the Raspberry Pi5. 
 - In my case motion sensor1's pin labelled OUT is connected to GPIO 12 on the Raspberry Pi5.
 - in my cate motion sensor2's pin labelled OUT is connected to GPIO 16 on the Raspberry Pi5.
+  
 
-### The installation of motion sensor library.
+### The installation of library for the motion sensor.
 
 #### Raspberry Pi OS (Recommended).
 ```
@@ -60,10 +67,36 @@ sudo apt install python3-gpiozero
 #### Using pip (For other OS or virtual environments).
 ```
 sudo pip3 install gpiozero
+
 ```
+### Magnetic connector switch
+
+<img width="150" height="150" alt="magnetic switch" src="https://github.com/user-attachments/assets/730fab61-e872-4f0d-8429-35c5d90dd72e" />
+
+The connection between Raspberry PI5 and magnetic connector switch
+- One of the magnetic connector switch connection is connected to GPIO 5 on the Raspberry Pi5.
+- The other connection is connected to a ground pin on the Raspberry Pi5.
+
+### The installation of library for the magnetic connector switch.
+
+Magnetic connector switch uses the same the library as motion sensor.
+
+### Leds
+
+I have used 3 yellow leds acting as sensor indicators and 1 red led as a indicator for the Raspberry PI's local hard drive status.
+
+The connection between Raspberry PI5 and the leds.
+- The yellow leds are connected to the to GPIO 21, GPIO 23 and GPIO 24 on the Raspberry Pi5.
+- The red led is connected to GPIO 17 on the Raspberry Pi5.
+- The leds other connection is connected to ground on the Raspberry Pi5.
+
+### The installation of library for the leds.
+
+Leds are using the same the library as motion sensor and magnetic connector switch.
+
 ### This project contains of two mysql tables.
 
-- cameralogs – where the alert text is saved to whenfor example a motion sensor is triggeded.
+- cameralogs – where the alert text is saved to when for example a motion sensor is triggeded.
 - settings – where the settings are stored.
 
 To create the tables, follow the instructions below.
@@ -98,8 +131,9 @@ The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this p
 - The recording length for video.
 - Enable cloud share.
 - Choose if only sensor motion 1 or sensor motion2 or both are enabled.
+- Choose if the magnetic connector switch is enabled or disabled.
 
-You can make these setting with the Visual Studio C# project.
+You can modify these setting with the Visual Studio C# project.
 The Visual Studio C# project works only with computers that run under Windows 11 operating system. 
 
 I have created a service which I have named camerasystem.service that when one or more of these changes are changed, it restarts the python program.
@@ -121,7 +155,8 @@ Restart=on-abort
 WantedBy=multi-user.target
 ```
 Both my mysql password and email token for the pyhton script are located at /etc/controldevice/controldevice.conf file.
-You should always consider to hide sensative information, for example password. On way to achieve this is to use environment variables.
+You should always consider to hide sensative information, for example password. On way to achieve this is to use environment variables,
+as I have done.
 
 To use this cameradevice service without sudo password from Visual Studio C# project, I created a simple bash script, **camerarestart.sh**
 ```
@@ -195,9 +230,5 @@ To use this updatesql without sudo password, put this line at bottom of /etc/sud
 camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/updatesql
 ```
 
-I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
-MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
-
 ### Picture about this project.
-
 <img width="1442" height="671" alt="Screenshot 2026-04-26 174605" src="https://github.com/user-attachments/assets/6c0a1456-8bd8-4dc8-99d2-a5981a2dae00" />
