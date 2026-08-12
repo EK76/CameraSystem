@@ -24,7 +24,7 @@ namespace CameraDevice
         public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString;
         public static string selectedStoragePath;
-        int setChoice, showMotionValue, showDetectionValue;
+        int setChoice, showMotionValue1, showMotionValue2, showDetectionValue;
         public static int selectedStorage = 1;
         List<string> videoFiles = new List<string>();
 
@@ -62,57 +62,65 @@ namespace CameraDevice
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    showMotionValue = reader.GetInt32("motionchoice");
+                    showMotionValue1 = reader.GetInt32("motionchoice1");
+                    showMotionValue2 = reader.GetInt32("motionchoice2");
                     showDetectionValue = reader.GetInt32("openstatus");
                 }
                 conn.Close();
             }
             catch (Exception i)
             {
-                MessageBox.Show(i.Message);
+                MessageBox.Show("Error:" + i.Message);
             }
 
-            switch (showMotionValue)
+
+            if (showMotionValue1 == 1) {
+                labelSensor.Text = "Motion sensor 1 is enabled";
+                labelSensor.ForeColor = Color.Green;
+            }
+            else
             {
-                case 1:
-                    labelSensor.Text = "Motion sensor 1 is enabled";
-                    labelSensor.ForeColor = Color.Green;
-                    labelSensor2.Text = "Motion sensor 2 is disabled";
-                    labelSensor2.ForeColor = Color.Red;
-                    break;
-                case 2:
-                    labelSensor.Text = "Motion sensor 1 is disabled";
-                    labelSensor.ForeColor = Color.Red;
-                    labelSensor2.Text = "Motion sensor 2 is enabled";
-                    labelSensor2.ForeColor = Color.Green;
-                    break;
-                case 3:
-                    labelSensor.Text = "Motion sensor 1 is enabled";
-                    labelSensor.ForeColor = Color.Green;
-                    labelSensor2.Text = "Motion sensor 2 is enabled";
-                    labelSensor2.ForeColor = Color.Green;
-                    break;
-                case 4:
-                    labelSensor.Text = "Motion sensor 1 is disabled";
-                    labelSensor.ForeColor = Color.Red;
-                    labelSensor2.Text = "Motion sensor 2 is disabled";
-                    labelSensor2.ForeColor = Color.Red;
-                    break;
+                labelSensor.Text = "Motion sensor 1 is disabled";
+                labelSensor.ForeColor = Color.Red;
             }
 
-            switch (showDetectionValue)
+            if (showMotionValue2 == 1)
             {
-                case 1:
-                    labelDetection.Text = "Open detection is enabled";
-                    labelDetection.ForeColor = Color.Green;
-                    break;
-                case 2:
-                    labelDetection.Text = "Open detection is disabled";
-                    labelDetection.ForeColor = Color.Red;
-                    break;
+                labelSensor2.Text = "Motion sensor 2 is enabled";
+                labelSensor2.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelSensor2.Text = "Motion sensor 2 is disabled";
+                labelSensor2.ForeColor = Color.Red;
+            }
+
+            if (showDetectionValue == 1)
+            {
+                labelDetection.Text = "Door sensor 1 is enabled";
+                labelDetection.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelDetection.Text = "Door sensor 1 is disabled";
+                labelDetection.ForeColor = Color.Red;
+            }
+
+            if ((showMotionValue1 == 0) && (showMotionValue2 == 0) && (showDetectionValue == 0))
+            {
+              labelAllSensors.Visible = true;
+              labelSensor.Visible = false;
+              labelSensor2.Visible = false;
+              labelDetection.Visible = false;
+            }
+            else
+            {
+              labelAllSensors.Visible = false;
+              labelSensor.Visible = true;
+              labelSensor2.Visible = true;
+              labelDetection.Visible = true;
             }
         }
-
 
         void playVideo()
         {
@@ -160,7 +168,6 @@ namespace CameraDevice
             labelFileCount.Text = "Number of videos: " + countFiles.ToString();
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
-            deleteFolderToolStripMenuItem.Enabled = true;
         }
         private void refreshVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -261,7 +268,7 @@ namespace CameraDevice
 
         private void logsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Logs logs = new Logs();
+            FormLogs logs = new FormLogs();
             logs.ShowDialog();
         }
 
@@ -368,7 +375,6 @@ namespace CameraDevice
             {
                 showSensorValue();
                 readFolder("\\\\cameradevice\\camerasystem");
-                MessageBox.Show("Settings have been updated, please check the changes", "Camera Device");
             }
             FormSettings.checkSensors = false;
         }
@@ -386,7 +392,7 @@ namespace CameraDevice
                 startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerashutdown.sh";
                 process.StartInfo = startInfo;
                 process.Start();
-                MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!");
+                MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!", "Camera Device");
             }
         }
 
@@ -506,15 +512,27 @@ namespace CameraDevice
             }
         }
 
-        private void comboBoxFolders_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void deleteVideostoolStripMenuItem2_Click(object sender, EventArgs e)
         {
             FormVideoFolders videofolder = new FormVideoFolders();
             videofolder.ShowDialog();
+        }
+
+        private void restartDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            password = HomeAssistant.Properties.Settings.Default.Password;
+            DialogResult dialogResult = MessageBox.Show("Are you sure to restart the device", "Camera Device", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerarestart.sh";
+                process.StartInfo = startInfo;
+                process.Start();
+                MessageBox.Show("Device has been restarted", "Camera Device");
+            }
         }
     }
 }

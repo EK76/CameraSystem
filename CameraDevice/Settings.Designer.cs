@@ -42,22 +42,16 @@
             checkBoxDrive = new CheckBox();
             textBoxRows = new TextBox();
             labelText5 = new Label();
-            radioButtonSensor1 = new RadioButton();
-            radioButtonSensor2 = new RadioButton();
-            radioButtonBothSensors = new RadioButton();
             labelDateModified = new Label();
-            radioButtonNoneSensors = new RadioButton();
-            radioButtonDetect1 = new RadioButton();
-            radioButtonNoneDetection = new RadioButton();
-            panelDetection = new Panel();
-            panelMotion = new Panel();
             labelText6 = new Label();
-            panelDetection.SuspendLayout();
-            panelMotion.SuspendLayout();
+            checkBoxDoorSensor1 = new CheckBox();
+            checkBoxMotionSensor1 = new CheckBox();
+            checkBoxMotionSensor2 = new CheckBox();
             SuspendLayout();
             // 
             // buttonOk
             // 
+            buttonOk.Enabled = false;
             buttonOk.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             buttonOk.Location = new Point(350, 458);
             buttonOk.Margin = new Padding(4, 3, 4, 3);
@@ -134,6 +128,7 @@
             checkBoxEmail.TabIndex = 9;
             checkBoxEmail.Text = "Enable Email Alert";
             checkBoxEmail.UseVisualStyleBackColor = true;
+            checkBoxEmail.CheckStateChanged += checkBoxEmail_CheckStateChanged;
             checkBoxEmail.Click += checkBoxEmail_Click;
             // 
             // textBoxStream
@@ -179,6 +174,7 @@
             checkBoxDrive.TabIndex = 15;
             checkBoxDrive.Text = "Remote Drive";
             checkBoxDrive.UseVisualStyleBackColor = true;
+            checkBoxDrive.CheckStateChanged += checkBoxDrive_CheckStateChanged;
             checkBoxDrive.Click += checkBoxDrive_Click;
             // 
             // textBoxRows
@@ -199,42 +195,6 @@
             labelText5.TabIndex = 17;
             labelText5.Text = "Set number of rows for log entries.";
             // 
-            // radioButtonSensor1
-            // 
-            radioButtonSensor1.AutoSize = true;
-            radioButtonSensor1.Location = new Point(12, 16);
-            radioButtonSensor1.Name = "radioButtonSensor1";
-            radioButtonSensor1.Size = new Size(138, 20);
-            radioButtonSensor1.TabIndex = 18;
-            radioButtonSensor1.TabStop = true;
-            radioButtonSensor1.Text = "Motion sensor 1.";
-            radioButtonSensor1.UseVisualStyleBackColor = true;
-            radioButtonSensor1.Click += radioButtonSensor1_Click;
-            // 
-            // radioButtonSensor2
-            // 
-            radioButtonSensor2.AutoSize = true;
-            radioButtonSensor2.Location = new Point(157, 16);
-            radioButtonSensor2.Name = "radioButtonSensor2";
-            radioButtonSensor2.Size = new Size(138, 20);
-            radioButtonSensor2.TabIndex = 19;
-            radioButtonSensor2.TabStop = true;
-            radioButtonSensor2.Text = "Motion sensor 2.";
-            radioButtonSensor2.UseVisualStyleBackColor = true;
-            radioButtonSensor2.Click += radioButtonSensor2_Click;
-            // 
-            // radioButtonBothSensors
-            // 
-            radioButtonBothSensors.AutoSize = true;
-            radioButtonBothSensors.Location = new Point(299, 16);
-            radioButtonBothSensors.Name = "radioButtonBothSensors";
-            radioButtonBothSensors.Size = new Size(119, 20);
-            radioButtonBothSensors.TabIndex = 20;
-            radioButtonBothSensors.TabStop = true;
-            radioButtonBothSensors.Text = "Both sensors.";
-            radioButtonBothSensors.UseVisualStyleBackColor = true;
-            radioButtonBothSensors.Click += radioButtonBothSensors_Click;
-            // 
             // labelDateModified
             // 
             labelDateModified.AutoSize = true;
@@ -243,64 +203,6 @@
             labelDateModified.Size = new Size(50, 16);
             labelDateModified.TabIndex = 21;
             labelDateModified.Text = "label1";
-            // 
-            // radioButtonNoneSensors
-            // 
-            radioButtonNoneSensors.AutoSize = true;
-            radioButtonNoneSensors.Location = new Point(424, 16);
-            radioButtonNoneSensors.Name = "radioButtonNoneSensors";
-            radioButtonNoneSensors.Size = new Size(115, 20);
-            radioButtonNoneSensors.TabIndex = 23;
-            radioButtonNoneSensors.TabStop = true;
-            radioButtonNoneSensors.Text = "None Sensor";
-            radioButtonNoneSensors.UseVisualStyleBackColor = true;
-            radioButtonNoneSensors.CheckedChanged += radioButtonNoneSensors_CheckedChanged;
-            radioButtonNoneSensors.Click += radioButtonNoneSensors_Click;
-            // 
-            // radioButtonDetect1
-            // 
-            radioButtonDetect1.AutoSize = true;
-            radioButtonDetect1.Location = new Point(15, 11);
-            radioButtonDetect1.Name = "radioButtonDetect1";
-            radioButtonDetect1.Size = new Size(130, 20);
-            radioButtonDetect1.TabIndex = 24;
-            radioButtonDetect1.TabStop = true;
-            radioButtonDetect1.Text = "Open detection";
-            radioButtonDetect1.UseVisualStyleBackColor = true;
-            radioButtonDetect1.Click += radioButtonDetect1_Click;
-            // 
-            // radioButtonNoneDetection
-            // 
-            radioButtonNoneDetection.AutoSize = true;
-            radioButtonNoneDetection.Location = new Point(160, 11);
-            radioButtonNoneDetection.Name = "radioButtonNoneDetection";
-            radioButtonNoneDetection.Size = new Size(134, 20);
-            radioButtonNoneDetection.TabIndex = 25;
-            radioButtonNoneDetection.TabStop = true;
-            radioButtonNoneDetection.Text = "None detection.";
-            radioButtonNoneDetection.UseVisualStyleBackColor = true;
-            radioButtonNoneDetection.CheckedChanged += radioButtonNoneDetection_CheckedChanged;
-            radioButtonNoneDetection.Click += radioButtonNoneDetection_Click;
-            // 
-            // panelDetection
-            // 
-            panelDetection.Controls.Add(radioButtonNoneDetection);
-            panelDetection.Controls.Add(radioButtonDetect1);
-            panelDetection.Location = new Point(12, 202);
-            panelDetection.Name = "panelDetection";
-            panelDetection.Size = new Size(552, 34);
-            panelDetection.TabIndex = 26;
-            // 
-            // panelMotion
-            // 
-            panelMotion.Controls.Add(radioButtonSensor1);
-            panelMotion.Controls.Add(radioButtonSensor2);
-            panelMotion.Controls.Add(radioButtonNoneSensors);
-            panelMotion.Controls.Add(radioButtonBothSensors);
-            panelMotion.Location = new Point(12, 118);
-            panelMotion.Name = "panelMotion";
-            panelMotion.Size = new Size(552, 39);
-            panelMotion.TabIndex = 27;
             // 
             // labelText6
             // 
@@ -311,14 +213,51 @@
             labelText6.TabIndex = 28;
             labelText6.Text = "Set active detection.";
             // 
+            // checkBoxDoorSensor1
+            // 
+            checkBoxDoorSensor1.AutoSize = true;
+            checkBoxDoorSensor1.Location = new Point(23, 205);
+            checkBoxDoorSensor1.Name = "checkBoxDoorSensor1";
+            checkBoxDoorSensor1.Size = new Size(109, 20);
+            checkBoxDoorSensor1.TabIndex = 29;
+            checkBoxDoorSensor1.Text = "Door status.";
+            checkBoxDoorSensor1.UseVisualStyleBackColor = true;
+            checkBoxDoorSensor1.CheckedChanged += checkBoxDoorSensor1_CheckedChanged;
+            checkBoxDoorSensor1.Click += checkBoxDoorSensor1_Click;
+            // 
+            // checkBoxMotionSensor1
+            // 
+            checkBoxMotionSensor1.AutoSize = true;
+            checkBoxMotionSensor1.Location = new Point(20, 126);
+            checkBoxMotionSensor1.Name = "checkBoxMotionSensor1";
+            checkBoxMotionSensor1.Size = new Size(135, 20);
+            checkBoxMotionSensor1.TabIndex = 30;
+            checkBoxMotionSensor1.Text = "Motion sensor 1";
+            checkBoxMotionSensor1.UseVisualStyleBackColor = true;
+            checkBoxMotionSensor1.CheckedChanged += checkBoxMotionSensor1_CheckedChanged;
+            checkBoxMotionSensor1.Click += checkBoxMotionSensor1_Click;
+            // 
+            // checkBoxMotionSensor2
+            // 
+            checkBoxMotionSensor2.AutoSize = true;
+            checkBoxMotionSensor2.Location = new Point(154, 126);
+            checkBoxMotionSensor2.Name = "checkBoxMotionSensor2";
+            checkBoxMotionSensor2.Size = new Size(135, 20);
+            checkBoxMotionSensor2.TabIndex = 31;
+            checkBoxMotionSensor2.Text = "Motion sensor 2";
+            checkBoxMotionSensor2.UseVisualStyleBackColor = true;
+            checkBoxMotionSensor2.CheckedChanged += checkBoxMotionSensor2_CheckedChanged;
+            checkBoxMotionSensor2.Click += checkBoxMotionSensor2_Click;
+            // 
             // FormSettings
             // 
             AutoScaleDimensions = new SizeF(9F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(576, 495);
+            Controls.Add(checkBoxMotionSensor2);
+            Controls.Add(checkBoxMotionSensor1);
+            Controls.Add(checkBoxDoorSensor1);
             Controls.Add(labelText6);
-            Controls.Add(panelMotion);
-            Controls.Add(panelDetection);
             Controls.Add(labelDateModified);
             Controls.Add(labelText5);
             Controls.Add(textBoxRows);
@@ -341,10 +280,6 @@
             ShowIcon = false;
             Text = "Camera Device";
             Load += FormSettings_Load;
-            panelDetection.ResumeLayout(false);
-            panelDetection.PerformLayout();
-            panelMotion.ResumeLayout(false);
-            panelMotion.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -365,15 +300,10 @@
         private CheckBox checkBoxDrive;
         private TextBox textBoxRows;
         private Label labelText5;
-        private RadioButton radioButtonSensor1;
-        private RadioButton radioButtonSensor2;
-        private RadioButton radioButtonBothSensors;
         private Label labelDateModified;
-        private RadioButton radioButtonNoneSensors;
-        private RadioButton radioButtonDetect1;
-        private RadioButton radioButtonNoneDetection;
-        private Panel panelDetection;
-        private Panel panelMotion;
         private Label labelText6;
+        private CheckBox checkBoxDoorSensor1;
+        private CheckBox checkBoxMotionSensor1;
+        private CheckBox checkBoxMotionSensor2;
     }
 }

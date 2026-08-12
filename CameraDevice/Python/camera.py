@@ -7,6 +7,7 @@ import shutil
 from gpiozero import MotionSensor
 from gpiozero import LED
 from gpiozero import Button
+from RPLCD.i2c import CharLCD
 
 import smtplib 
 from rclone_python import rclone
@@ -18,6 +19,12 @@ dbconfig = mysql.connector.connect(
    password = os.environ["sqlpass"],
    database = "camerasystem"
 )
+
+def showDisplay(displayText):
+  lcd.clear()
+  lcd.write_string("%s" %time.strftime("%d.%m.%Y") + " %s" %time.strftime("%H:%M"))
+  lcd.crlf()
+  lcd.write_string("%s" %displayText)
 
 def recordVideo():
   global alertText
@@ -36,10 +43,10 @@ def recordVideo():
   createfolder2 = "/home/camerauser/gdrive/Recordings/"+datefolder
   checkfolder = os.path.isdir(createfolder)
   checkfolder2 = os.path.isdir(createfolder2)
-  
+
   if not checkfolder and checkspace > 99:
     os.mkdir(createfolder, mode=0o777)
- 
+
   filecount = next(os.walk(createfolder))[2]
   print(len(filecount))
   filecount = len(filecount)
@@ -50,7 +57,6 @@ def recordVideo():
   dbinfo.execute(query, [alertText])
   dbconfig.commit()
 
-
 def streamVideo():
   global filecount
   global starttime
@@ -59,49 +65,76 @@ def streamVideo():
   global frame_width
   global frame_height
   global createfolder
-  global alertText  
-
+  global alertText
+  global recording
+ 
   frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
   fourcc = cv2.VideoWriter_fourcc(*'mp4v')
   output = cv2.VideoWriter(createfolder + '/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
   startTime = time.time()
+
+  recording = 0
+  print("Enbaled: " + str(recording))
   while(int(time.time() - startTime) < recordingTime):
     ret, frame = stream.read()
     output.write(frame)
-    output.release()
-   
-def motionShow():
-   global alertText  
-   global detectStatus
+  print("Video recored completed: ")
+  output.release()
+  recording = 1
+  print("Recording done.")
 
-   detectStatus = True
-   statusspace = 0
-   index = 0
-   print("Check: "+ str(index))
-   match motionChoice:
-      case 1:
-        print("Waiting for motion on sensor 1.")
-        alertText = "Motion detected on sensor 1. "
-        motionLed1.on()
-        motionLed2.off()
-        motionSensor1.wait_for_motion()
-      case 2:
-        print("Waiting for motion on sensor 2.")  
-        alertText = "Motion detected on sensor 2. "
-        motionLed1.off()
-        motionLed2.on()
-        motionSensor2.wait_for_motion()
-      case 3:
-        print("Waiting for motion on either sensor.")
-        alertText = "Motion detected on both sensor. "
-        motionLed1.on()
-        motionLed2.on()
-        while not motionSensor1.motion_detected and not motionSensor2.motion_detected:
-          time.sleep(0.1)
-          continue 
-      case 4:    
-        detectStatus = False
+
+def changeStatus(setText):
+    print(setText + " detected. Please wait until recording is completed.")
+    showDisplay("Camera busy")
+    dbinfo = dbconfig.cursor()
+    query = "insert into cameralogs(logtext) values (%s)"
+    dbinfo.execute(query, [setText + " detected. Camera was busy."])
+    dbconfig.commit()    
+
+def motionShow1():
+  global alertText  
+  global detectStatus
+  global recording
+
+  detectStatus = True
+  statusspace = 0
+  print("Motion Enbaled: " + str(recording))
+  if motionChoice1 == 1:
+    if recording == 1:
+      print("Waiting for motion on sensor 1.")
+      alertText = "Motion detected on sensor 1. " 
+      showDisplay("Motion1 detected")
+      motionLed1.on()
+      motionLed2.off()
+      recordVideo()
+      streamVideo()
+      enableChoice()
+    else:
+      changeStatus("Motion1")
+ 
+  
+def motionShow2():
+  global alertText  
+  global detectStatus
+  global recording
+
+  detectStatus = True
+  statusspace = 0
+  print("Recording " + str(recording))
+  if motionChoice2 == 1:
+    if recording == 1:
+      print("Waiting for motion on sensor 2.")
+      alertText = "Motion detected on sensor 2. " 
+      showDisplay("Motion2 detected")
+      motionLed1.off()
+      motionLed2.on()
+      recordVideo()
+      streamVideo()
+      enableChoice()
+    else:
+      changeStatus("Motion2")
 
 def enableChoice():
   if enableDrive == 'True':
@@ -110,6 +143,7 @@ def enableChoice():
     print(checkfolder2)
     print(createfolder + "/video" + str(filecount) +".mp4")
     copyfrom = createfolder + "/video" + str(filecount) +".mp4"
+    print ("Copying from  " + copyfrom + " to " + createfolder2)
     rclone.copy(copyfrom, createfolder2)
     print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")    
   if enableEmail == 'True':
@@ -122,32 +156,41 @@ def enableChoice():
 
 def doorStatus():
     global alertText
-    match detectChoice:
-      case 1:
+    if detectChoice == 1:
+      if recording == 1:
         print ("Door is opened!")
         alertText = "The door was opened with detection 1. "
+        showDisplay("Door1 detected")
         recordVideo()
         streamVideo()
         enableChoice()
-      case 2:
-        print ("None detection selected.")
+      else: 
+        changeStatus("Door1")
 
-
-stream = cv2.VideoCapture(0)
 motionSensor1 = MotionSensor(12)
 motionSensor2 = MotionSensor(16)
 motionLed1 = LED(23)
 motionLed2 = LED(24)
 detectLed1 = LED(21)
-statusLed1 = LED(17)
+redLed1 = LED(17)
+greenLed1 = LED(27)
+redLed1.off()
+greenLed1.on()
 
-statusLed1.off()
+lcd = CharLCD('PCF8574', 0x27, cols=16, rows=2)
+lcd.clear()
+lcd.write_string("Camera device")
+lcd.crlf()
+lcd.write_string("  activated.")
 
 statusOpen = Button(5,pull_up = True,bounce_time= 0.2)
 username = 'ken.ekholm76@gmail.com'
 password = os.environ["googlemessage"]
-
 statusspace = 1
+recording = 1
+
+
+stream = cv2.VideoCapture(0)
 
 try:
   dbinfo = dbconfig.cursor()
@@ -163,37 +206,54 @@ try:
   enableDrive = row[2]
   sendEmail = row[3]
   recordingTime = row[4]
-  motionChoice = row[7]
+  motionChoice2 = row[7]
   detectChoice = row[8]
+  motionChoice1 = row[9]
   dbconfig.commit()
+  recording = 1
+
+
+  if motionChoice1 == 1:
+    motionLed1.on()
+  else:
+    motionLed1.off()  
+
+  if motionChoice2 == 1:
+    motionLed2.on()
+  else:
+    motionLed2.off()  
  
   if detectChoice == 1:
     detectLed1.on()
   else:
     detectLed1.off()  
 
-  total, used, free = shutil.disk_usage("/media/usbdrive/camerasystem")
-  checkspace = free / total * 100
   while True:
-    if checkspace > 99:
-      statusOpen.when_released = doorStatus
-      motionShow()
-      if detectStatus == True:
-        recordVideo()
-        streamVideo()
-        enableChoice()
-      stream.release()
-    else:
-      if statusspace == 1:
-        print("Not enough space on local drive. " + str(statusspace) + "% free space remaining.")
-        dbinfo = dbconfig.cursor()
-        query = "insert into cameralogs(logtext) values ('Not enough space on local drive.')"
-        dbinfo.execute(query)
-        dbconfig.commit()    
-        statusLed1.on()
-        statusspace = 0
+    total, used, free = shutil.disk_usage("/media/usbdrive/camerasystem")
+    checkspace = free / total * 100
+    statusOpen.when_released = doorStatus
+    motionSensor1.when_motion = motionShow1
+    motionSensor2.when_motion = motionShow2
 
 
+    if statusspace == 1 and checkspace < 98:
+      print("Not enough space on local drive. " + str(statusspace) + "% free space remaining.")
+      dbinfo = dbconfig.cursor()
+      query = "insert into cameralogs(logtext) values ('Not enough space on local drive.')"
+      showDisplay("Not enough space")
+      dbinfo.execute(query)
+      dbconfig.commit()    
+      redLed1.on()
+      greenLed1.off()
+      statusspace = 0
+      if enableEmail == 'True':
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(username, password)
+        message = 'Subject: {}\n\n{}'.format("Camera alert", "Not enough space on local drive.")
+        server.sendmail("Camera alert",sendEmail, message)
+        print("Email sent")
+  stream.release()
 except mysql.connector.Error as error:
     print("Failed to insert record into table {}".format(error))
 except KeyboardInterrupt:

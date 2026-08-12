@@ -46,6 +46,8 @@
             showVideoDetailsToolStripMenuItem = new ToolStripMenuItem();
             playVideoToolStripMenuItem = new ToolStripMenuItem();
             hardwareInfoToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             clearLogsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -55,9 +57,9 @@
             mediumToolStripMenuItem = new ToolStripMenuItem();
             largeToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            restartDeviceToolStripMenuItem = new ToolStripMenuItem();
             shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
-            helpToolStripMenuItem = new ToolStripMenuItem();
-            aboutToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             listBoxVideos = new ListBox();
             labelFileCount = new Label();
@@ -68,6 +70,7 @@
             labelSensor = new Label();
             labelSensor2 = new Label();
             labelDetection = new Label();
+            labelAllSensors = new Label();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
             SuspendLayout();
@@ -80,7 +83,6 @@
             comboBoxFolders.Size = new Size(279, 23);
             comboBoxFolders.TabIndex = 0;
             comboBoxFolders.SelectedIndexChanged += comboBoxFolders_SelectedIndexChanged;
-            comboBoxFolders.TextChanged += comboBoxFolders_TextChanged;
             // 
             // menuStrip1
             // 
@@ -203,9 +205,23 @@
             hardwareInfoToolStripMenuItem.Text = "Hardware Info";
             hardwareInfoToolStripMenuItem.Click += hardwareInfoToolStripMenuItem_Click;
             // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(180, 22);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearLogsToolStripMenuItem, toolStripSeparator1, boldTextToolStripMenuItem, fontSizeToolStripMenuItem, settingsToolStripMenuItem, shutdownDeviceToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearLogsToolStripMenuItem, toolStripSeparator1, boldTextToolStripMenuItem, fontSizeToolStripMenuItem, settingsToolStripMenuItem, toolStripSeparator2, restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(47, 20);
             toolsToolStripMenuItem.Text = "Tools";
@@ -266,26 +282,24 @@
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(162, 6);
+            // 
+            // restartDeviceToolStripMenuItem
+            // 
+            restartDeviceToolStripMenuItem.Name = "restartDeviceToolStripMenuItem";
+            restartDeviceToolStripMenuItem.Size = new Size(165, 22);
+            restartDeviceToolStripMenuItem.Text = "Restart device";
+            restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click;
+            // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
             shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
-            // 
-            // helpToolStripMenuItem
-            // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(44, 20);
-            helpToolStripMenuItem.Text = "Help";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(107, 22);
-            aboutToolStripMenuItem.Text = "About";
-            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
@@ -358,7 +372,7 @@
             // 
             labelSensor.AutoSize = true;
             labelSensor.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelSensor.Location = new Point(322, 503);
+            labelSensor.Location = new Point(323, 489);
             labelSensor.Name = "labelSensor";
             labelSensor.Size = new Size(79, 17);
             labelSensor.TabIndex = 9;
@@ -368,7 +382,7 @@
             // 
             labelSensor2.AutoSize = true;
             labelSensor2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelSensor2.Location = new Point(322, 533);
+            labelSensor2.Location = new Point(323, 519);
             labelSensor2.Name = "labelSensor2";
             labelSensor2.Size = new Size(86, 17);
             labelSensor2.TabIndex = 10;
@@ -378,17 +392,30 @@
             // 
             labelDetection.AutoSize = true;
             labelDetection.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelDetection.Location = new Point(322, 560);
+            labelDetection.Location = new Point(323, 546);
             labelDetection.Name = "labelDetection";
             labelDetection.Size = new Size(45, 17);
             labelDetection.TabIndex = 11;
             labelDetection.Text = "label1";
+            // 
+            // labelAllSensors
+            // 
+            labelAllSensors.AutoSize = true;
+            labelAllSensors.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelAllSensors.ForeColor = Color.Red;
+            labelAllSensors.Location = new Point(323, 576);
+            labelAllSensors.Name = "labelAllSensors";
+            labelAllSensors.Size = new Size(158, 17);
+            labelAllSensors.TabIndex = 12;
+            labelAllSensors.Text = "All sensors are disabled.";
+            labelAllSensors.Visible = false;
             // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1446, 646);
+            Controls.Add(labelAllSensors);
             Controls.Add(labelDetection);
             Controls.Add(labelSensor2);
             Controls.Add(labelSensor);
@@ -457,5 +484,8 @@
         private ToolStripMenuItem deleteFolderToolStripMenuItem;
         private ToolStripMenuItem deleteVideostoolStripMenuItem2;
         private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripMenuItem restartDeviceToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator2;
+        private Label labelAllSensors;
     }
 }

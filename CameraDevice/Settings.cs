@@ -31,7 +31,7 @@ namespace CameraDevice
         string user = "cameraruser";
         string password;
         string host = "cameradevice";
-        int setChoice, setChoice2;
+        int setChoice, setChoice2, setChoice3;
         int checkState = 0;
         bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
@@ -52,46 +52,17 @@ namespace CameraDevice
                     emailAlert = reader.GetString("email");
                     checkEmail = reader.GetBoolean("email");
                     textBoxEmailadress.Text = reader.GetString("sendemail");
-                    setChoice = reader.GetInt32("motionchoice");
+                    setChoice = reader.GetInt32("motionchoice1");
+                    setChoice2 = reader.GetInt32("motionchoice2");
                     textBoxStream.Text = reader.GetInt32("stream").ToString();
                     streamVideo = reader.GetInt32("stream").ToString();
                     streamVideo2 = reader.GetInt32("stream").ToString();
                     textBoxRows.Text = reader.GetInt32("numberofrows").ToString();
                     emailAdress2 = reader.GetString("sendemail");
                     changeDate = reader.GetDateTime("datechanged").ToString();
-                    setChoice2 = reader.GetInt32("openstatus");
+                    setChoice3 = reader.GetInt32("openstatus");
                 }
                 conn.Close();
-
-                switch (setChoice)
-                {
-                    case 1:
-                        radioButtonSensor1.Checked = true;
-                        radioButtonSensor2.Checked = false;
-                        radioButtonBothSensors.Checked = false;
-                        radioButtonNoneSensors.Checked = false;
-                        break;
-
-                    case 2:
-                        radioButtonSensor1.Checked = false;
-                        radioButtonSensor2.Checked = true;
-                        radioButtonBothSensors.Checked = false;
-                        radioButtonNoneSensors.Checked = false;
-                        break;
-
-                    case 3:
-                        radioButtonSensor1.Checked = false;
-                        radioButtonSensor2.Checked = false;
-                        radioButtonBothSensors.Checked = true;
-                        radioButtonNoneSensors.Checked = false;
-                        break;
-                    case 4:
-                        radioButtonSensor1.Checked = false;
-                        radioButtonSensor2.Checked = false;
-                        radioButtonBothSensors.Checked = false;
-                        radioButtonNoneSensors.Checked = true;
-                        break;
-                }
 
                 if (emailAlert == "True")
                 {
@@ -116,18 +87,34 @@ namespace CameraDevice
                 {
                     checkBoxDrive.Checked = false;
                 }
-                switch (setChoice2)
-                {
-                    case 1:
-                        radioButtonDetect1.Checked = true;
-                        radioButtonNoneDetection.Checked = false;
-                        break;
 
-                    case 2:
-                        radioButtonDetect1.Checked = false;
-                        radioButtonNoneDetection.Checked = true;
-                        break;
+                if (setChoice == 1)
+                {
+                    checkBoxMotionSensor1.Checked = true;
                 }
+                else
+                {
+                    checkBoxMotionSensor1.Checked = false;
+                }
+
+                if (setChoice2 == 1)
+                {
+                    checkBoxMotionSensor2.Checked = true;
+                }
+                else
+                {
+                    checkBoxMotionSensor2.Checked = false;
+                }
+
+                if (setChoice3 == 1)
+                {
+                    checkBoxDoorSensor1.Checked = true;
+                }
+                else
+                {
+                    checkBoxDoorSensor1.Checked = false;
+                }
+
 
             }
             catch (Exception i)
@@ -188,13 +175,14 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice = '" + setChoice + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice2 + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "' where id = 1;";
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 command.ExecuteReader();
                 conn.Close();
                 conn.Open();
 
                 MessageBox.Show("Settings updated.", "Camera Device");
+                checkSensors = true;
 
             }
             catch (Exception i)
@@ -314,39 +302,6 @@ namespace CameraDevice
             }
         }
 
-        private void radioButtonSensor1_Click(object sender, EventArgs e)
-        {
-            setChoice = 1;
-            radioButtonSensor1.Checked = true;
-            radioButtonSensor2.Checked = false;
-            radioButtonBothSensors.Checked = false;
-            radioButtonNoneSensors.Checked = false;
-            radioButtonNoneDetection.Enabled = true;
-            checkSensors = true;
-        }
-
-        private void radioButtonSensor2_Click(object sender, EventArgs e)
-        {
-            setChoice = 2;
-            radioButtonSensor1.Checked = false;
-            radioButtonSensor2.Checked = true;
-            radioButtonBothSensors.Checked = false;
-            radioButtonNoneSensors.Checked = false;
-            radioButtonNoneDetection.Enabled = true;
-            checkSensors = true;
-        }
-
-        private void radioButtonBothSensors_Click(object sender, EventArgs e)
-        {
-            setChoice = 3;
-            radioButtonSensor1.Checked = false;
-            radioButtonSensor2.Checked = false;
-            radioButtonBothSensors.Checked = true;
-            radioButtonNoneSensors.Checked = false;
-            radioButtonNoneDetection.Enabled = true;
-            checkSensors = true;
-        }
-
         private void textBoxRows_TextChanged(object sender, EventArgs e)
         {
             if (textBoxRows.Text.Length > 0)
@@ -364,45 +319,67 @@ namespace CameraDevice
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
-        private void radioButtonNoneSensors_Click(object sender, EventArgs e)
-        {
-            setChoice = 4;
-            radioButtonSensor1.Checked = false;
-            radioButtonSensor2.Checked = false;
-            radioButtonBothSensors.Checked = false;
-            radioButtonNoneSensors.Checked = true;
-            checkSensors = true;
-        }
 
-        private void radioButtonDetect1_Click(object sender, EventArgs e)
+        private void checkBoxDoorSensor1_Click(object sender, EventArgs e)
         {
-            setChoice2 = 1;
-            radioButtonDetect1.Checked = true;
-            radioButtonNoneDetection.Checked = false;
-            radioButtonNoneSensors.Enabled = true;
-        }
-
-        private void radioButtonNoneDetection_Click(object sender, EventArgs e)
-        {
-            setChoice2= 2;
-            radioButtonDetect1.Checked = false;
-            radioButtonNoneDetection.Checked = true;
-        }
-
-        private void radioButtonNoneDetection_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButtonNoneDetection.Checked)
+            if (checkBoxDoorSensor1.Checked)
             {
-                radioButtonNoneSensors.Enabled = false;
+                setChoice3 = 1;
+            }
+            else
+            {
+                setChoice3 = 0;
+            }
+            MessageBox.Show("Door sensor 1 state changed to: " + setChoice3.ToString());
+        }
+
+        private void checkBoxMotionSensor1_Click(object sender, EventArgs e)
+        {
+            if (checkBoxMotionSensor1.Checked)
+            {
+                setChoice = 1;
+            }
+            else
+            {
+                setChoice = 0;
             }
         }
 
-        private void radioButtonNoneSensors_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxMotionSensor2_Click(object sender, EventArgs e)
         {
-            if (radioButtonNoneSensors.Checked)
+            if (checkBoxMotionSensor2.Checked)
             {
-                radioButtonNoneDetection.Enabled= false;
+                setChoice2 = 1;
             }
+            else
+            {
+                setChoice2 = 0;
+            }
+        }
+
+        private void checkBoxEmail_CheckStateChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
+        }
+
+        private void checkBoxDrive_CheckStateChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
+        }
+
+        private void checkBoxDoorSensor1_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
+        }
+
+        private void checkBoxMotionSensor1_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
+        }
+
+        private void checkBoxMotionSensor2_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
         }
     }
 }
