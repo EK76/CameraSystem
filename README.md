@@ -1,7 +1,7 @@
 # CameraDevice
 
 The goal with this IT project project was to record videos with a certain length when a motion sensor or magnetic connector switch was triggered. This project contains of two motion sensors and a magnetic connector switch
-that control the usb camera. The recordings are saved automatically to local hard drive and optionally to cloud share. For cloud share I have used Google drive. Search online with the phrase 
+that control the usb camera. There is also a LCD display that show info when a event occur (e.g motion detection). The recordings are saved automatically to local hard drive and optionally to cloud share. For cloud share I have used Google drive. Search online with the phrase 
 *"How to setup Google drive share in linux"* to learn more about to setup Google drive in linux. 
 
 It is also possible to watch or delete these video recordings both from local storage and
@@ -21,6 +21,7 @@ MySql.Data makes it easier to read from and make changes to MySQL database when 
 - 2 PIR motion sensors
 - Magnetic connector switch
 - 4 leds
+- LCD display
   
 Usb camera, motion sensors and magnetic connector switch are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, 
 when a motion sensor or a magnetic connection switch is trigged. 
@@ -56,7 +57,6 @@ The connection between Raspberry PI5 and sensor motions.
 - In my case motion sensor1's pin labelled OUT is connected to GPIO 12 on the Raspberry Pi5.
 - in my cate motion sensor2's pin labelled OUT is connected to GPIO 16 on the Raspberry Pi5.
   
-
 ### The installation of library for the motion sensor.
 
 #### Raspberry Pi OS (Recommended).
@@ -94,9 +94,40 @@ The connection between Raspberry PI5 and the leds.
 
 Leds are using the same the library as motion sensor and magnetic connector switch.
 
+### LCD display
+<img width="300" height="120" alt="lcddisplay2" src="https://github.com/user-attachments/assets/9430baf6-e434-4600-8474-941897cef9af" />
+<img width="300" height="120" alt="lcddisplay1" src="https://github.com/user-attachments/assets/3e0e12c3-9224-4cb3-8161-25d2c61f2e7c" />
+
+The LCD display used in this project is 16x2 with I2C protocol connection. 16x2 means it contains of two rows, which both can contain of 16 characters.
+I2C stands for Inter-Integrated Circuit. It is a simple two-wire communication system in this case between the LCD display and Raspberry Pi5.
+
+ #### Information about I2C protocol's function.
+- Uses two shared signal lines: SDA (Serial Data Line) to send data, and SCL (Serial Clock Line) to keep the timing synced.
+- Operates with a controller (master) device that directs traffic and a peripheral (slave) device that responds.
+- Each slave device has a unique address. The master calls this address so only the correct part listens.
+- Built-in acknowledgment bits tell the master if data arrived safely.
+
+The connection between Raspberry PI5 and the LCD display.
+- The LCD display's SDA pin is connected to SDA pin (GPIO2) on the Raspberry Pi5.
+- The LCD display's SCL pin is connected to SCL pin on (GPIO3) on the Raspberry Pi5.
+- The LCD display's VCC pin is connected to 5V pin on the Raspberry Pi5.
+- The LCD display's GND pin is connected to ground on the Raspberry Pi5.
+
+Before you can use this LCD display, you must activate I2C.
+- Type ***sudo raspi-config*** and press Enter in a terminal window.
+- Use the arrow keys to select 3 Interface Options or 5 Interfacing Options (depending on your OS version) and press Enter.
+- Choose I2C and select Yes to enable the ARM I2C interface.
+- Select Ok and then Finish to exit the configuration menu.
+- Reboot your Raspberry Pi 5 using ***sudo reboot*** for changes to take effect.
+
+### Installation of library for the LCD display.
+
+```
+sudo pip3 install RPLCD smbus2
+```
 ### This project contains of two mysql tables.
 
-- cameralogs – where the alert text is saved to when for example a motion sensor is triggeded.
+- cameralogs – where the alert text is saved to when for example a motion sensor is triggeed.
 - settings – where the settings are stored.
 
 To create the tables, follow the instructions below.
@@ -119,7 +150,9 @@ sendemail varchar(250),
 stream int,
 datechanged timestamp not null default current_timestamp on update current_timestamp,
 numberofrows int,
-motionchoice int,
+motionchoice1 int,
+motionchoice2 int,
+openstatus int,
 primary key(id)
 );
 ```
@@ -130,7 +163,7 @@ The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this p
 - Change email address.
 - The recording length for video.
 - Enable cloud share.
-- Choose if only sensor motion 1 or sensor motion2 or both are enabled.
+- Choose if sensor motion 1 and sensor motion2 are enabled or disabled.
 - Choose if the magnetic connector switch is enabled or disabled.
 
 You can modify these setting with the Visual Studio C# project.
@@ -174,7 +207,6 @@ Put this line at bottom of /etc/sudoers file with the help of sudo visudo.
 ```
 camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/camerarshutdown.sh
 ```
-
 I also created another service, gdrive.service that controls the cloudshare, in my case Google drive.
 ```
 [Unit]
