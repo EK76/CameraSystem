@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             comboBoxFolders = new ComboBox();
             menuStrip1 = new MenuStrip();
@@ -45,9 +46,6 @@
             logsToolStripMenuItem = new ToolStripMenuItem();
             showVideoDetailsToolStripMenuItem = new ToolStripMenuItem();
             playVideoToolStripMenuItem = new ToolStripMenuItem();
-            hardwareInfoToolStripMenuItem = new ToolStripMenuItem();
-            helpToolStripMenuItem = new ToolStripMenuItem();
-            aboutToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             clearLogsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
@@ -60,8 +58,14 @@
             toolStripSeparator2 = new ToolStripSeparator();
             restartDeviceToolStripMenuItem = new ToolStripMenuItem();
             shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             listBoxVideos = new ListBox();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            playVideoToolStripMenuItem2 = new ToolStripMenuItem();
+            copyVideosToolStripMenuItem2 = new ToolStripMenuItem();
+            deleteVideosToolStripMenuItem3 = new ToolStripMenuItem();
             labelFileCount = new Label();
             labelFileDate = new Label();
             labelFileSize = new Label();
@@ -72,6 +76,7 @@
             labelDetection = new Label();
             labelAllSensors = new Label();
             menuStrip1.SuspendLayout();
+            contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
             SuspendLayout();
             // 
@@ -92,6 +97,7 @@
             menuStrip1.Size = new Size(1446, 24);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
+            menuStrip1.ItemClicked += menuStrip1_ItemClicked;
             // 
             // fileToolStripMenuItem
             // 
@@ -162,7 +168,7 @@
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshVideosToolStripMenuItem, logsToolStripMenuItem, showVideoDetailsToolStripMenuItem, playVideoToolStripMenuItem, hardwareInfoToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshVideosToolStripMenuItem, logsToolStripMenuItem, showVideoDetailsToolStripMenuItem, playVideoToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "View";
@@ -198,27 +204,6 @@
             playVideoToolStripMenuItem.Text = "Play Video";
             playVideoToolStripMenuItem.Click += playVideoToolStripMenuItem_Click;
             // 
-            // hardwareInfoToolStripMenuItem
-            // 
-            hardwareInfoToolStripMenuItem.Name = "hardwareInfoToolStripMenuItem";
-            hardwareInfoToolStripMenuItem.Size = new Size(174, 22);
-            hardwareInfoToolStripMenuItem.Text = "Hardware Info";
-            hardwareInfoToolStripMenuItem.Click += hardwareInfoToolStripMenuItem_Click;
-            // 
-            // helpToolStripMenuItem
-            // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(44, 20);
-            helpToolStripMenuItem.Text = "Help";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new Size(180, 22);
-            aboutToolStripMenuItem.Text = "About";
-            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
-            // 
             // toolsToolStripMenuItem
             // 
             toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearLogsToolStripMenuItem, toolStripSeparator1, boldTextToolStripMenuItem, fontSizeToolStripMenuItem, settingsToolStripMenuItem, toolStripSeparator2, restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem });
@@ -229,19 +214,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(165, 22);
+            clearLogsToolStripMenuItem.Size = new Size(180, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(162, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(165, 22);
+            boldTextToolStripMenuItem.Size = new Size(180, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -249,7 +234,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(165, 22);
+            fontSizeToolStripMenuItem.Size = new Size(180, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -278,28 +263,42 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(165, 22);
+            settingsToolStripMenuItem.Size = new Size(180, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(162, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // restartDeviceToolStripMenuItem
             // 
             restartDeviceToolStripMenuItem.Name = "restartDeviceToolStripMenuItem";
-            restartDeviceToolStripMenuItem.Size = new Size(165, 22);
+            restartDeviceToolStripMenuItem.Size = new Size(180, 22);
             restartDeviceToolStripMenuItem.Text = "Restart device";
             restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
+            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            aboutToolStripMenuItem.Size = new Size(107, 22);
+            aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
@@ -308,6 +307,7 @@
             // 
             // listBoxVideos
             // 
+            listBoxVideos.ContextMenuStrip = contextMenuStrip1;
             listBoxVideos.Font = new Font("Segoe UI", 14F);
             listBoxVideos.FormattingEnabled = true;
             listBoxVideos.Location = new Point(12, 112);
@@ -318,6 +318,36 @@
             listBoxVideos.Click += listBoxVideos_Click;
             listBoxVideos.SelectedIndexChanged += listBoxVideos_SelectedIndexChanged;
             listBoxVideos.DoubleClick += listBoxVideos_DoubleClick;
+            // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { playVideoToolStripMenuItem2, copyVideosToolStripMenuItem2, deleteVideosToolStripMenuItem3 });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(146, 70);
+            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
+            // 
+            // playVideoToolStripMenuItem2
+            // 
+            playVideoToolStripMenuItem2.Enabled = false;
+            playVideoToolStripMenuItem2.Name = "playVideoToolStripMenuItem2";
+            playVideoToolStripMenuItem2.Size = new Size(145, 22);
+            playVideoToolStripMenuItem2.Text = "Play Video";
+            // 
+            // copyVideosToolStripMenuItem2
+            // 
+            copyVideosToolStripMenuItem2.Enabled = false;
+            copyVideosToolStripMenuItem2.Name = "copyVideosToolStripMenuItem2";
+            copyVideosToolStripMenuItem2.Size = new Size(145, 22);
+            copyVideosToolStripMenuItem2.Text = "Copy Videos";
+            copyVideosToolStripMenuItem2.Click += copyVideosToolStripMenuItem2_Click;
+            // 
+            // deleteVideosToolStripMenuItem3
+            // 
+            deleteVideosToolStripMenuItem3.Enabled = false;
+            deleteVideosToolStripMenuItem3.Name = "deleteVideosToolStripMenuItem3";
+            deleteVideosToolStripMenuItem3.Size = new Size(145, 22);
+            deleteVideosToolStripMenuItem3.Text = "Delete Videos";
+            deleteVideosToolStripMenuItem3.Click += deleteVideosToolStripMenuItem3_Click;
             // 
             // labelFileCount
             // 
@@ -362,7 +392,7 @@
             // 
             labelStorage.AutoSize = true;
             labelStorage.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelStorage.Location = new Point(301, 615);
+            labelStorage.Location = new Point(323, 611);
             labelStorage.Name = "labelStorage";
             labelStorage.Size = new Size(177, 17);
             labelStorage.TabIndex = 8;
@@ -437,6 +467,7 @@
             Load += FormMain_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -472,7 +503,6 @@
         private ToolStripMenuItem playVideoToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
-        private ToolStripMenuItem hardwareInfoToolStripMenuItem;
         private Label labelStorage;
         private ToolStripMenuItem openStorageToolStripMenuItem;
         private ToolStripMenuItem localStorageToolStripMenuItem;
@@ -487,5 +517,9 @@
         private ToolStripMenuItem restartDeviceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private Label labelAllSensors;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem playVideoToolStripMenuItem2;
+        private ToolStripMenuItem copyVideosToolStripMenuItem2;
+        private ToolStripMenuItem deleteVideosToolStripMenuItem3;
     }
 }

@@ -28,30 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buttonClose = new Button();
             listViewLogs = new ListView();
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
             labelText = new Label();
-            buttonBackup = new Button();
             comboBoxSelection = new ComboBox();
-            labelCountRows = new Label();
             comboBoxDate = new ComboBox();
             labelDateStart = new Label();
             labelDateEnd = new Label();
-            buttonGraph = new Button();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            backupLogsToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
+            boldTextToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            graphToolStripMenuItem = new ToolStripMenuItem();
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabelSelection = new ToolStripStatusLabel();
+            menuStrip1.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
-            // 
-            // buttonClose
-            // 
-            buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonClose.Location = new Point(518, 719);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new Size(75, 25);
-            buttonClose.TabIndex = 0;
-            buttonClose.Text = "Close";
-            buttonClose.UseVisualStyleBackColor = true;
-            buttonClose.Click += buttonClose_Click;
             // 
             // listViewLogs
             // 
@@ -59,7 +57,7 @@
             listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             listViewLogs.Location = new Point(11, 84);
             listViewLogs.Name = "listViewLogs";
-            listViewLogs.Size = new Size(583, 623);
+            listViewLogs.Size = new Size(583, 658);
             listViewLogs.TabIndex = 1;
             listViewLogs.UseCompatibleStateImageBehavior = false;
             listViewLogs.View = View.Details;
@@ -84,17 +82,6 @@
             labelText.TabIndex = 2;
             labelText.Text = "Show logs.";
             // 
-            // buttonBackup
-            // 
-            buttonBackup.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonBackup.Location = new Point(413, 719);
-            buttonBackup.Name = "buttonBackup";
-            buttonBackup.Size = new Size(99, 25);
-            buttonBackup.TabIndex = 3;
-            buttonBackup.Text = "Backup Logs";
-            buttonBackup.UseVisualStyleBackColor = true;
-            buttonBackup.Click += buttonBackup_Click;
-            // 
             // comboBoxSelection
             // 
             comboBoxSelection.FormattingEnabled = true;
@@ -103,16 +90,6 @@
             comboBoxSelection.Size = new Size(205, 23);
             comboBoxSelection.TabIndex = 4;
             comboBoxSelection.SelectedIndexChanged += comboBoxSelection_SelectedIndexChanged;
-            // 
-            // labelCountRows
-            // 
-            labelCountRows.AutoSize = true;
-            labelCountRows.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelCountRows.Location = new Point(14, 724);
-            labelCountRows.Name = "labelCountRows";
-            labelCountRows.Size = new Size(45, 17);
-            labelCountRows.TabIndex = 5;
-            labelCountRows.Text = "label1";
             // 
             // comboBoxDate
             // 
@@ -143,57 +120,136 @@
             labelDateEnd.TabIndex = 8;
             labelDateEnd.Text = "label2";
             // 
-            // buttonGraph
+            // menuStrip1
             // 
-            buttonGraph.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonGraph.ImageAlign = ContentAlignment.BottomCenter;
-            buttonGraph.Location = new Point(316, 721);
-            buttonGraph.Name = "buttonGraph";
-            buttonGraph.Size = new Size(91, 23);
-            buttonGraph.TabIndex = 9;
-            buttonGraph.Text = "View Graph";
-            buttonGraph.UseVisualStyleBackColor = true;
-            buttonGraph.Click += buttonGraph_Click;
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, viewToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(606, 24);
+            menuStrip1.TabIndex = 10;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { backupLogsToolStripMenuItem, exitToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // backupLogsToolStripMenuItem
+            // 
+            backupLogsToolStripMenuItem.Name = "backupLogsToolStripMenuItem";
+            backupLogsToolStripMenuItem.Size = new Size(141, 22);
+            backupLogsToolStripMenuItem.Text = "Backup Logs";
+            backupLogsToolStripMenuItem.Click += backupLogsToolStripMenuItem_Click;
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(141, 22);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // editToolStripMenuItem
+            // 
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { deleteToolStripMenuItem, boldTextToolStripMenuItem });
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(39, 20);
+            editToolStripMenuItem.Text = "Edit";
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Enabled = false;
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(186, 22);
+            deleteToolStripMenuItem.Text = "Delete Selected Items";
+            deleteToolStripMenuItem.Click += deleteToolStripMenuItem_Click;
+            // 
+            // boldTextToolStripMenuItem
+            // 
+            boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
+            boldTextToolStripMenuItem.Size = new Size(186, 22);
+            boldTextToolStripMenuItem.Text = "Bold Text";
+            boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
+            // 
+            // viewToolStripMenuItem
+            // 
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { graphToolStripMenuItem });
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new Size(44, 20);
+            viewToolStripMenuItem.Text = "View";
+            // 
+            // graphToolStripMenuItem
+            // 
+            graphToolStripMenuItem.Name = "graphToolStripMenuItem";
+            graphToolStripMenuItem.Size = new Size(106, 22);
+            graphToolStripMenuItem.Text = "Graph";
+            graphToolStripMenuItem.Click += graphToolStripMenuItem_Click;
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabelSelection });
+            statusStrip1.Location = new Point(0, 745);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(606, 22);
+            statusStrip1.TabIndex = 0;
+            statusStrip1.ItemClicked += statusStrip1_ItemClicked;
+            // 
+            // toolStripStatusLabelSelection
+            // 
+            toolStripStatusLabelSelection.Name = "toolStripStatusLabelSelection";
+            toolStripStatusLabelSelection.Size = new Size(118, 17);
+            toolStripStatusLabelSelection.Text = "toolStripStatusLabel1";
             // 
             // FormLogs
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(606, 754);
-            Controls.Add(buttonGraph);
+            ClientSize = new Size(606, 767);
+            Controls.Add(statusStrip1);
             Controls.Add(labelDateEnd);
             Controls.Add(labelDateStart);
             Controls.Add(comboBoxDate);
-            Controls.Add(labelCountRows);
             Controls.Add(comboBoxSelection);
-            Controls.Add(buttonBackup);
             Controls.Add(labelText);
             Controls.Add(listViewLogs);
-            Controls.Add(buttonClose);
+            Controls.Add(menuStrip1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MainMenuStrip = menuStrip1;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormLogs";
             ShowIcon = false;
             Text = "Camera Device";
             Load += FormLogs_Load;
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Button buttonClose;
         private ListView listViewLogs;
         private Label labelText;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
-        private Button buttonBackup;
         private ComboBox comboBoxSelection;
-        private Label labelCountRows;
+        private Label toolStripStatusLabelStatus;
         private ComboBox comboBoxDate;
         private Label labelDateStart;
         private Label labelDateEnd;
-        private Button buttonGraph;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem backupLogsToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
+        private ToolStripMenuItem boldTextToolStripMenuItem;
+        private ToolStripMenuItem viewToolStripMenuItem;
+        private ToolStripMenuItem graphToolStripMenuItem;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel toolStripStatusLabelSelection;
     }
 }

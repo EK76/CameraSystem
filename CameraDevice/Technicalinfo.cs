@@ -28,6 +28,8 @@ namespace ReadTemp
             pictureBox2.Image = Image.FromFile(@"Pictures\cameramodule3.png");
             pictureBox3.Image = Image.FromFile(@"Pictures\raspberrypi.png");
             pictureBox4.Image = Image.FromFile(@"Pictures\motionsensor.png");
+            pictureBox5.Image = Image.FromFile(@"Pictures\magneticswitch.png");
+
         }
     }
 }

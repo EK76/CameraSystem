@@ -28,68 +28,85 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            buttonClose = new Button();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             chartView = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            labelText = new Label();
+            radioButtonShowDates = new RadioButton();
+            radioButtonShowTopics = new RadioButton();
+            listBoxShowTopics = new ListBox();
             ((System.ComponentModel.ISupportInitialize)chartView).BeginInit();
             SuspendLayout();
-            // 
-            // buttonClose
-            // 
-            buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonClose.Location = new Point(728, 542);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new Size(75, 23);
-            buttonClose.TabIndex = 0;
-            buttonClose.Text = "Close";
-            buttonClose.UseVisualStyleBackColor = true;
-            buttonClose.Click += buttonClose_Click;
             // 
             // chartView
             // 
             chartView.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.Center;
-            chartArea2.AxisX.MajorGrid.Enabled = false;
-            chartArea2.AxisY.MajorGrid.Enabled = false;
-            chartArea2.Name = "ChartArea1";
-            chartView.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            chartView.Legends.Add(legend2);
+            chartArea1.AxisX.MajorGrid.Enabled = false;
+            chartArea1.AxisY.MajorGrid.Enabled = false;
+            chartArea1.Name = "ChartArea1";
+            chartView.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            chartView.Legends.Add(legend1);
             chartView.Location = new Point(12, 43);
             chartView.Name = "chartView";
-            series2.ChartArea = "ChartArea1";
-            series2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            series2.IsValueShownAsLabel = true;
-            series2.IsVisibleInLegend = false;
-            series2.IsXValueIndexed = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.YValuesPerPoint = 2;
-            chartView.Series.Add(series2);
-            chartView.Size = new Size(798, 484);
+            series1.ChartArea = "ChartArea1";
+            series1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            series1.IsValueShownAsLabel = true;
+            series1.IsVisibleInLegend = false;
+            series1.IsXValueIndexed = true;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.YValuesPerPoint = 2;
+            chartView.Series.Add(series1);
+            chartView.Size = new Size(795, 484);
             chartView.TabIndex = 1;
             chartView.Text = "chart1";
             // 
-            // labelText
+            // radioButtonShowDates
             // 
-            labelText.AutoSize = true;
-            labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            labelText.Location = new Point(12, 9);
-            labelText.Name = "labelText";
-            labelText.Size = new Size(230, 17);
-            labelText.TabIndex = 2;
-            labelText.Text = "Number of evenrs for current dates.";
+            radioButtonShowDates.AutoSize = true;
+            radioButtonShowDates.Checked = true;
+            radioButtonShowDates.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            radioButtonShowDates.Location = new Point(16, 13);
+            radioButtonShowDates.Name = "radioButtonShowDates";
+            radioButtonShowDates.Size = new Size(248, 21);
+            radioButtonShowDates.TabIndex = 2;
+            radioButtonShowDates.TabStop = true;
+            radioButtonShowDates.Text = "Number of events for current dates.";
+            radioButtonShowDates.UseVisualStyleBackColor = true;
+            radioButtonShowDates.CheckedChanged += radioButtonShowDates_CheckedChanged;
+            // 
+            // radioButtonShowTopics
+            // 
+            radioButtonShowTopics.AutoSize = true;
+            radioButtonShowTopics.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            radioButtonShowTopics.Location = new Point(283, 13);
+            radioButtonShowTopics.Name = "radioButtonShowTopics";
+            radioButtonShowTopics.Size = new Size(252, 21);
+            radioButtonShowTopics.TabIndex = 3;
+            radioButtonShowTopics.Text = "Number of events for current topics.";
+            radioButtonShowTopics.UseVisualStyleBackColor = true;
+            radioButtonShowTopics.CheckedChanged += radioButtonShowTopics_CheckedChanged;
+            // 
+            // listBoxShowTopics
+            // 
+            listBoxShowTopics.BackColor = SystemColors.Control;
+            listBoxShowTopics.FormattingEnabled = true;
+            listBoxShowTopics.Location = new Point(813, 43);
+            listBoxShowTopics.Name = "listBoxShowTopics";
+            listBoxShowTopics.Size = new Size(250, 484);
+            listBoxShowTopics.TabIndex = 4;
             // 
             // FormViewgraph
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(822, 581);
-            Controls.Add(labelText);
+            ClientSize = new Size(1069, 541);
+            Controls.Add(listBoxShowTopics);
+            Controls.Add(radioButtonShowTopics);
+            Controls.Add(radioButtonShowDates);
             Controls.Add(chartView);
-            Controls.Add(buttonClose);
+            ForeColor = SystemColors.ControlText;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -103,9 +120,9 @@
         }
 
         #endregion
-
-        private Button buttonClose;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartView;
-        private Label labelText;
+        private RadioButton radioButtonShowDates;
+        private RadioButton radioButtonShowTopics;
+        private ListBox listBoxShowTopics;
     }
 }

@@ -27,7 +27,7 @@ namespace CameraDevice
             InitializeComponent();
         }
         string checkString, connString;
-        string drive, emailAlert, emailAdress, emailAdress2, streamVideo, streamVideo2, setFolder, rowsOfNumbers, changeDate, openStatus;
+        string drive, emailAlert, emailAdress, emailAdress2, streamVideo, setFolder, rowsOfNumbers, changeDate, openStatus;
         string user = "cameraruser";
         string password;
         string host = "cameradevice";
@@ -56,7 +56,6 @@ namespace CameraDevice
                     setChoice2 = reader.GetInt32("motionchoice2");
                     textBoxStream.Text = reader.GetInt32("stream").ToString();
                     streamVideo = reader.GetInt32("stream").ToString();
-                    streamVideo2 = reader.GetInt32("stream").ToString();
                     textBoxRows.Text = reader.GetInt32("numberofrows").ToString();
                     emailAdress2 = reader.GetString("sendemail");
                     changeDate = reader.GetDateTime("datechanged").ToString();
@@ -114,7 +113,7 @@ namespace CameraDevice
                 {
                     checkBoxDoorSensor1.Checked = false;
                 }
-
+                buttonOk.Enabled = false;
 
             }
             catch (Exception i)
@@ -156,23 +155,6 @@ namespace CameraDevice
 
             try
             {
-                if (streamVideo != streamVideo2)
-                {
-                    MySqlConnection conn = new MySqlConnection(connString);
-                    conn.Open();
-                    checkString = "insert into cameralogs(logtext) values('Camera recording value was changed to " + streamVideo.ToString() + " seconds.');";
-                    MySqlCommand command = new MySqlCommand(checkString, conn);
-                    MySqlDataReader reader = command.ExecuteReader();
-                    conn.Close();
-                }
-            }
-            catch (Exception i)
-            {
-                MessageBox.Show(i.Message);
-            }
-
-            try
-            {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "' where id = 1;";
@@ -180,6 +162,10 @@ namespace CameraDevice
                 command.ExecuteReader();
                 conn.Close();
                 conn.Open();
+                checkString = "insert into cameralogs(logtext) values('Settings were updated.');";
+                MySqlCommand command2 = new MySqlCommand(checkString, conn);
+                MySqlDataReader reader2 = command2.ExecuteReader();
+                conn.Close();
 
                 MessageBox.Show("Settings updated.", "Camera Device");
                 checkSensors = true;
@@ -210,6 +196,7 @@ namespace CameraDevice
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Changed settings were not updated.", "Camera Device");
             Close();
         }
 
@@ -265,7 +252,6 @@ namespace CameraDevice
         private void textBoxEmailadress_TextChanged(object sender, EventArgs e)
         {
             if ((textBoxStream.Text.Length > 0) && (textBoxEmailadress.Text.Length > 0))
-
             {
                 buttonOk.Enabled = true;
             }
@@ -330,7 +316,6 @@ namespace CameraDevice
             {
                 setChoice3 = 0;
             }
-            MessageBox.Show("Door sensor 1 state changed to: " + setChoice3.ToString());
         }
 
         private void checkBoxMotionSensor1_Click(object sender, EventArgs e)
@@ -356,7 +341,6 @@ namespace CameraDevice
                 setChoice2 = 0;
             }
         }
-
         private void checkBoxEmail_CheckStateChanged(object sender, EventArgs e)
         {
             buttonOk.Enabled = true;
@@ -380,6 +364,11 @@ namespace CameraDevice
         private void checkBoxMotionSensor2_CheckedChanged(object sender, EventArgs e)
         {
             buttonOk.Enabled = true;
+        }
+
+        private void FormSettings_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            MessageBox.Show("Changed settings were not updated.", "Camera Device");
         }
     }
 }

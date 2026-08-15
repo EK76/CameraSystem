@@ -279,6 +279,7 @@
             Name = "FormSettings";
             ShowIcon = false;
             Text = "Camera Device";
+            FormClosed += FormSettings_FormClosed;
             Load += FormSettings_Load;
             ResumeLayout(false);
             PerformLayout();

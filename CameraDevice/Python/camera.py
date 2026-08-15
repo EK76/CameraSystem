@@ -90,7 +90,7 @@ def changeStatus(setText):
     showDisplay("Camera busy")
     dbinfo = dbconfig.cursor()
     query = "insert into cameralogs(logtext) values (%s)"
-    dbinfo.execute(query, [setText + " detected. Camera was busy."])
+    dbinfo.execute(query, [setText + " detected, Camera was busy."])
     dbconfig.commit()    
 
 def motionShow1():
@@ -104,7 +104,7 @@ def motionShow1():
   if motionChoice1 == 1:
     if recording == 1:
       print("Waiting for motion on sensor 1.")
-      alertText = "Motion detected on sensor 1. " 
+      alertText = "Motion detected on sensor 1." 
       showDisplay("Motion1 detected")
       motionLed1.on()
       motionLed2.off()
@@ -113,7 +113,6 @@ def motionShow1():
       enableChoice()
     else:
       changeStatus("Motion1")
- 
   
 def motionShow2():
   global alertText  
@@ -126,7 +125,7 @@ def motionShow2():
   if motionChoice2 == 1:
     if recording == 1:
       print("Waiting for motion on sensor 2.")
-      alertText = "Motion detected on sensor 2. " 
+      alertText = "Motion detected on sensor 2." 
       showDisplay("Motion2 detected")
       motionLed1.off()
       motionLed2.on()
@@ -159,7 +158,7 @@ def doorStatus():
     if detectChoice == 1:
       if recording == 1:
         print ("Door is opened!")
-        alertText = "The door was opened with detection 1. "
+        alertText = "The door was opened with detection 1."
         showDisplay("Door1 detected")
         recordVideo()
         streamVideo()
@@ -188,8 +187,6 @@ username = 'ken.ekholm76@gmail.com'
 password = os.environ["googlemessage"]
 statusspace = 1
 recording = 1
-
-
 stream = cv2.VideoCapture(0)
 
 try:
@@ -212,7 +209,6 @@ try:
   dbconfig.commit()
   recording = 1
 
-
   if motionChoice1 == 1:
     motionLed1.on()
   else:
@@ -234,7 +230,6 @@ try:
     statusOpen.when_released = doorStatus
     motionSensor1.when_motion = motionShow1
     motionSensor2.when_motion = motionShow2
-
 
     if statusspace == 1 and checkspace < 98:
       print("Not enough space on local drive. " + str(statusspace) + "% free space remaining.")

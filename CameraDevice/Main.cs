@@ -1,6 +1,5 @@
 using Microsoft.VisualBasic.ApplicationServices;
 using MySql.Data.MySqlClient;
-using ReadTemp;
 using Renci.SshNet;
 using System.Collections;
 using System.Diagnostics;
@@ -47,6 +46,10 @@ namespace CameraDevice
             {
                 MessageBox.Show("The path to video recordings is not available");
             }
+            deleteVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            deleteVideosToolStripMenuItem3.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            copyVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            copyVideosToolStripMenuItem2.Enabled = listBoxVideos.SelectedItems.Count > 0;
         }
 
         void showSensorValue()
@@ -74,7 +77,8 @@ namespace CameraDevice
             }
 
 
-            if (showMotionValue1 == 1) {
+            if (showMotionValue1 == 1)
+            {
                 labelSensor.Text = "Motion sensor 1 is enabled";
                 labelSensor.ForeColor = Color.Green;
             }
@@ -108,17 +112,17 @@ namespace CameraDevice
 
             if ((showMotionValue1 == 0) && (showMotionValue2 == 0) && (showDetectionValue == 0))
             {
-              labelAllSensors.Visible = true;
-              labelSensor.Visible = false;
-              labelSensor2.Visible = false;
-              labelDetection.Visible = false;
+                labelAllSensors.Visible = true;
+                labelSensor.Visible = false;
+                labelSensor2.Visible = false;
+                labelDetection.Visible = false;
             }
             else
             {
-              labelAllSensors.Visible = false;
-              labelSensor.Visible = true;
-              labelSensor2.Visible = true;
-              labelDetection.Visible = true;
+                labelAllSensors.Visible = false;
+                labelSensor.Visible = true;
+                labelSensor2.Visible = true;
+                labelDetection.Visible = true;
             }
         }
 
@@ -130,6 +134,66 @@ namespace CameraDevice
             };
             Process.Start(playVideo);
         }
+
+        void copyVideos()
+        {
+            if (MessageBox.Show("Copy selected videos?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                var folderDialog = new FolderBrowserDialog();
+                DialogResult result = folderDialog.ShowDialog();
+                folderDialog.ShowNewFolderButton = true;
+                if (result == DialogResult.OK)
+                {
+                    foreach (object copyValue in listBoxVideos.SelectedItems)
+                    {
+                        string sourceFile = videoFolder + "\\" + selectedFolder + "\\" + copyValue.ToString();
+                        string destFile = Path.Combine(folderDialog.SelectedPath, copyValue.ToString());
+                        File.Copy(sourceFile, destFile, true);
+                    }
+                    MessageBox.Show("Selected videos have been copied.", "Camera Device");
+                }
+            }
+
+        }
+        void deleteVideos()
+        {
+            if (MessageBox.Show("Delete selected videos?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                counterItems = 0;
+                foreach (object deleteValue in listBoxVideos.SelectedItems)
+                {
+                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + deleteValue.ToString());
+                }
+
+                listBoxVideos.Items.Clear();
+                countFiles = 0;
+                DirectoryInfo info = new DirectoryInfo(listAllVideos);
+                FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
+                foreach (FileInfo file in files)
+                {
+                    if (file.Extension == ".mp4")
+                    {
+                        listBoxVideos.Items.Add(file.Name);
+                        countFiles++;
+                    }
+                  /*  else
+                    {
+                        MessageBox.Show(file.Name);
+                    }*/
+                }
+                listBoxVideos.Update();
+                labelFileCount.Text = "Number of videos: " + countFiles.ToString();
+                MessageBox.Show("Selected videos have been deleted.", "Camera Device");
+                deleteVideosToolStripMenuItem.Enabled = false;
+                deleteVideosToolStripMenuItem3.Enabled = false;
+                copyVideosToolStripMenuItem.Enabled = false;
+                copyVideosToolStripMenuItem2.Enabled = false;
+                playVideoToolStripMenuItem.Enabled = false;
+                playVideoToolStripMenuItem2.Enabled = false;
+            }
+        }
+        
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
@@ -168,6 +232,7 @@ namespace CameraDevice
             labelFileCount.Text = "Number of videos: " + countFiles.ToString();
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
+            playVideoToolStripMenuItem2.Enabled = false;
         }
         private void refreshVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -180,12 +245,16 @@ namespace CameraDevice
                     readFolder(driverPath);
                     break;
             }
+            playVideoToolStripMenuItem.Enabled = false;
+            playVideoToolStripMenuItem2.Enabled = false;
         }
 
         private void listBoxVideos_SelectedIndexChanged(object sender, EventArgs e)
         {
             deleteVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            deleteVideosToolStripMenuItem3.Enabled = listBoxVideos.SelectedItems.Count > 0;
             copyVideosToolStripMenuItem.Enabled = listBoxVideos.SelectedItems.Count > 0;
+            copyVideosToolStripMenuItem2.Enabled = listBoxVideos.SelectedItems.Count > 0;
         }
 
         private void showVideoDetailsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -280,36 +349,7 @@ namespace CameraDevice
         private void deleteVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            if (MessageBox.Show("Delete selected videos?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                counterItems = 0;
-                foreach (object deleteValue in listBoxVideos.SelectedItems)
-                {
-                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + deleteValue.ToString());
-                }
-
-                listBoxVideos.Items.Clear();
-                countFiles = 0;
-                DirectoryInfo info = new DirectoryInfo(listAllVideos);
-                FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
-                foreach (FileInfo file in files)
-                {
-                    //    var file2 = new FileInfo(file);
-                    if (file.Extension == ".mp4")
-                    {
-                        listBoxVideos.Items.Add(file.Name);
-                        countFiles++;
-                    }
-                    else
-                    {
-                        MessageBox.Show(file.Name);
-                    }
-                }
-
-                listBoxVideos.Update();
-                labelFileCount.Text = "Number of videos: " + countFiles.ToString();
-                MessageBox.Show("Selected videos have been deleted.", "Home Assistant");
-            }
+            deleteVideos();
         }
         private void listBoxVideos_DoubleClick(object sender, EventArgs e)
         {
@@ -341,6 +381,7 @@ namespace CameraDevice
                 if (countVideos == 1)
                 {
                     playVideoToolStripMenuItem.Enabled = true;
+                    playVideoToolStripMenuItem2.Enabled = true;
 
                     FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
                     DateTime getDate = fileDate.CreationTime;
@@ -353,6 +394,7 @@ namespace CameraDevice
                 else
                 {
                     playVideoToolStripMenuItem.Enabled = false;
+                    playVideoToolStripMenuItem2.Enabled = false;
                     labelFileDate.Text = "Video creation date: ";
                     labelFileSize.Text = "Video size: ";
                 }
@@ -395,13 +437,6 @@ namespace CameraDevice
                 MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!", "Camera Device");
             }
         }
-
-        private void hardwareInfoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormTechnicalInfo hardware = new FormTechnicalInfo();
-            hardware.ShowDialog();
-        }
-
         private void localStorageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedStoragePath = "\\\\cameradevice\\camerasystem";
@@ -443,23 +478,7 @@ namespace CameraDevice
 
         private void copyVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            if (MessageBox.Show("Copy selected videos?", "Camera Device", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                var folderDialog = new FolderBrowserDialog();
-                DialogResult result = folderDialog.ShowDialog();
-                folderDialog.ShowNewFolderButton = true;
-                if (result == DialogResult.OK)
-                {
-                    foreach (object copyValue in listBoxVideos.SelectedItems)
-                    {
-                        string sourceFile = videoFolder + "\\" + selectedFolder + "\\" + copyValue.ToString();
-                        string destFile = Path.Combine(folderDialog.SelectedPath, copyValue.ToString());
-                        File.Copy(sourceFile, destFile, true);
-                    }
-                    MessageBox.Show("Selected videos have been copied.", "Camera Device");
-                }
-            }
+            copyVideos();
         }
 
         private void motionSensorStatusToolStripMenuItem_Click(object sender, EventArgs e)
@@ -533,6 +552,26 @@ namespace CameraDevice
                 process.Start();
                 MessageBox.Show("Device has been restarted", "Camera Device");
             }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void deleteVideosToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            deleteVideos();
+        }
+
+        private void copyVideosToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            copyVideos();
         }
     }
 }
