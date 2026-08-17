@@ -291,15 +291,15 @@ namespace CameraDevice
 
         private void boldTextToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!boldTextToolStripMenuItem.Checked)
-            {
-                boldTextToolStripMenuItem.Checked = true;
-                listViewLogs.Font = new Font(listViewLogs.Font, FontStyle.Bold);
-            }
-            else
+            if (boldTextToolStripMenuItem.Checked)
             {
                 boldTextToolStripMenuItem.Checked = false;
                 listViewLogs.Font = new Font(listViewLogs.Font, FontStyle.Regular);
+            }
+            else
+            {
+                boldTextToolStripMenuItem.Checked = true;
+                listViewLogs.Font = new Font(listViewLogs.Font, FontStyle.Bold);
             }
         }
 

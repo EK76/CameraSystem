@@ -54,7 +54,7 @@
             // listViewLogs
             // 
             listViewLogs.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
-            listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             listViewLogs.Location = new Point(11, 84);
             listViewLogs.Name = "listViewLogs";
             listViewLogs.Size = new Size(583, 658);
@@ -167,6 +167,8 @@
             // 
             // boldTextToolStripMenuItem
             // 
+            boldTextToolStripMenuItem.Checked = true;
+            boldTextToolStripMenuItem.CheckState = CheckState.Checked;
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
             boldTextToolStripMenuItem.Size = new Size(186, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
@@ -182,7 +184,7 @@
             // graphToolStripMenuItem
             // 
             graphToolStripMenuItem.Name = "graphToolStripMenuItem";
-            graphToolStripMenuItem.Size = new Size(106, 22);
+            graphToolStripMenuItem.Size = new Size(180, 22);
             graphToolStripMenuItem.Text = "Graph";
             graphToolStripMenuItem.Click += graphToolStripMenuItem_Click;
             // 

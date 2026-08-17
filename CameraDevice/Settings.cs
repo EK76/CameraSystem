@@ -125,6 +125,7 @@ namespace CameraDevice
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
+            checkChanges = true;
             if (checkBoxDrive.Checked)
             {
                 drive = "True";
@@ -196,8 +197,7 @@ namespace CameraDevice
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Changed settings were not updated.", "Camera Device");
-            Close();
+           Close();
         }
 
         private void checkBoxEmail_Click(object sender, EventArgs e)
@@ -368,7 +368,10 @@ namespace CameraDevice
 
         private void FormSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-            MessageBox.Show("Changed settings were not updated.", "Camera Device");
+            if (checkChanges == false)
+            {
+                MessageBox.Show("Changed settings were not updated.", "Camera Device");
+            }
         }
     }
 }
