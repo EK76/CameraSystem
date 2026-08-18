@@ -16,9 +16,7 @@ namespace CameraDevice
         public FormConfirm()
         {
             InitializeComponent();
-        }
-
-       
+        }  
         string checkString, connString;
 
         public object HomeAssistProperties { get; private set; }
