@@ -21,7 +21,7 @@ MySql.Data makes it easier to read from and make changes to MySQL database when 
 - 2 PIR motion sensors
 - Magnetic connector switch
 - 4 leds
-- LCD display
+- 16x2 LCD display with I2C interface
   
 Usb camera, motion sensors and magnetic connector switch are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, 
 when a motion sensor or a magnetic connection switch is trigged. 
