@@ -83,11 +83,11 @@ Magnetic connector switch uses the same the library as motion sensor.
 
 ### Leds
 
-I have used 3 yellow leds acting as sensor indicators and 1 red led as a indicator for the Raspberry PI's local hard drive status.
+I have used 3 yellow leds acting as sensor indicators and 1 rgb (red and green color) led as a indicator for the Raspberry PI's condition.
 
 The connection between Raspberry PI5 and the leds.
-- The yellow leds are connected to the to GPIO 21, GPIO 23 and GPIO 24 on the Raspberry Pi5.
-- The red led is connected to GPIO 17 on the Raspberry Pi5.
+- The yellow leds are connected to the to GPIO21, GPIO 23 and GPIO 24 on the Raspberry Pi5.
+- The RGB red are connected to GPIO17 (red) and GPIO27 (green) on the Raspberry Pi5.
 - The leds other connection is connected to ground on the Raspberry Pi5.
 
 ### The installation of library for the leds.
@@ -125,8 +125,9 @@ Before you can use this LCD display, you must activate I2C.
 ```
 sudo pip3 install RPLCD smbus2
 ```
-### This project contains of two mysql tables.
+### Database
 
+This project contains of two mysql tables.
 - cameralogs – where the alert text is saved to when for example a motion sensor is triggeed.
 - settings – where the settings are stored.
 
