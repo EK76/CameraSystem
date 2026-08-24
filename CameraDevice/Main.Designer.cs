@@ -75,6 +75,8 @@
             labelSensor2 = new Label();
             labelDetection = new Label();
             labelAllSensors = new Label();
+            folderBrowserDialog1 = new FolderBrowserDialog();
+            comboBoxSubFolders = new ComboBox();
             menuStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
@@ -83,7 +85,7 @@
             // comboBoxFolders
             // 
             comboBoxFolders.FormattingEnabled = true;
-            comboBoxFolders.Location = new Point(12, 57);
+            comboBoxFolders.Location = new Point(12, 40);
             comboBoxFolders.Name = "comboBoxFolders";
             comboBoxFolders.Size = new Size(279, 23);
             comboBoxFolders.TabIndex = 0;
@@ -214,19 +216,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(180, 22);
+            clearLogsToolStripMenuItem.Size = new Size(165, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(162, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(180, 22);
+            boldTextToolStripMenuItem.Size = new Size(165, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -234,7 +236,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(180, 22);
+            fontSizeToolStripMenuItem.Size = new Size(165, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -263,26 +265,26 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(165, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(177, 6);
+            toolStripSeparator2.Size = new Size(162, 6);
             // 
             // restartDeviceToolStripMenuItem
             // 
             restartDeviceToolStripMenuItem.Name = "restartDeviceToolStripMenuItem";
-            restartDeviceToolStripMenuItem.Size = new Size(180, 22);
+            restartDeviceToolStripMenuItem.Size = new Size(165, 22);
             restartDeviceToolStripMenuItem.Text = "Restart device";
             restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
+            shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
             // 
@@ -440,11 +442,21 @@
             labelAllSensors.Text = "All sensors are disabled.";
             labelAllSensors.Visible = false;
             // 
+            // comboBoxSubFolders
+            // 
+            comboBoxSubFolders.FormattingEnabled = true;
+            comboBoxSubFolders.Location = new Point(11, 72);
+            comboBoxSubFolders.Name = "comboBoxSubFolders";
+            comboBoxSubFolders.Size = new Size(121, 23);
+            comboBoxSubFolders.TabIndex = 15;
+            comboBoxSubFolders.SelectedIndexChanged += comboBoxSubFolders_SelectedIndexChanged;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1446, 646);
+            Controls.Add(comboBoxSubFolders);
             Controls.Add(labelAllSensors);
             Controls.Add(labelDetection);
             Controls.Add(labelSensor2);
@@ -521,5 +533,7 @@
         private ToolStripMenuItem playVideoToolStripMenuItem2;
         private ToolStripMenuItem copyVideosToolStripMenuItem2;
         private ToolStripMenuItem deleteVideosToolStripMenuItem3;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private ComboBox comboBoxSubFolders;
     }
 }

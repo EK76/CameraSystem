@@ -21,7 +21,7 @@ namespace CameraDevice
         int countFiles, counterItems, countVideos = 0;
         bool setBold = false;
         public static bool checkFolder = false;
-        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString;
+        string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString, subFolder;
         public static string selectedStoragePath;
         int setChoice, showMotionValue1, showMotionValue2, showDetectionValue;
         public static int selectedStorage = 1;
@@ -176,10 +176,10 @@ namespace CameraDevice
                         listBoxVideos.Items.Add(file.Name);
                         countFiles++;
                     }
-                  /*  else
-                    {
-                        MessageBox.Show(file.Name);
-                    }*/
+                    /*  else
+                      {
+                          MessageBox.Show(file.Name);
+                      }*/
                 }
                 listBoxVideos.Update();
                 labelFileCount.Text = "Number of videos: " + countFiles.ToString();
@@ -192,7 +192,7 @@ namespace CameraDevice
                 playVideoToolStripMenuItem2.Enabled = false;
             }
         }
-        
+
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -212,27 +212,23 @@ namespace CameraDevice
             listBoxVideos.Items.Clear();
             countFiles = 0;
 
-            listBoxVideos.Items.Clear();
             DirectoryInfo info = new DirectoryInfo(listAllVideos);
-            FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
-            foreach (FileInfo file in files)
+            comboBoxSubFolders.Items.Clear();
+            comboBoxSubFolders.Text = "";
+            try
             {
-                if (file.Extension == ".mp4")
+                string[] folders = Directory.GetDirectories(listAllVideos);
+                foreach (string folder in folders)
                 {
-                    listBoxVideos.Items.Add(file.Name);
-                    countFiles++;
-                }
-                else
-                {
-                    MessageBox.Show(file.Name);
+                    var folder2 = new DirectoryInfo(folder);
+                    comboBoxSubFolders.Items.Add(folder2.Name);
                 }
             }
+            catch (Exception info2)
+            {
+                MessageBox.Show("The path to video recordings is not available");
+            }
 
-            listBoxVideos.Update();
-            labelFileCount.Text = "Number of videos: " + countFiles.ToString();
-            selectedFolder = comboBoxFolders.Text;
-            playVideoToolStripMenuItem.Enabled = false;
-            playVideoToolStripMenuItem2.Enabled = false;
         }
         private void refreshVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -383,11 +379,11 @@ namespace CameraDevice
                     playVideoToolStripMenuItem.Enabled = true;
                     playVideoToolStripMenuItem2.Enabled = true;
 
-                    FileInfo fileDate = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                    FileInfo fileDate = new FileInfo(subFolder + "\\" + listBoxVideos.SelectedItem);
                     DateTime getDate = fileDate.CreationTime;
                     labelFileDate.Text = "Video creation date: " + getDate.ToString();
 
-                    FileInfo fileSize = new FileInfo(videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem);
+                    FileInfo fileSize = new FileInfo(subFolder + "\\" + listBoxVideos.SelectedItem);
                     var getSize = fileSize.Length / 1024;
                     labelFileSize.Text = "Video size: " + getSize + " KB";
                 }
@@ -399,9 +395,9 @@ namespace CameraDevice
                     labelFileSize.Text = "Video size: ";
                 }
 
-                axWindowsMediaPlayer1.URL = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
+                axWindowsMediaPlayer1.URL = subFolder + "\\" + listBoxVideos.SelectedItem;
                 axWindowsMediaPlayer1.Ctlcontrols.stop();
-                selectedVideo = videoFolder + "\\" + comboBoxFolders.Text + "\\" + listBoxVideos.SelectedItem;
+                selectedVideo = subFolder + "\\" + listBoxVideos.SelectedItem;
             }
         }
 
@@ -572,6 +568,59 @@ namespace CameraDevice
         private void copyVideosToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             copyVideos();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var folderDialog = new FolderBrowserDialog();
+            folderDialog.InitialDirectory = videoFolder;
+            folderDialog.ShowPinnedPlaces = false;
+            folderDialog.ShowNewFolderButton = false;
+
+
+            DialogResult result = folderDialog.ShowDialog();
+
+
+            if (result == DialogResult.OK)
+            {
+                string folderPath = folderDialog.SelectedPath;
+
+            }
+            else
+            {
+                //Operation aborted by the user
+            }
+            MessageBox.Show(folderDialog.SelectedPath);
+        }
+
+        private void comboBoxSubFolders_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            listAllVideos = listAllVideos + "\\" + comboBoxSubFolders.Text;
+            listBoxVideos.Items.Clear();
+            countFiles = 0;
+
+            listBoxVideos.Items.Clear();
+            DirectoryInfo info = new DirectoryInfo(listAllVideos);
+            FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
+            foreach (FileInfo file in files)
+            {
+                if (file.Extension == ".mp4")
+                {
+                    listBoxVideos.Items.Add(file.Name);
+                    countFiles++;
+                }
+                else
+                {
+                    MessageBox.Show(file.Name);
+                }
+            }
+            subFolder = listAllVideos;
+            listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
+            listBoxVideos.Update();
+            labelFileCount.Text = "Number of videos: " + countFiles.ToString();
+            selectedFolder = comboBoxFolders.Text;
+            playVideoToolStripMenuItem.Enabled = false;
+            playVideoToolStripMenuItem2.Enabled = false;
         }
     }
 }

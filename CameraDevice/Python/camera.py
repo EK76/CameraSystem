@@ -30,6 +30,7 @@ def recordVideo():
   global alertText
   global createfolder
   global filecount
+  global filecount2
   global createfolder2
   global checkfolder
   global checkfolder2
@@ -44,21 +45,41 @@ def recordVideo():
   checkfolder = os.path.isdir(createfolder)
   checkfolder2 = os.path.isdir(createfolder2)
 
-  if not checkfolder and checkspace > 99:
-    os.mkdir(createfolder, mode=0o777)
+  #if not checkfolder and checkspace > 99:
+  #  os.mkdir(createfolder, mode=0o777)
 
-  filecount = next(os.walk(createfolder))[2]
-  print(len(filecount))
+  if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera1"):
+    #os.mkdir("/media/usbdrive/camerasystem/"+datefolder+"/camera1", mode=0o777)
+    os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera1"),mode=0o777)
+    print ("Camera 1 created.")
+
+  if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera2"):
+    # os.mkdir("/media/usbdrive/camerasystem/"+datefolder+"/camera2", mode=0o777)
+    os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera2"), mode=0o777)
+    print ("Camera 2 created.")
+
+  filecount = next(os.walk(createfolder+"/camera1"))[2]
   filecount = len(filecount)
   filecount = filecount + 1
+  
+  filecount2 = next(os.walk(createfolder+"/camera2"))[2]
+  filecount2 = len(filecount2)
+  filecount2 = filecount2 + 1
+
   print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
-  alertText = alertText + " '" + datefolder + "/video" + str(filecount) + "'";
+  alertText = alertText + " '" + datefolder + "/camer1/video" + str(filecount) + "'";
+  query = "insert into cameralogs (logtext) values (%s)"
+  dbinfo.execute(query, [alertText])
+  dbconfig.commit()
+
+  alertText = alertText + " '" + datefolder + "/camera2/video" + str(filecount2) + "'";
   query = "insert into cameralogs (logtext) values (%s)"
   dbinfo.execute(query, [alertText])
   dbconfig.commit()
 
 def streamVideo():
   global filecount
+  global filecount2
   global starttime
   global delaytime
   global stream
@@ -71,19 +92,24 @@ def streamVideo():
   frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
   fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-  output = cv2.VideoWriter(createfolder + '/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+  output = cv2.VideoWriter(createfolder + '/camera1/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+  output2 = cv2.VideoWriter(createfolder + '/camera2/video' + str(filecount2) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
   startTime = time.time()
 
   recording = 0
-  print("Enbaled: " + str(recording))
+  print("Enabled: " + str(recording))
   while(int(time.time() - startTime) < recordingTime):
-    ret, frame = stream.read()
-    output.write(frame)
+    if camera1 ==1:
+      ret, frame = stream.read()
+      output.write(frame)
+    if camera2 == 1:
+      ret2, frame2 = stream2.read()
+      output2.write(frame2)
   print("Video recored completed: ")
   output.release()
+  output2.release()
   recording = 1
   print("Recording done.")
-
 
 def changeStatus(setText):
     print(setText + " detected. Please wait until recording is completed.")
@@ -92,6 +118,13 @@ def changeStatus(setText):
     query = "insert into cameralogs(logtext) values (%s)"
     dbinfo.execute(query, [setText + " detected, Camera was busy."])
     dbconfig.commit()    
+    if enableEmail == 'True':
+      server = smtplib.SMTP('smtp.gmail.com', 587)
+      server.starttls()
+      server.login(username, password)
+      message = 'Subject: {}\n\n{}'.format("Camera alert", "Camera was busy.")
+      server.sendmail("Camera alert",sendEmail, message)
+      print("Email sent")
 
 def motionShow1():
   global alertText  
@@ -136,15 +169,24 @@ def motionShow2():
       changeStatus("Motion2")
 
 def enableChoice():
+  global datefolder
   if enableDrive == 'True':
-    if not checkfolder2:
-      os.mkdir(createfolder2)   
-    print(checkfolder2)
-    print(createfolder + "/video" + str(filecount) +".mp4")
-    copyfrom = createfolder + "/video" + str(filecount) +".mp4"
+    print (createfolder2)
+    if not os.path.isdir(createfolder2 + "/camera1"):
+      os.makedirs(createfolder2+"/camera1", mode=0o777)
+      print ("Cloud Camera 1 created.")
+
+    if not os.path.isdir(createfolder2 + "/camera2"):
+      os.makedirs(createfolder2+"/camera2", mode=0o777)
+      print ("Cloud Camera 1 created.")
+
+    copyfrom = createfolder + "/camera1/video" + str(filecount) +".mp4"
+    copyfrom2 = createfolder + "/camera2/video" + str(filecount) +".mp4"
     print ("Copying from  " + copyfrom + " to " + createfolder2)
-    rclone.copy(copyfrom, createfolder2)
+    rclone.copy(copyfrom, createfolder2 + "/camera1")
+    rclone.copy(copyfrom2, createfolder2 + "/camera2")
     print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")    
+
   if enableEmail == 'True':
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
@@ -188,6 +230,7 @@ password = os.environ["googlemessage"]
 statusspace = 1
 recording = 1
 stream = cv2.VideoCapture(0)
+stream2 = cv2.VideoCapture(2)
 
 try:
   dbinfo = dbconfig.cursor()
@@ -206,6 +249,8 @@ try:
   motionChoice2 = row[7]
   detectChoice = row[8]
   motionChoice1 = row[9]
+  camera1 = row[10]
+  camera2 = row[11]
   dbconfig.commit()
   recording = 1
 
@@ -249,8 +294,10 @@ try:
         server.sendmail("Camera alert",sendEmail, message)
         print("Email sent")
   stream.release()
+  stream2.release()
 except mysql.connector.Error as error:
     print("Failed to insert record into table {}".format(error))
 except KeyboardInterrupt:
     print("Exit!")
+finally:
     GPIO.cleanup()  

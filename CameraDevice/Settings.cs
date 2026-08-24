@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
@@ -31,7 +32,7 @@ namespace CameraDevice
         string user = "cameraruser";
         string password;
         string host = "cameradevice";
-        int setChoice, setChoice2, setChoice3;
+        int setChoice, setChoice2, setChoice3, setChoice4, setChoice5;
         int checkState = 0;
         bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
@@ -60,6 +61,8 @@ namespace CameraDevice
                     emailAdress2 = reader.GetString("sendemail");
                     changeDate = reader.GetDateTime("datechanged").ToString();
                     setChoice3 = reader.GetInt32("openstatus");
+                    setChoice4 = reader.GetInt32("camera1");
+                    setChoice5 = reader.GetInt32("camera2");
                 }
                 conn.Close();
 
@@ -113,7 +116,39 @@ namespace CameraDevice
                 {
                     checkBoxDoorSensor1.Checked = false;
                 }
+
+                if (setChoice4 == 1)
+                {
+                    checkBoxUsbCamera1.Checked = true;
+                }
+                else
+                {
+                    checkBoxUsbCamera1.Checked = false;
+                }
+
+                if (setChoice5 == 1)
+                {
+                    checkBoxUsbCamera2.Checked = true;
+                }
+                else
+                {
+                    checkBoxUsbCamera2.Checked = false;
+                }
+
+
+                if (setChoice4 == 0)
+                {
+                    checkBoxUsbCamera2.Enabled = false;
+                }
+
+
+                if (setChoice5 == 0)
+                {
+                    checkBoxUsbCamera1.Enabled = false;
+                }
+
                 buttonOk.Enabled = false;
+
 
             }
             catch (Exception i)
@@ -158,7 +193,7 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "', camera1 = '" + setChoice4 + "', camera2 = '" + setChoice5 + "' where id = 1;";
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 command.ExecuteReader();
                 conn.Close();
@@ -197,7 +232,7 @@ namespace CameraDevice
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-           Close();
+            Close();
         }
 
         private void checkBoxEmail_Click(object sender, EventArgs e)
@@ -368,9 +403,64 @@ namespace CameraDevice
 
         private void FormSettings_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (checkChanges == false)
+            if (checkChanges != true)
             {
                 MessageBox.Show("Changed settings were not updated.", "Camera Device");
+            }
+        }
+
+        private void checkBoxUsbCamera1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBoxUsbCamera1.Checked)
+            {
+                checkBoxUsbCamera2.Enabled = false;
+            }
+            else
+            {
+                checkBoxUsbCamera2.Enabled = true;
+            }
+            buttonOk.Enabled = true;
+        }
+
+        private void checkBoxUsbCamera2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBoxUsbCamera2.Checked)
+            {
+                checkBoxUsbCamera1.Enabled = false;
+            }
+            else
+            {
+                checkBoxUsbCamera1.Enabled = true;
+            }
+            buttonOk.Enabled = true;
+        }
+
+        private void textBoxRows_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxUsbCamera1_Click(object sender, EventArgs e)
+        {
+            if (checkBoxUsbCamera1.Checked)
+            {
+                setChoice4 = 1;
+            }
+            else
+            {
+                setChoice4 = 0;
+            }
+        }
+
+        private void checkBoxUsbCamera2_Click(object sender, EventArgs e)
+        {
+            if (checkBoxUsbCamera2.Checked)
+            {
+                setChoice5 = 1;
+            }
+            else
+            {
+                setChoice5 = 0;
             }
         }
     }
