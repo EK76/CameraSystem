@@ -154,6 +154,8 @@ numberofrows int,
 motionchoice1 int,
 motionchoice2 int,
 openstatus int,
+camera1 int,
+camera2 int,
 primary key(id)
 );
 ```
