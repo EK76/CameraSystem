@@ -134,11 +134,6 @@ namespace CameraDevice
             showStatus();
         }
 
-        private void buttonBackup_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void comboBoxSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(connString);
@@ -305,7 +300,7 @@ namespace CameraDevice
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Sure", "Some Title", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("Are sure to deleted the selected items?", "Camera Device", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
                 MySqlConnection conn = new MySqlConnection(connString);
@@ -330,10 +325,6 @@ namespace CameraDevice
             }
         }
 
-        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
     }
 }
 

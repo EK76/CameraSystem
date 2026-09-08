@@ -29,17 +29,17 @@ def showDisplay(displayText):
 def recordVideo():
   global alertText
   global createfolder
-  global filecount
-  global filecount2
   global createfolder2
   global checkfolder
   global checkfolder2
   global checkspace
+  global datefolder
+  global timefile
 
   print("Recording feed.")
   now = datetime.datetime.now()
   datefolder = now.strftime("%Y_%m_%d")
-  timefile = now.strftime("%H:%M:%S")
+  timefile = now.strftime("%H_%M_%S")
   createfolder = "/media/usbdrive/camerasystem/"+datefolder
   createfolder2 = "/home/camerauser/gdrive/Recordings/"+datefolder
   checkfolder = os.path.isdir(createfolder)
@@ -49,37 +49,14 @@ def recordVideo():
   #  os.mkdir(createfolder, mode=0o777)
 
   if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera1"):
-    #os.mkdir("/media/usbdrive/camerasystem/"+datefolder+"/camera1", mode=0o777)
     os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera1"),mode=0o777)
     print ("Camera 1 created.")
 
   if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera2"):
-    # os.mkdir("/media/usbdrive/camerasystem/"+datefolder+"/camera2", mode=0o777)
     os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera2"), mode=0o777)
     print ("Camera 2 created.")
 
-  filecount = next(os.walk(createfolder+"/camera1"))[2]
-  filecount = len(filecount)
-  filecount = filecount + 1
-  
-  filecount2 = next(os.walk(createfolder+"/camera2"))[2]
-  filecount2 = len(filecount2)
-  filecount2 = filecount2 + 1
-
-  print("Local: " + createfolder + "/video" + str(filecount) +".mp4")
-  alertText = alertText + " '" + datefolder + "/camer1/video" + str(filecount) + "'";
-  query = "insert into cameralogs (logtext) values (%s)"
-  dbinfo.execute(query, [alertText])
-  dbconfig.commit()
-
-  alertText = alertText + " '" + datefolder + "/camera2/video" + str(filecount2) + "'";
-  query = "insert into cameralogs (logtext) values (%s)"
-  dbinfo.execute(query, [alertText])
-  dbconfig.commit()
-
 def streamVideo():
-  global filecount
-  global filecount2
   global starttime
   global delaytime
   global stream
@@ -88,12 +65,21 @@ def streamVideo():
   global createfolder
   global alertText
   global recording
- 
+  global settime
+  global datefolder
+  global timefile
+  global camera1
+  global camera2
+
+  cameraText1 = ""
+  cameraText2 = ""
   frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
   fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-  output = cv2.VideoWriter(createfolder + '/camera1/video' + str(filecount) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
-  output2 = cv2.VideoWriter(createfolder + '/camera2/video' + str(filecount2) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+  if camera1 == 1:
+    output = cv2.VideoWriter(createfolder + '/camera1/video_' + str(timefile) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+  if camera2 == 1:
+    output2 = cv2.VideoWriter(createfolder + '/camera2/video_' + str(timefile) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
   startTime = time.time()
 
   recording = 0
@@ -102,14 +88,42 @@ def streamVideo():
     if camera1 ==1:
       ret, frame = stream.read()
       output.write(frame)
+      if frame is None:
+        print("Camera 1 is not active.")
+        showDisplay("Camera 1 broken")
+        dbinfo = dbconfig.cursor()
+        query = "insert into cameralogs(logtext) values (%s)"
+        dbinfo.execute(query, ["Camera 1 broken."])
+        dbconfig.commit()    
+        camera1=0;
     if camera2 == 1:
       ret2, frame2 = stream2.read()
       output2.write(frame2)
-  print("Video recored completed: ")
-  output.release()
-  output2.release()
+      if frame2 is None:
+        print("Camera 2 is not active.")
+        showDisplay("Camera 2 broken")
+        dbinfo = dbconfig.cursor()
+        query = "insert into cameralogs(logtext) values (%s)"
+        dbinfo.execute(query, ["Camera 2 broken."])
+        dbconfig.commit()    
+        camera2=0;
+  
+  if camera1 == 1:
+    output.release()
+    cameraText1 = "'" + datefolder + "/camera1/video_" + str(timefile) + "'"
+
+  if camera2 == 1:
+    output2.release()
+    cameraText2 = "'" + datefolder + "/camera2/video_" + str(timefile) + "'"
   recording = 1
   print("Recording done.")
+  
+  dbinfo = dbconfig.cursor(buffered=True)
+  alertText = alertText + cameraText1 + " " + cameraText2
+  query = "insert into cameralogs (logtext) values (%s)"
+  dbinfo.execute(query, [alertText])
+  dbconfig.commit()  
+
 
 def changeStatus(setText):
     print(setText + " detected. Please wait until recording is completed.")
@@ -122,7 +136,7 @@ def changeStatus(setText):
       server = smtplib.SMTP('smtp.gmail.com', 587)
       server.starttls()
       server.login(username, password)
-      message = 'Subject: {}\n\n{}'.format("Camera alert", "Camera was busy.")
+      message = 'Subject: {}\n\n{}'.format("Camera alert", setText + " detected. Camera was busy.")
       server.sendmail("Camera alert",sendEmail, message)
       print("Email sent")
 
@@ -136,11 +150,9 @@ def motionShow1():
   print("Motion Enbaled: " + str(recording))
   if motionChoice1 == 1:
     if recording == 1:
-      print("Waiting for motion on sensor 1.")
+      print("Motion on sensor 1.")
       alertText = "Motion detected on sensor 1." 
       showDisplay("Motion1 detected")
-      motionLed1.on()
-      motionLed2.off()
       recordVideo()
       streamVideo()
       enableChoice()
@@ -157,11 +169,9 @@ def motionShow2():
   print("Recording " + str(recording))
   if motionChoice2 == 1:
     if recording == 1:
-      print("Waiting for motion on sensor 2.")
+      print("Motion on sensor 2.")
       alertText = "Motion detected on sensor 2." 
       showDisplay("Motion2 detected")
-      motionLed1.off()
-      motionLed2.on()
       recordVideo()
       streamVideo()
       enableChoice()
@@ -170,6 +180,7 @@ def motionShow2():
 
 def enableChoice():
   global datefolder
+  global settime
   if enableDrive == 'True':
     print (createfolder2)
     if not os.path.isdir(createfolder2 + "/camera1"):
@@ -178,14 +189,15 @@ def enableChoice():
 
     if not os.path.isdir(createfolder2 + "/camera2"):
       os.makedirs(createfolder2+"/camera2", mode=0o777)
-      print ("Cloud Camera 1 created.")
-
-    copyfrom = createfolder + "/camera1/video" + str(filecount) +".mp4"
-    copyfrom2 = createfolder + "/camera2/video" + str(filecount) +".mp4"
-    print ("Copying from  " + copyfrom + " to " + createfolder2)
-    rclone.copy(copyfrom, createfolder2 + "/camera1")
-    rclone.copy(copyfrom2, createfolder2 + "/camera2")
-    print("GDrive: " + createfolder2 + "/video" + str(filecount) +".mp4")    
+      print ("Cloud Camera 2 created.")
+    
+    if camera1 == 1:
+      copyfrom = createfolder + "/camera1/video_" + str(settime) +".mp4"
+      rclone.copy(copyfrom, createfolder2 + "/camera1")
+    if camera2 == 1:
+      copyfrom2 = createfolder + "/camera2/video_" + str(settime) +".mp4"
+      rclone.copy(copyfrom2, createfolder2 + "/camera2")
+    print("GDrive: " + createfolder2 + "/video_" + str(settime) +".mp4")    
 
   if enableEmail == 'True':
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -232,7 +244,27 @@ recording = 1
 stream = cv2.VideoCapture(0)
 stream2 = cv2.VideoCapture(2)
 
+if not stream.isOpened():
+  print("Camera1 is not actived.")
+  showDisplay("Camera 1 broken")
+  dbinfo = dbconfig.cursor()
+  query = "insert into cameralogs(logtext) values (%s)"
+  dbinfo.execute(query, ["Camera 1 broken."])
+  dbconfig.commit()    
+  exit()
+
+if not stream2.isOpened():
+  print("Camera2 is not actived.")
+  showDisplay("Camera 2 broken")
+  dbinfo = dbconfig.cursor()
+  query = "insert into cameralogs(logtext) values (%s)"
+  dbinfo.execute(query, ["Camera 2 broken."])
+  dbconfig.commit()    
+  exit()
+
 try:
+
+
   dbinfo = dbconfig.cursor()
   query = "insert into cameralogs(logtext) values ('Camera device started.')"
   dbinfo.execute(query)
@@ -268,6 +300,8 @@ try:
     detectLed1.on()
   else:
     detectLed1.off()  
+  
+  print(str(camera1))
 
   while True:
     total, used, free = shutil.disk_usage("/media/usbdrive/camerasystem")

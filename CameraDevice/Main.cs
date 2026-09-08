@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using WMPLib;
 
 namespace CameraDevice
 {
@@ -23,7 +24,7 @@ namespace CameraDevice
         public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString, subFolder;
         public static string selectedStoragePath;
-        int setChoice, showMotionValue1, showMotionValue2, showDetectionValue;
+        int setChoice, showMotionValue1, showMotionValue2, showDetectionValue, showCamera1, showCamera2;
         public static int selectedStorage = 1;
         List<string> videoFiles = new List<string>();
 
@@ -68,6 +69,8 @@ namespace CameraDevice
                     showMotionValue1 = reader.GetInt32("motionchoice1");
                     showMotionValue2 = reader.GetInt32("motionchoice2");
                     showDetectionValue = reader.GetInt32("openstatus");
+                    showCamera1 = reader.GetInt32("camera1");
+                    showCamera2 = reader.GetInt32("camera2");
                 }
                 conn.Close();
             }
@@ -79,36 +82,60 @@ namespace CameraDevice
 
             if (showMotionValue1 == 1)
             {
-                labelSensor.Text = "Motion sensor 1 is enabled";
+                labelSensor.Text = "Motion sensor 1 is enabled.";
                 labelSensor.ForeColor = Color.Green;
             }
             else
             {
-                labelSensor.Text = "Motion sensor 1 is disabled";
+                labelSensor.Text = "Motion sensor 1 is disabled.";
                 labelSensor.ForeColor = Color.Red;
             }
 
             if (showMotionValue2 == 1)
             {
-                labelSensor2.Text = "Motion sensor 2 is enabled";
+                labelSensor2.Text = "Motion sensor 2 is enabled.";
                 labelSensor2.ForeColor = Color.Green;
             }
             else
             {
-                labelSensor2.Text = "Motion sensor 2 is disabled";
+                labelSensor2.Text = "Motion sensor 2 is disabled.";
                 labelSensor2.ForeColor = Color.Red;
             }
 
             if (showDetectionValue == 1)
             {
-                labelDetection.Text = "Door sensor 1 is enabled";
+                labelDetection.Text = "Door sensor 1 is enabled.";
                 labelDetection.ForeColor = Color.Green;
             }
             else
             {
-                labelDetection.Text = "Door sensor 1 is disabled";
+                labelDetection.Text = "Door sensor 1 is disabled.";
                 labelDetection.ForeColor = Color.Red;
             }
+
+            if (showCamera1 == 1)
+            {
+                labelCamera1.Text = "Camera 1 is enabled.";
+                labelCamera1.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelCamera1.Text = "Camera 1 is disabled.";
+                labelCamera1.ForeColor = Color.Red;
+            }
+
+
+            if (showCamera2 == 1)
+            {
+                labelCamera2.Text = "Camera 2 is enabled.";
+                labelCamera2.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelCamera2.Text = "Camera 2 is disabled.";
+                labelCamera2.ForeColor = Color.Red;
+            }
+
 
             if ((showMotionValue1 == 0) && (showMotionValue2 == 0) && (showDetectionValue == 0))
             {
@@ -146,7 +173,7 @@ namespace CameraDevice
                 {
                     foreach (object copyValue in listBoxVideos.SelectedItems)
                     {
-                        string sourceFile = videoFolder + "\\" + selectedFolder + "\\" + copyValue.ToString();
+                        string sourceFile = listAllVideos + "\\" + comboBoxSubFolders.Text + "\\" + copyValue.ToString();
                         string destFile = Path.Combine(folderDialog.SelectedPath, copyValue.ToString());
                         File.Copy(sourceFile, destFile, true);
                     }
@@ -162,12 +189,12 @@ namespace CameraDevice
                 counterItems = 0;
                 foreach (object deleteValue in listBoxVideos.SelectedItems)
                 {
-                    File.Delete(videoFolder + "\\" + selectedFolder + "\\" + deleteValue.ToString());
+                    File.Delete(listAllVideos + "\\" + comboBoxSubFolders.Text + "\\" + deleteValue.ToString());
                 }
 
                 listBoxVideos.Items.Clear();
                 countFiles = 0;
-                DirectoryInfo info = new DirectoryInfo(listAllVideos);
+                DirectoryInfo info = new DirectoryInfo(listAllVideos + "\\" + comboBoxSubFolders.Text);
                 FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
                 foreach (FileInfo file in files)
                 {
@@ -176,10 +203,6 @@ namespace CameraDevice
                         listBoxVideos.Items.Add(file.Name);
                         countFiles++;
                     }
-                    /*  else
-                      {
-                          MessageBox.Show(file.Name);
-                      }*/
                 }
                 listBoxVideos.Update();
                 labelFileCount.Text = "Number of videos: " + countFiles.ToString();
@@ -192,7 +215,6 @@ namespace CameraDevice
                 playVideoToolStripMenuItem2.Enabled = false;
             }
         }
-
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -337,11 +359,6 @@ namespace CameraDevice
             logs.ShowDialog();
         }
 
-        private void saveVideosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void deleteVideosToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -371,6 +388,7 @@ namespace CameraDevice
 
         private void listBoxVideos_Click(object sender, EventArgs e)
         {
+            string showSeconds = "";
             if (listBoxVideos.SelectedItem != null)
             {
                 countVideos = listBoxVideos.SelectedItems.Count;
@@ -385,19 +403,29 @@ namespace CameraDevice
 
                     FileInfo fileSize = new FileInfo(subFolder + "\\" + listBoxVideos.SelectedItem);
                     var getSize = fileSize.Length / 1024;
-                    labelFileSize.Text = "Video size: " + getSize + " KB";
+                    labelFileSize.Text = "Video file size: " + getSize + " KB";
+
+                 // Add the reference of wmp.dll (c:\Windows\System32) in your project and then add the namespace WMPLib in your code.
+                    var playerDuration = new WindowsMediaPlayer();
+                    var clipDuration = playerDuration.newMedia(subFolder + "\\" + listBoxVideos.SelectedItem);
+                    showSeconds = TimeSpan.FromSeconds(clipDuration.duration).ToString("ss");
+                    showSeconds = showSeconds.TrimStart('0');
+                    showSeconds = showSeconds.TrimStart(new char[] { '0' });
+
+                    labelFileDuration.Text = "Video duration: " + showSeconds + " seconds";
                 }
                 else
                 {
                     playVideoToolStripMenuItem.Enabled = false;
                     playVideoToolStripMenuItem2.Enabled = false;
                     labelFileDate.Text = "Video creation date: ";
-                    labelFileSize.Text = "Video size: ";
+                    labelFileSize.Text = "Video file size: ";
+                    labelFileDuration.Text = "Video duration: ";
                 }
 
-                axWindowsMediaPlayer1.URL = subFolder + "\\" + listBoxVideos.SelectedItem;
+                axWindowsMediaPlayer1.URL = listAllVideos + "\\" + comboBoxSubFolders.Text + "\\" + listBoxVideos.SelectedItem;
                 axWindowsMediaPlayer1.Ctlcontrols.stop();
-                selectedVideo = subFolder + "\\" + listBoxVideos.SelectedItem;
+                selectedVideo = listAllVideos + "\\" + comboBoxSubFolders.Text + "\\" + listBoxVideos.SelectedItem;
             }
         }
 
@@ -550,16 +578,6 @@ namespace CameraDevice
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
         private void deleteVideosToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             deleteVideos();
@@ -609,10 +627,6 @@ namespace CameraDevice
                     listBoxVideos.Items.Add(file.Name);
                     countFiles++;
                 }
-                else
-                {
-                    MessageBox.Show(file.Name);
-                }
             }
             subFolder = listAllVideos;
             listAllVideos = videoFolder + "\\" + comboBoxFolders.Text;
@@ -621,6 +635,11 @@ namespace CameraDevice
             selectedFolder = comboBoxFolders.Text;
             playVideoToolStripMenuItem.Enabled = false;
             playVideoToolStripMenuItem2.Enabled = false;
+        }
+
+        private void playVideoToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            playVideo();
         }
     }
 }

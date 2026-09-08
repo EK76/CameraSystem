@@ -85,7 +85,6 @@
             textBoxEmailadress.Name = "textBoxEmailadress";
             textBoxEmailadress.Size = new Size(241, 25);
             textBoxEmailadress.TabIndex = 3;
-            textBoxEmailadress.Click += textBoxRows_Click;
             textBoxEmailadress.TextChanged += textBoxEmailadress_TextChanged;
             // 
             // labelText
@@ -133,7 +132,6 @@
             checkBoxEmail.Text = "Enable Email Alert";
             checkBoxEmail.UseVisualStyleBackColor = true;
             checkBoxEmail.CheckStateChanged += checkBoxEmail_CheckStateChanged;
-            checkBoxEmail.Click += textBoxRows_Click;
             // 
             // textBoxStream
             // 
@@ -143,7 +141,6 @@
             textBoxStream.Name = "textBoxStream";
             textBoxStream.Size = new Size(54, 25);
             textBoxStream.TabIndex = 10;
-            textBoxStream.Click += textBoxRows_Click;
             textBoxStream.TextChanged += textBoxStream_TextChanged;
             textBoxStream.KeyPress += textBoxStream_KeyPress;
             // 
@@ -180,7 +177,6 @@
             checkBoxDrive.Text = "Remote Drive";
             checkBoxDrive.UseVisualStyleBackColor = true;
             checkBoxDrive.CheckStateChanged += checkBoxDrive_CheckStateChanged;
-            checkBoxDrive.Click += textBoxRows_Click;
             // 
             // textBoxRows
             // 
@@ -188,7 +184,6 @@
             textBoxRows.Name = "textBoxRows";
             textBoxRows.Size = new Size(54, 22);
             textBoxRows.TabIndex = 16;
-            textBoxRows.Click += textBoxRows_Click;
             textBoxRows.TextChanged += textBoxRows_TextChanged;
             textBoxRows.KeyPress += textBoxRows_KeyPress;
             // 
@@ -229,7 +224,7 @@
             checkBoxDoorSensor1.Text = "Door status.";
             checkBoxDoorSensor1.UseVisualStyleBackColor = true;
             checkBoxDoorSensor1.CheckedChanged += checkBoxDoorSensor1_CheckedChanged;
-            checkBoxDoorSensor1.Click += textBoxRows_Click;
+            checkBoxDoorSensor1.Click += checkBoxDoorSensor1_Click;
             // 
             // checkBoxMotionSensor1
             // 
@@ -241,6 +236,7 @@
             checkBoxMotionSensor1.Text = "Motion sensor 1";
             checkBoxMotionSensor1.UseVisualStyleBackColor = true;
             checkBoxMotionSensor1.CheckedChanged += checkBoxMotionSensor1_CheckedChanged;
+            checkBoxMotionSensor1.Click += checkBoxMotionSensor1_Click;
             // 
             // checkBoxMotionSensor2
             // 
@@ -252,6 +248,7 @@
             checkBoxMotionSensor2.Text = "Motion sensor 2";
             checkBoxMotionSensor2.UseVisualStyleBackColor = true;
             checkBoxMotionSensor2.CheckedChanged += checkBoxMotionSensor2_CheckedChanged;
+            checkBoxMotionSensor2.Click += checkBoxMotionSensor2_Click;
             // 
             // labelText7
             // 

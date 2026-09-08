@@ -57,7 +57,7 @@
             listViewLogs.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             listViewLogs.Location = new Point(11, 84);
             listViewLogs.Name = "listViewLogs";
-            listViewLogs.Size = new Size(583, 658);
+            listViewLogs.Size = new Size(740, 658);
             listViewLogs.TabIndex = 1;
             listViewLogs.UseCompatibleStateImageBehavior = false;
             listViewLogs.View = View.Details;
@@ -65,7 +65,7 @@
             // columnHeader1
             // 
             columnHeader1.Text = "Log";
-            columnHeader1.Width = 380;
+            columnHeader1.Width = 600;
             // 
             // columnHeader2
             // 
@@ -87,14 +87,14 @@
             comboBoxSelection.FormattingEnabled = true;
             comboBoxSelection.Location = new Point(151, 52);
             comboBoxSelection.Name = "comboBoxSelection";
-            comboBoxSelection.Size = new Size(205, 23);
+            comboBoxSelection.Size = new Size(288, 23);
             comboBoxSelection.TabIndex = 4;
             comboBoxSelection.SelectedIndexChanged += comboBoxSelection_SelectedIndexChanged;
             // 
             // comboBoxDate
             // 
             comboBoxDate.FormattingEnabled = true;
-            comboBoxDate.Location = new Point(391, 52);
+            comboBoxDate.Location = new Point(495, 52);
             comboBoxDate.Name = "comboBoxDate";
             comboBoxDate.Size = new Size(121, 23);
             comboBoxDate.TabIndex = 6;
@@ -104,7 +104,7 @@
             // 
             labelDateStart.AutoSize = true;
             labelDateStart.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelDateStart.Location = new Point(157, 10);
+            labelDateStart.Location = new Point(151, 24);
             labelDateStart.Name = "labelDateStart";
             labelDateStart.Size = new Size(96, 17);
             labelDateStart.TabIndex = 7;
@@ -114,7 +114,7 @@
             // 
             labelDateEnd.AutoSize = true;
             labelDateEnd.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelDateEnd.Location = new Point(394, 7);
+            labelDateEnd.Location = new Point(495, 24);
             labelDateEnd.Name = "labelDateEnd";
             labelDateEnd.Size = new Size(45, 17);
             labelDateEnd.TabIndex = 8;
@@ -125,7 +125,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, viewToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(606, 24);
+            menuStrip1.Size = new Size(763, 24);
             menuStrip1.TabIndex = 10;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -184,7 +184,7 @@
             // graphToolStripMenuItem
             // 
             graphToolStripMenuItem.Name = "graphToolStripMenuItem";
-            graphToolStripMenuItem.Size = new Size(180, 22);
+            graphToolStripMenuItem.Size = new Size(106, 22);
             graphToolStripMenuItem.Text = "Graph";
             graphToolStripMenuItem.Click += graphToolStripMenuItem_Click;
             // 
@@ -193,9 +193,8 @@
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabelSelection });
             statusStrip1.Location = new Point(0, 745);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(606, 22);
+            statusStrip1.Size = new Size(763, 22);
             statusStrip1.TabIndex = 0;
-            statusStrip1.ItemClicked += statusStrip1_ItemClicked;
             // 
             // toolStripStatusLabelSelection
             // 
@@ -207,7 +206,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(606, 767);
+            ClientSize = new Size(763, 767);
             Controls.Add(statusStrip1);
             Controls.Add(labelDateEnd);
             Controls.Add(labelDateStart);

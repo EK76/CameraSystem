@@ -77,6 +77,9 @@
             labelAllSensors = new Label();
             folderBrowserDialog1 = new FolderBrowserDialog();
             comboBoxSubFolders = new ComboBox();
+            labelCamera1 = new Label();
+            labelCamera2 = new Label();
+            labelFileDuration = new Label();
             menuStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
@@ -99,7 +102,6 @@
             menuStrip1.Size = new Size(1446, 24);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
-            menuStrip1.ItemClicked += menuStrip1_ItemClicked;
             // 
             // fileToolStripMenuItem
             // 
@@ -326,7 +328,6 @@
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { playVideoToolStripMenuItem2, copyVideosToolStripMenuItem2, deleteVideosToolStripMenuItem3 });
             contextMenuStrip1.Name = "contextMenuStrip1";
             contextMenuStrip1.Size = new Size(146, 70);
-            contextMenuStrip1.Opening += contextMenuStrip1_Opening;
             // 
             // playVideoToolStripMenuItem2
             // 
@@ -334,6 +335,7 @@
             playVideoToolStripMenuItem2.Name = "playVideoToolStripMenuItem2";
             playVideoToolStripMenuItem2.Size = new Size(145, 22);
             playVideoToolStripMenuItem2.Text = "Play Video";
+            playVideoToolStripMenuItem2.Click += playVideoToolStripMenuItem2_Click;
             // 
             // copyVideosToolStripMenuItem2
             // 
@@ -377,9 +379,9 @@
             labelFileSize.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelFileSize.Location = new Point(308, 144);
             labelFileSize.Name = "labelFileSize";
-            labelFileSize.Size = new Size(75, 17);
+            labelFileSize.Size = new Size(99, 17);
             labelFileSize.TabIndex = 6;
-            labelFileSize.Text = "Video size:";
+            labelFileSize.Text = "Video file size:";
             // 
             // axWindowsMediaPlayer1
             // 
@@ -451,11 +453,44 @@
             comboBoxSubFolders.TabIndex = 15;
             comboBoxSubFolders.SelectedIndexChanged += comboBoxSubFolders_SelectedIndexChanged;
             // 
+            // labelCamera1
+            // 
+            labelCamera1.AutoSize = true;
+            labelCamera1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelCamera1.Location = new Point(323, 433);
+            labelCamera1.Name = "labelCamera1";
+            labelCamera1.Size = new Size(45, 17);
+            labelCamera1.TabIndex = 16;
+            labelCamera1.Text = "label1";
+            // 
+            // labelCamera2
+            // 
+            labelCamera2.AutoSize = true;
+            labelCamera2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelCamera2.Location = new Point(323, 461);
+            labelCamera2.Name = "labelCamera2";
+            labelCamera2.Size = new Size(45, 17);
+            labelCamera2.TabIndex = 17;
+            labelCamera2.Text = "label2";
+            // 
+            // labelFileDuration
+            // 
+            labelFileDuration.AutoSize = true;
+            labelFileDuration.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelFileDuration.Location = new Point(308, 181);
+            labelFileDuration.Name = "labelFileDuration";
+            labelFileDuration.Size = new Size(105, 17);
+            labelFileDuration.TabIndex = 18;
+            labelFileDuration.Text = "Video duration:";
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1446, 646);
+            Controls.Add(labelFileDuration);
+            Controls.Add(labelCamera2);
+            Controls.Add(labelCamera1);
             Controls.Add(comboBoxSubFolders);
             Controls.Add(labelAllSensors);
             Controls.Add(labelDetection);
@@ -535,5 +570,8 @@
         private ToolStripMenuItem deleteVideosToolStripMenuItem3;
         private FolderBrowserDialog folderBrowserDialog1;
         private ComboBox comboBoxSubFolders;
+        private Label labelCamera1;
+        private Label labelCamera2;
+        private Label labelFileDuration;
     }
 }

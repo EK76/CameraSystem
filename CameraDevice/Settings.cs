@@ -194,6 +194,7 @@ namespace CameraDevice
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
                 checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "', camera1 = '" + setChoice4 + "', camera2 = '" + setChoice5 + "' where id = 1;";
+                Clipboard.SetText(checkString);
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 command.ExecuteReader();
                 conn.Close();
@@ -341,41 +342,7 @@ namespace CameraDevice
         }
 
 
-        private void checkBoxDoorSensor1_Click(object sender, EventArgs e)
-        {
-            if (checkBoxDoorSensor1.Checked)
-            {
-                setChoice3 = 1;
-            }
-            else
-            {
-                setChoice3 = 0;
-            }
-        }
 
-        private void checkBoxMotionSensor1_Click(object sender, EventArgs e)
-        {
-            if (checkBoxMotionSensor1.Checked)
-            {
-                setChoice = 1;
-            }
-            else
-            {
-                setChoice = 0;
-            }
-        }
-
-        private void checkBoxMotionSensor2_Click(object sender, EventArgs e)
-        {
-            if (checkBoxMotionSensor2.Checked)
-            {
-                setChoice2 = 1;
-            }
-            else
-            {
-                setChoice2 = 0;
-            }
-        }
         private void checkBoxEmail_CheckStateChanged(object sender, EventArgs e)
         {
             buttonOk.Enabled = true;
@@ -435,10 +402,6 @@ namespace CameraDevice
             buttonOk.Enabled = true;
         }
 
-        private void textBoxRows_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void checkBoxUsbCamera1_Click(object sender, EventArgs e)
         {
@@ -461,6 +424,42 @@ namespace CameraDevice
             else
             {
                 setChoice5 = 0;
+            }
+        }
+
+        private void checkBoxDoorSensor1_Click(object sender, EventArgs e)
+        {
+            if (checkBoxDoorSensor1.Checked)
+            {
+                setChoice3 = 1;
+            }
+            else
+            {
+                setChoice3 = 0;
+            }
+        }
+
+        private void checkBoxMotionSensor1_Click(object sender, EventArgs e)
+        {
+            if (checkBoxMotionSensor1.Checked)
+            {
+                setChoice = 1;
+            }
+            else
+            {
+                setChoice = 0;
+            }
+        }
+
+        private void checkBoxMotionSensor2_Click(object sender, EventArgs e)
+        {
+            if (checkBoxMotionSensor2.Checked)
+            {
+                setChoice2 = 1;
+            }
+            else
+            {
+                setChoice2 = 0;
             }
         }
     }
