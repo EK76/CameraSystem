@@ -1,21 +1,20 @@
 # CameraDevice
 
-The goal with this IT project project was to record videos with a certain length when a motion sensor or magnetic connector switch was triggered. This project contains of two motion sensors and a magnetic connector switch
-that control the usb camera. There is also a LCD display that show info when a event occur (e.g motion detection). The recordings are saved automatically to local hard drive and optionally to cloud share. For cloud share I have used Google drive. Search online with the phrase 
-*"How to setup Google drive share in linux"* to learn more about to setup Google drive in linux. 
+The goal of this IT project was to record video clips of a specified length whenever a motion sensor or a magnetic contact switch was triggered. The project consists of two motion sensors and one magnetic contact switch that control a USB camera.
+An LCD display is also included to show information whenever an event occurs, such as motion detection. The recordings are automatically saved to a local hard drive and can optionally be uploaded to a cloud storage service. 
 
-It is also possible to watch or delete these video recordings both from local storage and
-from cloushare with the Visual Studio C# project or with a 3rd-party application. It is even possible to send notifications to a email adress of your choosing. Search online with the phrase 
-*"How to setup email notifications in linux"* to learn more about to setup email notifications. In my case I used a Google account.
+For cloud storage, I used Google Drive. Search online for the phrase **"How to set up Google Drive sharing in Linux"** to learn more about configuring Google Drive on Linux.
+It is also possible to view or delete video recordings from both local storage and cloud storage using the Visual Studio C# application or a third-party application. 
+n addition, email notifications can be sent to an email address of your choice. Search online for the phrase **"How to set up email notifications in Linux"** to learn more about configuring email notifications. In my case, I used a Google account.
  
-### Requirements for this Visual Studio C# project.
+### Visual Studio C# Project requirements
 - .NET 9.0
 -  C# language version 13.0
 
-I have also installed one external plugin trough Visual Studio NuGet Package Manager for this Visaul Studio C# project, which is MySql.Data from Oracle Corporation.
-MySql.Data makes it easier to read from and make changes to MySQL database when using Visual Studio.
+This Visual Studio C# project uses the **MySql.Data** package from Oracle Corporation, which was installed through the Visual Studio NuGet Package Manager. 
+The package provides a .NET data provider for MySQL and enables the application to connect to, read from, and modify data stored in a MySQL database efficiently.
 
-### List over the hardware for this project.
+### Hardware used in this project.
 - Raspberry Pi 5
 - Usb camera
 - 2 PIR motion sensors
@@ -23,17 +22,18 @@ MySql.Data makes it easier to read from and make changes to MySQL database when 
 - 4 leds
 - 16x2 LCD display with I2C interface
   
-Usb camera, motion sensors and magnetic connector switch are connected to Raspberry PI 5, which have Debian GNU/Linux 13 (trixie) version installed. A python script makes it for example possible to create the video recordings, 
-when a motion sensor or a magnetic connection switch is trigged. 
-The python code can be found (located) at the folder Python within this project. I used python version 3.13.5 for this project. In my case the python script is located at **/home/camerauser/camerasystem** and I have chosen
-**camerauser** as my username for Raspberry Pi 5 device.
+The hardware components, including the USB camera, motion sensors, and magnetic contact switch, are connected to a Raspberry Pi 5 running Debian GNU/Linux 13 (Trixie). 
+System functionality is controlled by a Python script, which handles event detection and initiates video recording when a motion sensor or magnetic contact switch is triggered.
+The Python source code is located in the Python folder of this project. The project was developed and tested using Python 3.13.5.
+In the reference installation, the Python application is stored in the directory **/home/camerauser/camerasystem.** The username **camerauser** is used on the Raspberry Pi 5 system 
+and should be replaced if a different username is configured.
 
 ### USB camera.
 <img width="202" height="182" alt="usbcamera" src="https://github.com/user-attachments/assets/17e0fe59-68d8-4e98-9dc2-6c02407fb6fc" />
 
 In my case I used the opencv library for controlling the usb camera with python.
 
-### The installation of library for using usb camera.
+### Installation of the USB camera library
 
 #### Raspberry Pi OS (Recommended).
 ```
@@ -49,7 +49,11 @@ sudo pip3 install python3-opencv-python
 <img width="143" height="123" alt="image" src="https://github.com/user-attachments/assets/d85f2d60-32a4-4a5e-932e-370d10e6ed53" />
 
 I used the this PIR HC-SR501 as my sensor motion. At the core of many smart automation devices lies the powerful PIR Sensor. 
-It stands for Passive Infrared Sensor and relies on infrared sensing technology to detect the motion of objects.
+The HC-SR501 PIR (Passive Infrared) sensor was used as the motion detection sensor in this project. PIR sensors are commonly used 
+in automation, surveillance, and security applications because they can detect movement by monitoring changes in infrared radiation within their field of view.
+
+When motion is detected, the HC-SR501 generates a signal that is processed by the Raspberry Pi 5. This event can then trigger predefined actions, 
+such as initiating video recording, updating the LCD display, or sending an email notification.
 
 The connection between Raspberry PI5 and sensor motions.
 - Both motion sensor's pin labelled VCC is connected to the 5V pin on the Raspberry Pi5. 
@@ -77,18 +81,25 @@ The connection between Raspberry PI5 and magnetic connector switch
 - One of the magnetic connector switch connection is connected to GPIO 5 on the Raspberry Pi5.
 - The other connection is connected to a ground pin on the Raspberry Pi5.
 
-### The installation of library for the magnetic connector switch.
+The magnetic contact switch detects whether a door, window, or other monitored object is open or closed. 
+When the switch changes state, the Raspberry Pi 5 detects the signal on GPIO 5 and can trigger predefined actions, 
+such as starting a video recording, updating the LCD display, or sending an email notification.
 
-Magnetic connector switch uses the same the library as motion sensor.
+### Library Installation for the Magnetic Contact Switch.
+
+The magnetic contact switch uses the same Python library as the motion sensor. Therefore, no additional libraries are required specifically for the magnetic contact switch. 
+Once the motion sensor library has been installed, it can also be used to read the state of the magnetic contact switch through the Raspberry Pi GPIO pins.
 
 ### Leds
 
 I have used 3 yellow leds acting as sensor indicators and 1 rgb (red and green color) led as a indicator for the Raspberry PI's condition.
 
-The connection between Raspberry PI5 and the leds.
+Connection between Raspberry PI5 and the leds.
 - The yellow leds are connected to the to GPIO21, GPIO 23 and GPIO 24 on the Raspberry Pi5.
 - The RGB red are connected to GPIO17 (red) and GPIO27 (green) on the Raspberry Pi5.
 - The leds other connection is connected to ground on the Raspberry Pi5.
+
+  
 
 ### The installation of library for the leds.
 
@@ -98,7 +109,7 @@ Leds are using the same the library as motion sensor and magnetic connector swit
 <img width="300" height="120" alt="lcddisplay2" src="https://github.com/user-attachments/assets/9430baf6-e434-4600-8474-941897cef9af" />
 <img width="300" height="120" alt="lcddisplay1" src="https://github.com/user-attachments/assets/3e0e12c3-9224-4cb3-8161-25d2c61f2e7c" />
 
-The LCD display used in this project is 16x2 with I2C protocol connection. 16x2 means it contains of two rows, which both can contain of 16 characters.
+The LCD display used in this project is 16x2 with I2C protocol connection. 16x2 means it contains of two rows, which both can contain of 16 characters. 
 I2C stands for Inter-Integrated Circuit. It is a simple two-wire communication system in this case between the LCD display and Raspberry Pi5.
 
  #### Information about I2C protocol's function.
@@ -120,7 +131,7 @@ Before you can use this LCD display, you must activate I2C.
 - Select Ok and then Finish to exit the configuration menu.
 - Reboot your Raspberry Pi 5 using ***sudo reboot*** for changes to take effect.
 
-### Installation of library for the LCD display.
+### Library installation for the LCD display.
 
 ```
 sudo pip3 install RPLCD smbus2
@@ -161,7 +172,7 @@ primary key(id)
 ```
 The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this project.
 
-#### The settings that can be changed how the python script is run.
+#### Settings that can be changed for the python script.
 - Enable email notification.
 - Change email address.
 - The recording length for video.
@@ -169,10 +180,9 @@ The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this p
 - Choose if sensor motion 1 and sensor motion2 are enabled or disabled.
 - Choose if the magnetic connector switch is enabled or disabled.
 
-You can modify these setting with the Visual Studio C# project.
-The Visual Studio C# project works only with computers that run under Windows 11 operating system. 
-
-I have created a service which I have named camerasystem.service that when one or more of these changes are changed, it restarts the python program.
+The system configuration settings can be managed through the Visual Studio C# application, which is compatible with the Windows 11 operating system.
+A systemd service named camerasystem.service has been configured on the Raspberry Pi 5. The service monitors configuration changes and automatically 
+restarts the Python application whenever one or more settings are updated. This ensures that all changes are applied without requiring a manual restart of the Python program.
 ```
 [Unit]
 Description=Control Cameradevice.
@@ -190,9 +200,9 @@ Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 ```
-Both my mysql password and email token for the pyhton script are located at /etc/controldevice/controldevice.conf file.
-You should always consider to hide sensative information, for example password. On way to achieve this is to use environment variables,
-as I have done.
+When developing applications, it is considered a security best practice to protect sensitive information such as passwords, API keys, and authentication tokens. 
+In this project, environment variables are used to store these credentials instead of embedding them directly in the source code. 
+This approach improves security, simplifies maintenance, and reduces the risk of exposing sensitive data.
 
 To use this cameradevice service without sudo password from Visual Studio C# project, I created a simple bash script, **camerarestart.sh**
 ```
@@ -230,10 +240,9 @@ ExecStop=fusermount -u /home/camerauser/gdrive
 [Install]
 WantedBy=multi-user.target
 ```
-This project also cointain of php file (updatesql) that works like a cli application, which purpose is to delete all rows for the table cameralogs, except the newest rows according to the value **$row[6]**
-In order for updatesql can run as cli application you must put **#!/usr/bin/env php** as the first row in updatesql and make the file runnable with **chmod 777 updatesql**.  You also must install php to your
-operatings system.
-
+This project also contains a PHP file called **updatesql**, which functions as a command-line (CLI) application. 
+Its purpose is to delete old rows from the **cameralogs** table while retaining the most recent entries based on the value stored in **$row[6]**.
+In addition, PHP must be installed on the operating system where the script is executed.
 ```
 sudo apt install php php-cli php-fpm
 ```
