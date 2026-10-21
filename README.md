@@ -264,10 +264,5 @@ or die (mysqli_error($dbconnect));
 You can use crontab to run this updatesql for example every night at 2 o'clock, by adding this line to rhe crontab config file. <br />
 **0 2 * * *  /home/camerauser/camerasystem/updatetable**
 
-To use this updatesql without sudo password, put this line at bottom of /etc/sudoers file with the help of sudo visudo.
-```
-camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/updatesql
-```
-
 ### Picture about this project.
 <img width="1442" height="671" alt="Screenshot 2026-04-26 174605" src="https://github.com/user-attachments/assets/6c0a1456-8bd8-4dc8-99d2-a5981a2dae00" />
