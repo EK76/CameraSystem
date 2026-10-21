@@ -99,8 +99,6 @@ Connection between Raspberry PI5 and the leds.
 - The RGB red are connected to GPIO17 (red) and GPIO27 (green) on the Raspberry Pi5.
 - The leds other connection is connected to ground on the Raspberry Pi5.
 
-  
-
 ### The installation of library for the leds.
 
 Leds are using the same the library as motion sensor and magnetic connector switch.
@@ -171,6 +169,14 @@ primary key(id)
 );
 ```
 The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this project.
+I have entered my database information (such as the host, database name, username, and password) into the application settings in Visual Studio C#. 
+I can then read this information using the following code in Visual Studio C#. 
+```
+connString = HomeAssistant.Properties.Settings.Default.Database;
+```
+For more information about application settings in Visual C#, see the following **[link](https://learn.microsoft.com/en-us/visualstudio/ide/managing-application-settings-dotnet?view=visualstudio)**. 
+
+
 
 #### Settings that can be changed for the python script.
 - Enable email notification.
@@ -181,8 +187,9 @@ The MySQL version 11.8.6-MariaDB-0+deb13u1 acts as my database server for this p
 - Choose if the magnetic connector switch is enabled or disabled.
 
 The system configuration settings can be managed through the Visual Studio C# application, which is compatible with the Windows 11 operating system.
-A systemd service named camerasystem.service has been configured on the Raspberry Pi 5. The service monitors configuration changes and automatically 
-restarts the Python application whenever one or more settings are updated. This ensures that all changes are applied without requiring a manual restart of the Python program.
+A systemd service named cameradevice.service has been configured on the Raspberry Pi 5. Whenever one or more settings are modified through the Visual Studio C# application, 
+the service automatically restarts the Python program and reloads the updated configuration. This approach eliminates the need for manual restarts and ensures that the latest 
+configuration settings are applied immediately.
 ```
 [Unit]
 Description=Control Cameradevice.
@@ -203,22 +210,10 @@ WantedBy=multi-user.target
 When developing applications, it is considered a security best practice to protect sensitive information such as passwords, API keys, and authentication tokens. 
 In this project, environment variables are used to store these credentials instead of embedding them directly in the source code. 
 This approach improves security, simplifies maintenance, and reduces the risk of exposing sensitive data.
-
-To use this cameradevice service without sudo password from Visual Studio C# project, I created a simple bash script, **camerarestart.sh**
+To allow the Visual Studio C# application to manage the service without prompting for a sudo password put this line at bottom of 
+/etc/sudoers file with the help of sudo visudo.
 ```
-sudo systemctl restart cameradevice
-```
-As the next step I put this line at bottom of /etc/sudoers file with the help of sudo visudo.
-```
-camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/camerarestart.sh
-```
-The same procedure is also done if you wan't to shutdown the device from Visual Studio C# project, then you can create a bashscript  **camerashutdown.sh**
-```
-sudo shutdown now
-```
-Put this line at bottom of /etc/sudoers file with the help of sudo visudo.
-```
-camerauser ALL=(ALL) NOPASSWD: /home/camerauser/camerasystem/camerarshutdown.sh
+%sudo   ALL=(ALL:ALL) ALL
 ```
 I also created another service, gdrive.service that controls the cloudshare, in my case Google drive.
 ```
