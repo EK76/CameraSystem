@@ -1,11 +1,11 @@
 # CameraDevice
 
-The goal of this IT project was to record video clips of a specified length whenever a motion sensor or a magnetic contact switch was triggered. The project consists of two motion sensors and one magnetic contact switch that control a USB camera.
+The goal of this IT project was to record video clips of a specified length whenever a motion sensor or a magnetic contact switch was triggered. The project consists of two motion sensors and one magnetic contact switch that control two USB cameras.
 An LCD display is also included to show information whenever an event occurs, such as motion detection. The recordings are automatically saved to a local hard drive and can optionally be uploaded to a cloud storage service. 
 
 For cloud storage, I used Google Drive. Search online for the phrase **"How to set up Google Drive sharing in Linux"** to learn more about configuring Google Drive on Linux.
 It is also possible to view or delete video recordings from both local storage and cloud storage using the Visual Studio C# application or a third-party application. 
-n addition, email notifications can be sent to an email address of your choice. Search online for the phrase **"How to set up email notifications in Linux"** to learn more about configuring email notifications. In my case, I used a Google account.
+In addition, email notifications can be sent to an email address of your choice. Search online for the phrase **"How to set up email notifications in Linux"** to learn more about configuring email notifications. In my case, I used a Google account.
  
 ### Visual Studio C# Project requirements
 - .NET 9.0
@@ -16,7 +16,7 @@ The package provides a .NET data provider for MySQL and enables the application 
 
 ### Hardware used in this project.
 - Raspberry Pi 5
-- Usb camera
+- 2 usb cameras
 - 2 PIR motion sensors
 - Magnetic connector switch
 - 4 leds
@@ -59,7 +59,7 @@ The connection between Raspberry PI5 and sensor motions.
 - Both motion sensor's pin labelled VCC is connected to the 5V pin on the Raspberry Pi5. 
 - Both motion sensor's pin labelled GND is connected to a ground pin on the Raspberry Pi5. 
 - In my case motion sensor1's pin labelled OUT is connected to GPIO 12 on the Raspberry Pi5.
-- in my cate motion sensor2's pin labelled OUT is connected to GPIO 16 on the Raspberry Pi5.
+- In my case motion sensor2's pin labelled OUT is connected to GPIO 16 on the Raspberry Pi5.
   
 ### The installation of library for the motion sensor.
 
