@@ -77,9 +77,9 @@ def streamVideo():
   frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
   fourcc = cv2.VideoWriter_fourcc(*'mp4v')
   if camera1 == 1:
-    output = cv2.VideoWriter(createfolder + '/camera1/video_' + str(timefile) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+    output = cv2.VideoWriter(createfolder + '/camera1/video_' + str(timefile) + '.mp4', fourcc, 15.0, (frame_width, frame_height))
   if camera2 == 1:
-    output2 = cv2.VideoWriter(createfolder + '/camera2/video_' + str(timefile) + '.mp4', fourcc, 20.0, (frame_width, frame_height))
+    output2 = cv2.VideoWriter(createfolder + '/camera2/video_' + str(timefile) + '.mp4', fourcc, 15.0, (frame_width, frame_height))
   startTime = time.time()
 
   recording = 0
@@ -95,7 +95,10 @@ def streamVideo():
         query = "insert into cameralogs(logtext) values (%s)"
         dbinfo.execute(query, ["Camera 1 broken."])
         dbconfig.commit()    
-        camera1=0;
+        camera1 = 0
+        redLed1.on()
+        greenLed1.off()
+
     if camera2 == 1:
       ret2, frame2 = stream2.read()
       output2.write(frame2)
@@ -106,7 +109,9 @@ def streamVideo():
         query = "insert into cameralogs(logtext) values (%s)"
         dbinfo.execute(query, ["Camera 2 broken."])
         dbconfig.commit()    
-        camera2=0;
+        camera2 = 0
+        redLed1.on()
+        greenLed1.off()
   
   if camera1 == 1:
     output.release()
@@ -180,7 +185,7 @@ def motionShow2():
 
 def enableChoice():
   global datefolder
-  global settime
+  global timefile
   if enableDrive == 'True':
     print (createfolder2)
     if not os.path.isdir(createfolder2 + "/camera1"):
@@ -192,12 +197,12 @@ def enableChoice():
       print ("Cloud Camera 2 created.")
     
     if camera1 == 1:
-      copyfrom = createfolder + "/camera1/video_" + str(settime) +".mp4"
+      copyfrom = createfolder + "/camera1/video_" + str(timefile) +".mp4"
       rclone.copy(copyfrom, createfolder2 + "/camera1")
     if camera2 == 1:
-      copyfrom2 = createfolder + "/camera2/video_" + str(settime) +".mp4"
+      copyfrom2 = createfolder + "/camera2/video_" + str(timefile) +".mp4"
       rclone.copy(copyfrom2, createfolder2 + "/camera2")
-    print("GDrive: " + createfolder2 + "/video_" + str(settime) +".mp4")    
+    print("GDrive: " + createfolder2 + "/video_" + str(timefile) +".mp4")    
 
   if enableEmail == 'True':
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -251,6 +256,8 @@ if not stream.isOpened():
   query = "insert into cameralogs(logtext) values (%s)"
   dbinfo.execute(query, ["Camera 1 broken."])
   dbconfig.commit()    
+  redLed1.on()
+  greenLed1.off()
   exit()
 
 if not stream2.isOpened():
@@ -260,11 +267,10 @@ if not stream2.isOpened():
   query = "insert into cameralogs(logtext) values (%s)"
   dbinfo.execute(query, ["Camera 2 broken."])
   dbconfig.commit()    
+  redLed1.on()
+  greenLed1.off()
   exit()
-
 try:
-
-
   dbinfo = dbconfig.cursor()
   query = "insert into cameralogs(logtext) values ('Camera device started.')"
   dbinfo.execute(query)
@@ -300,8 +306,6 @@ try:
     detectLed1.on()
   else:
     detectLed1.off()  
-  
-  print(str(camera1))
 
   while True:
     total, used, free = shutil.disk_usage("/media/usbdrive/camerasystem")
