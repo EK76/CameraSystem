@@ -161,6 +161,7 @@ use camerasystem;
 create table cameralogs(
 id int not null auto_increment,
 logtext varchar(250),
+infocode int,
 datecreated datetime default (current_timestamp),
 primary key(id)
 );
@@ -175,6 +176,7 @@ datechanged timestamp not null default current_timestamp on update current_times
 numberofrows int,
 motionchoice1 int,
 motionchoice2 int,
+motionchoice3 int,
 openstatus int,
 camera1 int,
 camera2 int,
