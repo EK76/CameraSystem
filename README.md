@@ -1,7 +1,7 @@
 # CameraDevice
 
-The goal of this IT project was to record video clips of a specified length whenever a motion sensor or a magnetic contact switch was triggered. The project consists of two motion sensors and one magnetic contact switch that control two USB cameras.
-An LCD display is also included to show information whenever an event occurs, such as motion detection. The recordings are automatically saved to a local hard drive and can optionally be uploaded to a cloud storage service. 
+The goal of this IT project was to record video clips of a specified length whenever a motion sensor or a magnetic contact switch was triggered. The project consists of two motion sensors, one wireless motion sensor and one magnetic contact switch that control two USB cameras.
+An 1.3" oled display also included to show information whenever an event occurs, such as motion detection. The recordings are automatically saved to a local hard drive and can optionally be uploaded to a cloud storage service. 
 
 For cloud storage, I used Google Drive. Search online for the phrase **"How to set up Google Drive sharing in Linux"** to learn more about configuring Google Drive on Linux.
 It is also possible to view or delete video recordings from both local storage and cloud storage using the Visual Studio C# application or a third-party application. 
@@ -15,12 +15,13 @@ This Visual Studio C# project uses the **MySql.Data** package from Oracle Corpor
 The package provides a .NET data provider for MySQL and enables the application to connect to, read from, and modify data stored in a MySQL database efficiently.
 
 ### Hardware used in this project.
-- Raspberry Pi 5
+- 1 Raspberry Pi 5
 - 2 usb cameras
 - 2 PIR motion sensors
-- Magnetic connector switch
+- 1 Wireless PIR motion sensor
+- 1 Magnetic connector switch
 - 4 leds
-- 16x2 LCD display with I2C interface
+- 1 1.3" oled display 
   
 The hardware components, including the USB camera, motion sensors, and magnetic contact switch, are connected to a Raspberry Pi 5 running Debian GNU/Linux 13 (Trixie). 
 System functionality is controlled by a Python script, which handles event detection and initiates video recording when a motion sensor or magnetic contact switch is triggered.
@@ -44,6 +45,12 @@ sudo apt install python3-opencv
 ```
 sudo pip3 install python3-opencv-python
 ```
+### Wireless PIR motion sensor
+
+I used the Shelly BLU Motion ZB Sensor as the wireless motion sensor for this project.
+For detailed installation instructions on integrating this wireless motion sensor with this GitHub project, 
+please see the WirelessMotion.pdf document.
+
 ### PIR motion sensor
 
 <img width="143" height="123" alt="image" src="https://github.com/user-attachments/assets/d85f2d60-32a4-4a5e-932e-370d10e6ed53" />
@@ -103,37 +110,43 @@ Connection between Raspberry PI5 and the leds.
 
 Leds are using the same the library as motion sensor and magnetic connector switch.
 
-### LCD display
-<img width="300" height="120" alt="lcddisplay2" src="https://github.com/user-attachments/assets/9430baf6-e434-4600-8474-941897cef9af" />
-<img width="300" height="120" alt="lcddisplay1" src="https://github.com/user-attachments/assets/3e0e12c3-9224-4cb3-8161-25d2c61f2e7c" />
+### 1.3" oled display.
 
-The LCD display used in this project is 16x2 with I2C protocol connection. 16x2 means it contains of two rows, which both can contain of 16 characters. 
-I2C stands for Inter-Integrated Circuit. It is a simple two-wire communication system in this case between the LCD display and Raspberry Pi5.
+<img width="263" height="285" alt="oled" src="https://github.com/user-attachments/assets/8c84f64e-cf72-41dd-84b8-30bb26221663" />
 
- #### Information about I2C protocol's function.
+This OLED (organic light-emitting diode) display module combines bright white and deep blue colors to provide a sharp 128×64 pixel resolution. 
+Its 1.3-inch display is ideal for a wide range of applications, providing a clear and sharp image even in small devices. 
+The module uses the IIC communication protocol. IIC communication (also written as I²C or I2C) stands for Inter-Integrated Circuit,
+a popular two-wire serial communication protocol used to connect low-speed peripheral chips, sensors, and displays to microcontrollers
+ 
+Information about IIC protocol's function.
 - Uses two shared signal lines: SDA (Serial Data Line) to send data, and SCL (Serial Clock Line) to keep the timing synced.
 - Operates with a controller (master) device that directs traffic and a peripheral (slave) device that responds.
 - Each slave device has a unique address. The master calls this address so only the correct part listens.
 - Built-in acknowledgment bits tell the master if data arrived safely.
 
-The connection between Raspberry PI5 and the LCD display.
-- The LCD display's SDA pin is connected to SDA pin (GPIO2) on the Raspberry Pi5.
-- The LCD display's SCL pin is connected to SCL pin on (GPIO3) on the Raspberry Pi5.
-- The LCD display's VCC pin is connected to 5V pin on the Raspberry Pi5.
-- The LCD display's GND pin is connected to ground on the Raspberry Pi5.
+Connection between Raspberry PI5 and the oled display.
 
-Before you can use this LCD display, you must activate I2C.
-- Type ***sudo raspi-config*** and press Enter in a terminal window.
+- The oled display's SDA pin is connected to SDA pin (GPIO2) on the Raspberry Pi5.
+- The oled display's SCL pin is connected to SCL pin (GPIO3) on the Raspberry Pi5.
+- The oled display's VCC pin is connected to 5V pin on the Raspberry Pi5.
+- The oled display's GND pin is connected to ground on the Raspberry Pi5.
+
+Before you can use this oled display with Raspberry PI 5, you must activate I2C.
+
+- Type sudo raspi-config and press Enter in a terminal window.
 - Use the arrow keys to select 3 Interface Options or 5 Interfacing Options (depending on your OS version) and press Enter.
 - Choose I2C and select Yes to enable the ARM I2C interface.
 - Select Ok and then Finish to exit the configuration menu.
-- Reboot your Raspberry Pi 5 using ***sudo reboot*** for changes to take effect.
+- Reboot your Raspberry Pi 5 using sudo reboot for changes to take effect.
 
-### Library installation for the LCD display.
+### Library installation for the OLED display.
 
+#### Using pip (For other OS or virtual environments).
 ```
-sudo pip3 install RPLCD smbus2
+sudo pip3 install luma.oled
 ```
+
 ### Database
 
 This project contains of two mysql tables.
@@ -148,6 +161,7 @@ use camerasystem;
 create table cameralogs(
 id int not null auto_increment,
 logtext varchar(250),
+infocode int,
 datecreated datetime default (current_timestamp),
 primary key(id)
 );
@@ -162,6 +176,7 @@ datechanged timestamp not null default current_timestamp on update current_times
 numberofrows int,
 motionchoice1 int,
 motionchoice2 int,
+motionchoice3 int,
 openstatus int,
 camera1 int,
 camera2 int,
