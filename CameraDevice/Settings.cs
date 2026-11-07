@@ -29,10 +29,10 @@ namespace CameraDevice
         }
         string checkString, connString;
         string drive, emailAlert, emailAdress, emailAdress2, streamVideo, setFolder, rowsOfNumbers, changeDate, openStatus;
-        string user = "cameraruser";
+        //string user = "cameraruser";
         string password;
-        string host = "cameradevice";
-        int setChoice, setChoice2, setChoice3, setChoice4, setChoice5;
+        //    string host = "cameradevice";
+        int setChoice, setChoice2, setChoice3, setChoice4, setChoice5, setChoice6;
         int checkState = 0;
         bool checkChanges = false, checkEmail, noneEmail;
         private void FormSettings_Load(object sender, EventArgs e)
@@ -63,6 +63,7 @@ namespace CameraDevice
                     setChoice3 = reader.GetInt32("openstatus");
                     setChoice4 = reader.GetInt32("camera1");
                     setChoice5 = reader.GetInt32("camera2");
+                    setChoice6 = reader.GetInt32("motionchoice3");
                 }
                 conn.Close();
 
@@ -135,17 +136,26 @@ namespace CameraDevice
                     checkBoxUsbCamera2.Checked = false;
                 }
 
-
-                if (setChoice4 == 0)
+                if (setChoice6 == 1)
                 {
-                    checkBoxUsbCamera2.Enabled = false;
+                    checkBoxMotionSensor3.Checked = true;
+                }
+                else
+                {
+                    checkBoxMotionSensor3.Checked = false;
                 }
 
 
-                if (setChoice5 == 0)
-                {
-                    checkBoxUsbCamera1.Enabled = false;
-                }
+                /* if (setChoice4 == 0)
+                 {
+                     checkBoxUsbCamera2.Enabled = false;
+                 }
+
+
+                 if (setChoice5 == 0)
+                 {
+                     checkBoxUsbCamera1.Enabled = false;
+                 }*/
 
                 buttonOk.Enabled = false;
 
@@ -193,13 +203,13 @@ namespace CameraDevice
             {
                 MySqlConnection conn = new MySqlConnection(connString);
                 conn.Open();
-                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "', camera1 = '" + setChoice4 + "', camera2 = '" + setChoice5 + "' where id = 1;";
+                checkString = "update settings set drive='" + drive + "', email ='" + emailAlert + "', sendemail = '" + emailAdress + "', motionchoice1 = '" + setChoice + "', motionchoice2 = '" + setChoice2 + "', stream = '" + streamVideo + "', numberofrows = '" + rowsOfNumbers + "', openstatus = '" + setChoice3 + "', camera1 = '" + setChoice4 + "', camera2 = '" + setChoice5 + "', motionchoice3 = '" + setChoice6 + "' where id = 1;";
                 Clipboard.SetText(checkString);
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 command.ExecuteReader();
                 conn.Close();
                 conn.Open();
-                checkString = "insert into cameralogs(logtext) values('Settings were updated.');";
+                checkString = "insert into cameralogs(logtext,infocode) values('Settings were updated.', '0');";
                 MySqlCommand command2 = new MySqlCommand(checkString, conn);
                 MySqlDataReader reader2 = command2.ExecuteReader();
                 conn.Close();
@@ -461,6 +471,23 @@ namespace CameraDevice
             {
                 setChoice2 = 0;
             }
+        }
+
+        private void checkBoxMotionSensor3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxMotionSensor3.Checked)
+            {
+                setChoice6 = 1;
+            }
+            else
+            {
+                setChoice6 = 0;
+            }
+        }
+
+        private void checkBoxMotionSensor3_CheckStateChanged(object sender, EventArgs e)
+        {
+            buttonOk.Enabled = true;
         }
     }
 }

@@ -34,7 +34,6 @@
             chartView = new System.Windows.Forms.DataVisualization.Charting.Chart();
             radioButtonShowDates = new RadioButton();
             radioButtonShowTopics = new RadioButton();
-            listBoxShowTopics = new ListBox();
             ((System.ComponentModel.ISupportInitialize)chartView).BeginInit();
             SuspendLayout();
             // 
@@ -61,6 +60,8 @@
             chartView.Size = new Size(795, 484);
             chartView.TabIndex = 1;
             chartView.Text = "chart1";
+            chartView.GetToolTipText += chartView_GetToolTipText;
+            chartView.Click += chartView_Click;
             // 
             // radioButtonShowDates
             // 
@@ -88,21 +89,11 @@
             radioButtonShowTopics.UseVisualStyleBackColor = true;
             radioButtonShowTopics.CheckedChanged += radioButtonShowTopics_CheckedChanged;
             // 
-            // listBoxShowTopics
-            // 
-            listBoxShowTopics.BackColor = SystemColors.Control;
-            listBoxShowTopics.FormattingEnabled = true;
-            listBoxShowTopics.Location = new Point(813, 43);
-            listBoxShowTopics.Name = "listBoxShowTopics";
-            listBoxShowTopics.Size = new Size(250, 484);
-            listBoxShowTopics.TabIndex = 4;
-            // 
             // FormViewgraph
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1069, 541);
-            Controls.Add(listBoxShowTopics);
+            ClientSize = new Size(819, 541);
             Controls.Add(radioButtonShowTopics);
             Controls.Add(radioButtonShowDates);
             Controls.Add(chartView);
@@ -123,6 +114,5 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartView;
         private RadioButton radioButtonShowDates;
         private RadioButton radioButtonShowTopics;
-        private ListBox listBoxShowTopics;
     }
 }

@@ -56,6 +56,7 @@
             largeToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
+            controlDeviceToolStripMenuItem = new ToolStripMenuItem();
             restartDeviceToolStripMenuItem = new ToolStripMenuItem();
             shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
@@ -80,6 +81,7 @@
             labelCamera1 = new Label();
             labelCamera2 = new Label();
             labelFileDuration = new Label();
+            labelSensor3 = new Label();
             menuStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)axWindowsMediaPlayer1).BeginInit();
@@ -210,7 +212,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearLogsToolStripMenuItem, toolStripSeparator1, boldTextToolStripMenuItem, fontSizeToolStripMenuItem, settingsToolStripMenuItem, toolStripSeparator2, restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clearLogsToolStripMenuItem, toolStripSeparator1, boldTextToolStripMenuItem, fontSizeToolStripMenuItem, settingsToolStripMenuItem, toolStripSeparator2, controlDeviceToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(47, 20);
             toolsToolStripMenuItem.Text = "Tools";
@@ -218,19 +220,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(165, 22);
+            clearLogsToolStripMenuItem.Size = new Size(152, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(162, 6);
+            toolStripSeparator1.Size = new Size(149, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(165, 22);
+            boldTextToolStripMenuItem.Size = new Size(152, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -238,7 +240,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(165, 22);
+            fontSizeToolStripMenuItem.Size = new Size(152, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -267,28 +269,35 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(165, 22);
+            settingsToolStripMenuItem.Size = new Size(152, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(162, 6);
+            toolStripSeparator2.Size = new Size(149, 6);
+            // 
+            // controlDeviceToolStripMenuItem
+            // 
+            controlDeviceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem });
+            controlDeviceToolStripMenuItem.Name = "controlDeviceToolStripMenuItem";
+            controlDeviceToolStripMenuItem.Size = new Size(152, 22);
+            controlDeviceToolStripMenuItem.Text = "Control Device";
             // 
             // restartDeviceToolStripMenuItem
             // 
             restartDeviceToolStripMenuItem.Name = "restartDeviceToolStripMenuItem";
-            restartDeviceToolStripMenuItem.Size = new Size(165, 22);
-            restartDeviceToolStripMenuItem.Text = "Restart device";
-            restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click;
+            restartDeviceToolStripMenuItem.Size = new Size(166, 22);
+            restartDeviceToolStripMenuItem.Text = "Restart Device";
+            restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click_1;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(165, 22);
-            shutdownDeviceToolStripMenuItem.Text = "Shutdown device";
-            shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click;
+            shutdownDeviceToolStripMenuItem.Size = new Size(166, 22);
+            shutdownDeviceToolStripMenuItem.Text = "Shutdown Device";
+            shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click_1;
             // 
             // helpToolStripMenuItem
             // 
@@ -406,7 +415,7 @@
             // 
             labelSensor.AutoSize = true;
             labelSensor.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelSensor.Location = new Point(323, 489);
+            labelSensor.Location = new Point(323, 462);
             labelSensor.Name = "labelSensor";
             labelSensor.Size = new Size(79, 17);
             labelSensor.TabIndex = 9;
@@ -416,7 +425,7 @@
             // 
             labelSensor2.AutoSize = true;
             labelSensor2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelSensor2.Location = new Point(323, 519);
+            labelSensor2.Location = new Point(323, 492);
             labelSensor2.Name = "labelSensor2";
             labelSensor2.Size = new Size(86, 17);
             labelSensor2.TabIndex = 10;
@@ -426,7 +435,7 @@
             // 
             labelDetection.AutoSize = true;
             labelDetection.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelDetection.Location = new Point(323, 546);
+            labelDetection.Location = new Point(323, 544);
             labelDetection.Name = "labelDetection";
             labelDetection.Size = new Size(45, 17);
             labelDetection.TabIndex = 11;
@@ -437,7 +446,7 @@
             labelAllSensors.AutoSize = true;
             labelAllSensors.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelAllSensors.ForeColor = Color.Red;
-            labelAllSensors.Location = new Point(323, 576);
+            labelAllSensors.Location = new Point(323, 574);
             labelAllSensors.Name = "labelAllSensors";
             labelAllSensors.Size = new Size(158, 17);
             labelAllSensors.TabIndex = 12;
@@ -457,7 +466,7 @@
             // 
             labelCamera1.AutoSize = true;
             labelCamera1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelCamera1.Location = new Point(323, 433);
+            labelCamera1.Location = new Point(323, 406);
             labelCamera1.Name = "labelCamera1";
             labelCamera1.Size = new Size(45, 17);
             labelCamera1.TabIndex = 16;
@@ -467,7 +476,7 @@
             // 
             labelCamera2.AutoSize = true;
             labelCamera2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            labelCamera2.Location = new Point(323, 461);
+            labelCamera2.Location = new Point(323, 434);
             labelCamera2.Name = "labelCamera2";
             labelCamera2.Size = new Size(45, 17);
             labelCamera2.TabIndex = 17;
@@ -483,11 +492,22 @@
             labelFileDuration.TabIndex = 18;
             labelFileDuration.Text = "Video duration:";
             // 
+            // labelSensor3
+            // 
+            labelSensor3.AutoSize = true;
+            labelSensor3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            labelSensor3.Location = new Point(323, 520);
+            labelSensor3.Name = "labelSensor3";
+            labelSensor3.Size = new Size(45, 17);
+            labelSensor3.TabIndex = 19;
+            labelSensor3.Text = "label1";
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1446, 646);
+            Controls.Add(labelSensor3);
             Controls.Add(labelFileDuration);
             Controls.Add(labelCamera2);
             Controls.Add(labelCamera1);
@@ -549,7 +569,6 @@
         private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
         private ToolStripMenuItem playVideoToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
-        private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
         private Label labelStorage;
         private ToolStripMenuItem openStorageToolStripMenuItem;
         private ToolStripMenuItem localStorageToolStripMenuItem;
@@ -561,7 +580,6 @@
         private ToolStripMenuItem deleteFolderToolStripMenuItem;
         private ToolStripMenuItem deleteVideostoolStripMenuItem2;
         private ToolStripSeparator toolStripMenuItem1;
-        private ToolStripMenuItem restartDeviceToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
         private Label labelAllSensors;
         private ContextMenuStrip contextMenuStrip1;
@@ -573,5 +591,9 @@
         private Label labelCamera1;
         private Label labelCamera2;
         private Label labelFileDuration;
+        private ToolStripMenuItem controlDeviceToolStripMenuItem;
+        private ToolStripMenuItem restartDeviceToolStripMenuItem;
+        private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
+        private Label labelSensor3;
     }
 }

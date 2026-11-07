@@ -50,6 +50,7 @@
             labelText7 = new Label();
             checkBoxUsbCamera1 = new CheckBox();
             checkBoxUsbCamera2 = new CheckBox();
+            checkBoxMotionSensor3 = new CheckBox();
             SuspendLayout();
             // 
             // buttonOk
@@ -283,11 +284,24 @@
             checkBoxUsbCamera2.CheckedChanged += checkBoxUsbCamera2_CheckedChanged;
             checkBoxUsbCamera2.Click += checkBoxUsbCamera2_Click;
             // 
+            // checkBoxMotionSensor3
+            // 
+            checkBoxMotionSensor3.AutoSize = true;
+            checkBoxMotionSensor3.Location = new Point(295, 126);
+            checkBoxMotionSensor3.Name = "checkBoxMotionSensor3";
+            checkBoxMotionSensor3.Size = new Size(188, 20);
+            checkBoxMotionSensor3.TabIndex = 35;
+            checkBoxMotionSensor3.Text = "Wireless Motion sensor";
+            checkBoxMotionSensor3.UseVisualStyleBackColor = true;
+            checkBoxMotionSensor3.CheckedChanged += checkBoxMotionSensor3_CheckedChanged;
+            checkBoxMotionSensor3.CheckStateChanged += checkBoxMotionSensor3_CheckStateChanged;
+            // 
             // FormSettings
             // 
             AutoScaleDimensions = new SizeF(9F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(576, 557);
+            Controls.Add(checkBoxMotionSensor3);
             Controls.Add(checkBoxUsbCamera2);
             Controls.Add(checkBoxUsbCamera1);
             Controls.Add(labelText7);
@@ -346,5 +360,6 @@
         private Label labelText7;
         private CheckBox checkBoxUsbCamera1;
         private CheckBox checkBoxUsbCamera2;
+        private CheckBox checkBoxMotionSensor3;
     }
 }

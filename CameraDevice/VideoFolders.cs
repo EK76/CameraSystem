@@ -17,7 +17,7 @@ namespace CameraDevice
             InitializeComponent();
         }
 
-        int counterItems = 0;
+        int counterItems = 0, countFolders = 0;
         private void buttonClose_Click(object sender, EventArgs e)
         {
             Close();
@@ -71,6 +71,20 @@ namespace CameraDevice
                 }
                 toolStripStatusLabelNumbers.Text = "Numbers of video folders: " + counterItems.ToString();
                 MessageBox.Show("Selected video folders have been deleted.", "Camera Device");
+                buttonDelete.Enabled = false;
+            }
+        }
+
+        private void listBoxVideoFolders_Click(object sender, EventArgs e)
+        {
+            countFolders = listBoxVideoFolders.SelectedItems.Count;
+            if (countFolders == 0)
+            {
+                buttonDelete.Enabled = false;
+            }
+            else
+            {
+                buttonDelete.Enabled = true;
             }
         }
     }

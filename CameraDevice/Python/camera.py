@@ -5,6 +5,7 @@ import datetime
 import mysql.connector
 import shutil
 import threading
+import sys
 from gpiozero import MotionSensor
 from gpiozero import LED
 from gpiozero import Button
@@ -18,17 +19,9 @@ from luma.core.interface.serial import i2c
 from luma.core.render import canvas
 from luma.oled.device import sh1106
 
-config = {
-  'host':'localhost',
-  'user':'loguser',
-  'password':os.getenv("sqlpass"),
-  'database':'camerasystem'
-}
-connection = mysql.connector.connect(**config)
-def recordVideo(deviceText):
 
-  stream = cv2.VideoCapture(0)
-  stream2 = cv2.VideoCapture(2)
+
+def recordVideo(deviceText, checkLeds):
   print("Recording feed.")
   now = datetime.datetime.now()
   datefolder = now.strftime("%Y_%m_%d")
@@ -39,56 +32,68 @@ def recordVideo(deviceText):
   checkfolder2 = os.path.isdir(createfolder2)
   createVideo1 = True
   createVideo2 = True
+  checkEmail = True
+  cameraCheck = False
 
-
-  if not stream.isOpened():
-    #raise RuntimeError("Could not open camera 1")
-    addmysqlrecord("Camera 1 is not working." )
-    oledinfo("CAMERA 1", "IS NOT WORKING.", "","")
-    sendEmail("Camera 1 is not working.")
-    setText = ""
-    createVideo1 = False 
- 
-
-  if not stream2.isOpened():
-    #raise RuntimeError("Could not open camera 1")
-    addmysqlrecord("Camera 2 is not working." )
-    oledinfo("CAMERA 2", "IS NOT WORKING.", "","")
-    sendEmail("Camera 2 is not working.")
-    setText2 = ""
-    createVideo2 = False 
-
-
-  if createVideo1 == False or createVideo2 == False:
+  if camera1 == 1:
+    stream = cv2.VideoCapture(0)
+    if not stream.isOpened():
+      cameraCheck =True
+      addmysqlrecord("Camera 1 is not working." )
+      oledinfo("CAMERA1", "IS NOT WORKING.", "","")
+      checkEmail = sendEmail("Camera 1 is not working.",cameraCheck)
+      setText = ""
+      createVideo1 = False 
+  if camera2 == 1:
+    stream2 = cv2.VideoCapture(2)
+    if not stream2.isOpened():
+      cameraCheck = True
+      addmysqlrecord("Camera 2 is not working." )
+      oledinfo("CAMERA2", "IS NOT WORKING.", "","")
+      checkEmail = sendEmail("Camera 2 is not working.",cameraCheck)
+      setText2 = ""
+      createVideo2 = False 
+   
+  if createVideo1 == False or createVideo2 == False or checkLeds == False or checkEmail == False:
     greenLed1.off()
     redLed1.on()
   else:
     greenLed1.on()
     redLed1.off()
-   
+
+  if createVideo1 == False and createVideo2 == False:
+    oledinfo("BOTH CAMERAS", "ARE NOT WORKING.", "","")
+    cameraCheck = True
+     
   if createVideo1 == True:
     if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera1"):
       os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera1"),mode=0o777)
       print ("Camera 1 created.")
+
+    if camera1 == 1:
+      frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
+      frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
+      fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+      fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+      output = cv2.VideoWriter(createfolder + '/camera1/video_' + str(timefile) + '.mp4', fourcc, 15.0, (frame_width, frame_height))
 
   if createVideo2 == True:
     if not os.path.isdir("/media/usbdrive/camerasystem/"+datefolder+"/camera2"):
       os.makedirs(os.path.join("/media/usbdrive/camerasystem/"+datefolder+"/", "camera2"), mode=0o777)
       print ("Camera 2 created.")
 
-  frame_width = int(stream.get(cv2.CAP_PROP_FRAME_WIDTH))
-  frame_height = int(stream.get(cv2.CAP_PROP_FRAME_HEIGHT))
-  fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-  if camera1 == 1:
-    output = cv2.VideoWriter(createfolder + '/camera1/video_' + str(timefile) + '.mp4', fourcc, 15.0, (frame_width, frame_height))
-  if camera2 == 1:
-    output2 = cv2.VideoWriter(createfolder + '/camera2/video_' + str(timefile) + '.mp4', fourcc, 15.0, (frame_width, frame_height))
-  startTime = time.time()
+    if camera2 == 1:
+      frame_width2 = int(stream2.get(cv2.CAP_PROP_FRAME_WIDTH))
+      frame_height2 = int(stream2.get(cv2.CAP_PROP_FRAME_HEIGHT))
+      fourcc2 = cv2.VideoWriter_fourcc(*'mp4v')
+      fourcc2 = cv2.VideoWriter_fourcc(*'mp4v')
+      output2 = cv2.VideoWriter(createfolder + '/camera2/video_' + str(timefile) + '.mp4', fourcc2, 15.0, (frame_width2, frame_height2))
 
+  startTime = time.time()
   print("Enabled: ")
   while(int(time.time() - startTime) < recordingTime):
     if createVideo1 == True:
-      if camera1 ==1:
+      if camera1 == 1:
         try:
           if not stream.isOpened():
             raise RuntimeError("Could not open camera")
@@ -125,7 +130,7 @@ def recordVideo(deviceText):
       output2.release()
       cameraText2 = "'" + datefolder + "/camera2/video_" + str(timefile) + "'"
     else:
-      setText = ""  
+      setText2 = ""  
   
   if enableDrive == 'True':
     print("Uploading to GDrive.")
@@ -140,26 +145,65 @@ def recordVideo(deviceText):
     if createVideo1 == True:
       if camera1 == 1:
         copyfrom = createfolder + "/camera1/video_" + str(timefile) +".mp4"
-        rclone.copy(copyfrom, createfolder2 + "/camera1")
+        try:
+          rclone.copy(copyfrom, createfolder2 + "/camera1")
+        except:
+          greenLed1.off()
+          redLed1.on()
+          addmysqlrecord("Camera 1 cloud share error." )
+          oledinfo("CAMERA1", "CLOUD SHARE ERROR.", "","")
+          checkEmail = sendEmail("Camera 1 cloud share error.", cameraCheck)
     if createVideo2 == True:
       if camera2 == 1:
         copyfrom2 = createfolder + "/camera2/video_" + str(timefile) +".mp4"
-        rclone.copy(copyfrom2, createfolder2 + "/camera2")
+        try:
+          rclone.copy(copyfrom2, createfolder2 + "/camera2")
+        except:
+          greenLed1.off()
+          redLed1.on()
+          addmysqlrecord("Camera 2 cloud share error." )
+          oledinfo("CAMERA2", "CLOUD SHARE ERROR.", "","")
+          checkEmail = sendEmail("Camera 2 cloud share error.", cameraCheck)
     print("GDrive: " + createfolder2 + "/video_" + str(timefile) +".mp4")    
   setText3 = setText + setText2 + "were detected with " + deviceText + "."
   print(setText3)
-  sendEmail(setText3) 
-  stream.release()
-  stream2.release()  
+  if setText == ""  and setText2 == "":
+    setText3 = "The cameras are either broken or disabled."
+    print(setText3)
+  addmysqlrecord(setText3)
+  checkEmail = sendEmail(setText3, cameraCheck) 
+  if cameraCheck == True:
+    greenLed1.off()
+    redLed1.on()
+    print("Camera error. Sending email.")
+  
+  if camera1 == 1:
+    stream.release()
+  if camera2 == 2:
+    stream2.release()  
   print("Recording done.")
 
-def sendEmail(infoText):
+
+def sendEmail(infoText, cameraCheck):
+  checkDatabase = True
   if enableEmail == 'True':
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(username, password)
-    message = 'Subject: {}\n\n{}'.format("Camera alert", infoText)
-    server.sendmail("Camera alert",sendAdress,message)
+    try:
+      with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(username, password)
+        message = f'Subject: Camera alert\n\n{infoText}'
+        server.sendmail(username, sendAdress, message)
+        checkEmail = True
+    except Exception as e:
+      if cameraCheck == False:
+        oledinfo("FAILED TO SEND EMAIL", "","","")
+        addmysqlrecord("Failed to send email." )
+              
+      print(f"Failed to send email2: {e}")
+      checkEmail = False
+      redLed1.on()
+      greenLed1.off()
+    return checkEmail
 
 def motionShow1():
   if motionChoice1 == 1:
@@ -167,10 +211,10 @@ def motionShow1():
       return
     try:
       print("Motion on sensor 1.")
-      addmysqlrecord("Motion detected on sensor 1." )
-      oledinfo("THE MOTION 1", "WAS TRIGGED.", "","")
+      oledinfo("THE MOTION 1","WAS TRIGGED.","","")
+      checkLeds = addmysqlrecord("Motion detected on sensor 1." )
       deviceText = "Motion 1"
-      recordVideo(deviceText)
+      recordVideo(deviceText, checkLeds)
     finally:
       recordingLock.release()
 
@@ -180,10 +224,10 @@ def motionShow2():
       return
     try:  
       print("Motion on sensor 2.")
-      addmysqlrecord("Motion detected on sensor 2." )
       oledinfo("THE MOTION 2","WAS TRIGGED", "","")
+      checkLeds = addmysqlrecord("Motion detected on sensor 2." )
       deviceText = "Motion 2"
-      recordVideo(deviceText)
+      recordVideo(deviceText, checkLeds)
     finally:
       recordingLock.release()
 
@@ -192,11 +236,11 @@ def doorStatus():
     if not recordingLock.acquire(blocking=False):
       return
     try:  
-      print ("Door is opened!")
-      addmysqlrecord("The door was opened with detection 1.")
+      print ("Door is opened!") 
       oledinfo("THE DOOR SWITCH ", "WITH DETECTION 1", "","")
+      checkLeds = addmysqlrecord("The door was opened with detection 1.")
       deviceText = "Detection 1"
-      recordVideo(deviceText)
+      recordVideo(deviceText, checkLeds)
     finally:
       recordingLock.release()  
 
@@ -211,12 +255,40 @@ def oledinfo(row1, row2, row3, row4):
     draw.text((5, 46), row4, fill="white")
 
 def addmysqlrecord(info):
-   cursor = connection.cursor()
-   query = "insert into cameralogs(logtext) values (%s)"
-   cursor.execute(query, [info])
-   connection.commit()
-   print("Record inserted successfully into table cameralogs with info: ", (info))
-   cursor.close()
+  try:
+    connection = mysql.connector.connect(**config)
+    cursor = connection.cursor()
+    query = "insert into cameralogs (logtext) VALUES (%s)"
+    cursor.execute(query, (info,))
+    connection.commit()
+    greenLed1.on()
+    redLed1.off()
+    checkLeds = True
+    print(f"Record inserted successfully into table cameralogs with info: {info}")
+  except mysql.connector.Error as e:
+    greenLed1.off()
+    redLed1.on()
+    print(f"Database error: {e}")
+    oledinfo("DATABASE ERROR", "","","")
+    if (not info == "Failed to send email."):
+      print("Database error. Sending email.")
+      sendEmail("Database error.", False)
+    checkLeds = False
+  except Exception as e:
+    connection.rollback()
+    greenLed1.off()
+    redLed1.on()
+    print(f"Database error: {e}")
+    oledinfo("DATABASE ERROR", "","")
+    if (not info == "Failed to send email."):
+      sendEmail("Database error.", False)
+    checkLeds = False
+  finally:
+    return checkLeds
+    try:
+      cursor.close()
+    except:
+      pass
 
 try:
   serial = i2c(port=1, address=0x3C)
@@ -234,23 +306,40 @@ try:
   greenLed1.on()
   username = 'ken.ekholm76@gmail.com'
   password = os.environ["googlemessage"]
- 
-  cursor = connection.cursor()
-  query = "select * from settings where id = 1"
-  cursor.execute(query)
-  row = cursor.fetchone()
-  enableEmail = row[1]
-  enableDrive = row[2]
-  sendAdress = row[3]
-  recordingTime = row[4]
-  motionChoice2 = row[7]
-  detectChoice = row[8]
-  motionChoice1 = row[9]
-  camera1 = row[10]
-  camera2 = row[11]
-  connection.commit()
-  cursor.close()
- 
+
+  config = {
+    'host':'localhost',
+    'user':'loguser',
+    'password':os.getenv("sqlpass"),
+    'database':'camerasystem' 
+  }
+  try:
+    connection = mysql.connector.connect(**config)
+    cursor = connection.cursor()
+    query = "select * from settings where id = 1"
+    cursor.execute(query)
+    row = cursor.fetchone()
+    enableEmail = row[1]
+    enableDrive = row[2]
+    sendAdress = row[3]
+    recordingTime = row[4]
+    motionChoice2 = row[7]
+    detectChoice = row[8]
+    motionChoice1 = row[9]
+    camera1 = row[10]
+    camera2 = row[11]
+    connection.commit()
+    cursor.close()
+  except mysql.connector.Error as e:
+    print(f"Database error.")
+    greenLed1.off()
+    redLed1.on()
+    oledinfo("DATABASE ERROR","", "","")
+    enableEmail = True
+    sendEmail("Database error.", True)
+    time.sleep(5)
+    sys.exit(0)
+
   if detectChoice == 1:
     detectLed1.on()
   else:

@@ -50,6 +50,7 @@
             // 
             // buttonDelete
             // 
+            buttonDelete.Enabled = false;
             buttonDelete.Location = new Point(175, 772);
             buttonDelete.Margin = new Padding(4);
             buttonDelete.Name = "buttonDelete";
@@ -68,6 +69,7 @@
             listBoxVideoFolders.SelectionMode = SelectionMode.MultiSimple;
             listBoxVideoFolders.Size = new Size(392, 704);
             listBoxVideoFolders.TabIndex = 2;
+            listBoxVideoFolders.Click += listBoxVideoFolders_Click;
             // 
             // labelText
             // 

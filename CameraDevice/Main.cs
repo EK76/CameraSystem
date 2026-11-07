@@ -24,7 +24,7 @@ namespace CameraDevice
         public static bool checkFolder = false;
         string copyToVideoFolder, selectedFolder, selectedVideo, listAllVideos, password, checkString, connString, subFolder;
         public static string selectedStoragePath;
-        int setChoice, showMotionValue1, showMotionValue2, showDetectionValue, showCamera1, showCamera2;
+        int setChoice, showMotionValue1, showMotionValue2, showMotionValue3, showDetectionValue, showCamera1, showCamera2;
         public static int selectedStorage = 1;
         List<string> videoFiles = new List<string>();
 
@@ -68,6 +68,7 @@ namespace CameraDevice
                 {
                     showMotionValue1 = reader.GetInt32("motionchoice1");
                     showMotionValue2 = reader.GetInt32("motionchoice2");
+                    showMotionValue3 = reader.GetInt32("motionchoice3");
                     showDetectionValue = reader.GetInt32("openstatus");
                     showCamera1 = reader.GetInt32("camera1");
                     showCamera2 = reader.GetInt32("camera2");
@@ -100,6 +101,17 @@ namespace CameraDevice
             {
                 labelSensor2.Text = "Motion sensor 2 is disabled.";
                 labelSensor2.ForeColor = Color.Red;
+            }
+
+            if (showMotionValue3 == 1)
+            {
+                labelSensor3.Text = "Wireless motion sensor is enabled.";
+                labelSensor3.ForeColor = Color.Green;
+            }
+            else
+            {
+                labelSensor3.Text = "Wireless motion sensor is disabled.";
+                labelSensor3.ForeColor = Color.Red;
             }
 
             if (showDetectionValue == 1)
@@ -405,7 +417,7 @@ namespace CameraDevice
                     var getSize = fileSize.Length / 1024;
                     labelFileSize.Text = "Video file size: " + getSize + " KB";
 
-                 // Add the reference of wmp.dll (c:\Windows\System32) in your project and then add the namespace WMPLib in your code.
+                    // Add the reference of wmp.dll (c:\Windows\System32) in your project and then add the namespace WMPLib in your code.
                     var playerDuration = new WindowsMediaPlayer();
                     var clipDuration = playerDuration.newMedia(subFolder + "\\" + listBoxVideos.SelectedItem);
                     showSeconds = TimeSpan.FromSeconds(clipDuration.duration).ToString("ss");
@@ -445,22 +457,6 @@ namespace CameraDevice
             FormSettings.checkSensors = false;
         }
 
-        private void shutdownDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            password = HomeAssistant.Properties.Settings.Default.Password;
-            DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerashutdown.sh";
-                process.StartInfo = startInfo;
-                process.Start();
-                MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!", "Camera Device");
-            }
-        }
         private void localStorageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             selectedStoragePath = "\\\\cameradevice\\camerasystem";
@@ -561,23 +557,6 @@ namespace CameraDevice
             videofolder.ShowDialog();
         }
 
-        private void restartDeviceToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            password = HomeAssistant.Properties.Settings.Default.Password;
-            DialogResult dialogResult = MessageBox.Show("Are you sure to restart the device", "Camera Device", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerarestart.sh";
-                process.StartInfo = startInfo;
-                process.Start();
-                MessageBox.Show("Device has been restarted", "Camera Device");
-            }
-        }
-
         private void deleteVideosToolStripMenuItem3_Click(object sender, EventArgs e)
         {
             deleteVideos();
@@ -640,6 +619,40 @@ namespace CameraDevice
         private void playVideoToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             playVideo();
+        }
+
+        private void restartDeviceToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            password = HomeAssistant.Properties.Settings.Default.Password;
+            DialogResult dialogResult = MessageBox.Show("Are you sure to restart the device", "Camera Device", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerarestart.sh";
+                process.StartInfo = startInfo;
+                process.Start();
+                MessageBox.Show("Device has been restarted", "Camera Device");
+            }
+        }
+
+        private void shutdownDeviceToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            password = HomeAssistant.Properties.Settings.Default.Password;
+            DialogResult dialogResult = MessageBox.Show("Are you sure to shutdown the device", "Camera Device", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = "/C ssh camerauser@cameradevice sudo /home/camerauser/camerasystem/camerashutdown.sh";
+                process.StartInfo = startInfo;
+                process.Start();
+                MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!", "Camera Device");
+            }
         }
     }
 }

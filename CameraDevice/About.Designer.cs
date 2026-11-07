@@ -51,9 +51,9 @@
             labelText.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
             labelText.Location = new Point(25, 21);
             labelText.Name = "labelText";
-            labelText.Size = new Size(170, 17);
+            labelText.Size = new Size(177, 17);
             labelText.TabIndex = 1;
-            labelText.Text = "Camera Device version 3.1";
+            labelText.Text = "Camera Device version 3.41";
             // 
             // labelText2
             // 

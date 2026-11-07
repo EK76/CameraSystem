@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
+using Sensordevice;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -25,12 +27,13 @@ namespace CameraDevice
         List<int> dateCounts = new List<int>();
         List<int> topicCounts = new List<int>();
         string connString = HomeAssistant.Properties.Settings.Default.Database, checkString;
-        int dateNumbers, topicNumbers, count, checkCount, index, index2;
+        int dateNumbers, topicNumbers, count, checkCount, index, index2, choice = 1;
+        bool openForm = false;
+        public static string setString, setColumn;
+        public static int setColor;
 
         void dateView()
         {
-            this.Size = new Size(835, 620);
-            listBoxShowTopics.Visible = false;
             chartView.Series[0].Points.Clear();
             MySqlConnection conn = new MySqlConnection(connString);
             dateNumbers = FormLogs.listDates.Count;
@@ -59,42 +62,50 @@ namespace CameraDevice
                 index++;
                 index2++;
             }
+            choice = 1;
         }
 
         void topicView()
         {
-            this.Size = new Size(1085, 620);
-            listBoxShowTopics.Visible = true;
             chartView.Series[0].Points.Clear();
             MySqlConnection conn = new MySqlConnection(connString);
             topicNumbers = FormLogs.listTopics.Count;
             topicCounts.Clear();
-
             for (int index = 0; index < topicNumbers; index++)
             {
                 conn.Open();
-                checkString = "select count(*) from cameralogs where logtext like '" + FormLogs.listTopics[index] + "%'";
+                checkString = "select count(*) from cameralogs where infocode = '" + FormLogs.listTopics[index] + "';";
                 MySqlCommand command = new MySqlCommand(checkString, conn);
                 count = Convert.ToInt32(command.ExecuteScalar());
                 conn.Close();
                 topicCounts.Add(count);
                 checkCount++;
             }
-
             index = 0;
             index2 = 1;
-            listBoxShowTopics.Items.Clear();
+
             foreach (var addValue in topicCounts)
             {
-               chartView.Series[0].Points.AddXY(index2, addValue);
-               chartView.Series[0].Points[index].Label = addValue.ToString();
+                chartView.Series[0].Points.AddXY(index2, addValue);
+                chartView.Series[0].Points[index].Label = addValue.ToString();
                 chartView.ChartAreas[0].AxisX.Interval = 1;
-               chartView.Series[0].Points[index].AxisLabel = index2.ToString();
-
-               listBoxShowTopics.Items.Add(index2.ToString()+ ". " + FormLogs.listTopics[index].ToString());
-               index++;
-               index2++;
+                chartView.Series[0].Points[index].AxisLabel = index2.ToString();
+                if (index == 0)
+                {
+                    chartView.Series[0].Points[index].Color = Color.Green;
+                }
+                if (index == 1)
+                {
+                    chartView.Series[0].Points[index].Color = Color.Yellow;
+                }
+                if (index == 2)
+                {
+                    chartView.Series[0].Points[index].Color = Color.Red;
+                }
+                index++;
+                index2++;
             }
+            choice = 2;
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
@@ -119,7 +130,54 @@ namespace CameraDevice
             if (radioButtonShowTopics.Checked)
             {
                 topicView();
-            }  
+            }
+        }
+
+        private void chartView_GetToolTipText(object sender, ToolTipEventArgs e)
+        {
+            string setValue = "";
+
+            if (choice == 1)
+            {
+                if (e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
+                {
+                    var dataPoint = e.HitTestResult.Series.Points[e.HitTestResult.PointIndex];
+                    setValue = string.Format("{0}", FormLogs.listDates[(int)dataPoint.XValue - 1], dataPoint.YValues[0]);
+                    setString = "select * from cameralogs where datecreated like '" + setValue + "%';";
+                    setColumn = "Date " + setValue + "is selected";
+                    openForm = true;
+                    setColor = 4;
+                }
+                else
+                {
+                    openForm = false;
+                }
+            }
+            else
+            {
+                if (e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
+                {
+                    var dataPoint = e.HitTestResult.Series.Points[e.HitTestResult.PointIndex];
+                    setValue = string.Format("{0}", dataPoint.XValue, dataPoint.YValues[0]);
+                    setString = "select * from cameralogs where infocode = '" + (Convert.ToInt32(setValue) - 1) + "';";
+                    setColumn = "Infocode " + (Convert.ToInt32(setValue) - 1) + " is selected";
+                    setColor = Convert.ToInt32(setValue);
+                    openForm = true;
+                }
+                else
+                {
+                    openForm = false;
+                }
+            }
+        }
+
+        private void chartView_Click(object sender, EventArgs e)
+        {
+            if (openForm)
+            {
+                FormLogscolumn logsColumn = new FormLogscolumn();
+                logsColumn.ShowDialog();
+            }
         }
     }
 }
