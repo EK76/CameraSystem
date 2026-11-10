@@ -49,7 +49,7 @@ sudo pip3 install python3-opencv-python
 
 I used the Shelly BLU Motion ZB Sensor as the wireless motion sensor for this project.
 For detailed installation instructions on integrating this wireless motion sensor with this GitHub project, 
-please see the WirelessMotion.pdf document.
+please see the wirelessmotion.pdf document under the folder Zigbee2MQTT.
 
 ### PIR motion sensor
 
