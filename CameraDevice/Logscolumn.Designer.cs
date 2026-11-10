@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buttonClose = new Button();
             listViewColumn = new ListView();
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
@@ -39,24 +38,14 @@
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // buttonClose
-            // 
-            buttonClose.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            buttonClose.Location = new Point(698, 643);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new Size(75, 23);
-            buttonClose.TabIndex = 0;
-            buttonClose.Text = "Close";
-            buttonClose.UseVisualStyleBackColor = true;
-            buttonClose.Click += buttonClose_Click;
-            // 
             // listViewColumn
             // 
+            listViewColumn.BackColor = Color.LightGray;
             listViewColumn.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader4 });
             listViewColumn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
-            listViewColumn.Location = new Point(8, 44);
+            listViewColumn.Location = new Point(8, 29);
             listViewColumn.Name = "listViewColumn";
-            listViewColumn.Size = new Size(765, 593);
+            listViewColumn.Size = new Size(765, 654);
             listViewColumn.TabIndex = 1;
             listViewColumn.UseCompatibleStateImageBehavior = false;
             listViewColumn.View = View.Details;
@@ -108,13 +97,12 @@
             Controls.Add(statusStrip1);
             Controls.Add(labelHead);
             Controls.Add(listViewColumn);
-            Controls.Add(buttonClose);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormLogscolumn";
             ShowIcon = false;
-            Text = "Sensor Device";
+            Text = "Camera Device";
             Load += Logscolumn_Load;
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
@@ -123,8 +111,6 @@
         }
 
         #endregion
-
-        private Button buttonClose;
         private ListView listViewColumn;
         private Label labelHead;
         private ColumnHeader columnHeader1;

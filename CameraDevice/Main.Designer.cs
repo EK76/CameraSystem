@@ -59,6 +59,7 @@
             controlDeviceToolStripMenuItem = new ToolStripMenuItem();
             restartDeviceToolStripMenuItem = new ToolStripMenuItem();
             shutdownDeviceToolStripMenuItem = new ToolStripMenuItem();
+            updateDeviceToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
@@ -220,19 +221,19 @@
             // clearLogsToolStripMenuItem
             // 
             clearLogsToolStripMenuItem.Name = "clearLogsToolStripMenuItem";
-            clearLogsToolStripMenuItem.Size = new Size(152, 22);
+            clearLogsToolStripMenuItem.Size = new Size(180, 22);
             clearLogsToolStripMenuItem.Text = "Clear Logs";
             clearLogsToolStripMenuItem.Click += clearLogsToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(149, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // boldTextToolStripMenuItem
             // 
             boldTextToolStripMenuItem.Name = "boldTextToolStripMenuItem";
-            boldTextToolStripMenuItem.Size = new Size(152, 22);
+            boldTextToolStripMenuItem.Size = new Size(180, 22);
             boldTextToolStripMenuItem.Text = "Bold Text";
             boldTextToolStripMenuItem.Click += boldTextToolStripMenuItem_Click;
             // 
@@ -240,7 +241,7 @@
             // 
             fontSizeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, largeToolStripMenuItem });
             fontSizeToolStripMenuItem.Name = "fontSizeToolStripMenuItem";
-            fontSizeToolStripMenuItem.Size = new Size(152, 22);
+            fontSizeToolStripMenuItem.Size = new Size(180, 22);
             fontSizeToolStripMenuItem.Text = "Font Size";
             // 
             // smallToolStripMenuItem
@@ -269,35 +270,42 @@
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(152, 22);
+            settingsToolStripMenuItem.Size = new Size(180, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(149, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // controlDeviceToolStripMenuItem
             // 
-            controlDeviceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem });
+            controlDeviceToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { restartDeviceToolStripMenuItem, shutdownDeviceToolStripMenuItem, updateDeviceToolStripMenuItem });
             controlDeviceToolStripMenuItem.Name = "controlDeviceToolStripMenuItem";
-            controlDeviceToolStripMenuItem.Size = new Size(152, 22);
+            controlDeviceToolStripMenuItem.Size = new Size(180, 22);
             controlDeviceToolStripMenuItem.Text = "Control Device";
             // 
             // restartDeviceToolStripMenuItem
             // 
             restartDeviceToolStripMenuItem.Name = "restartDeviceToolStripMenuItem";
-            restartDeviceToolStripMenuItem.Size = new Size(166, 22);
+            restartDeviceToolStripMenuItem.Size = new Size(180, 22);
             restartDeviceToolStripMenuItem.Text = "Restart Device";
             restartDeviceToolStripMenuItem.Click += restartDeviceToolStripMenuItem_Click_1;
             // 
             // shutdownDeviceToolStripMenuItem
             // 
             shutdownDeviceToolStripMenuItem.Name = "shutdownDeviceToolStripMenuItem";
-            shutdownDeviceToolStripMenuItem.Size = new Size(166, 22);
+            shutdownDeviceToolStripMenuItem.Size = new Size(180, 22);
             shutdownDeviceToolStripMenuItem.Text = "Shutdown Device";
             shutdownDeviceToolStripMenuItem.Click += shutdownDeviceToolStripMenuItem_Click_1;
+            // 
+            // updateDeviceToolStripMenuItem
+            // 
+            updateDeviceToolStripMenuItem.Name = "updateDeviceToolStripMenuItem";
+            updateDeviceToolStripMenuItem.Size = new Size(180, 22);
+            updateDeviceToolStripMenuItem.Text = "Update Device";
+            updateDeviceToolStripMenuItem.Click += updateDeviceToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
@@ -595,5 +603,6 @@
         private ToolStripMenuItem restartDeviceToolStripMenuItem;
         private ToolStripMenuItem shutdownDeviceToolStripMenuItem;
         private Label labelSensor3;
+        private ToolStripMenuItem updateDeviceToolStripMenuItem;
     }
 }

@@ -31,9 +31,14 @@ namespace CameraDevice
         bool openForm = false;
         public static string setString, setColumn;
         public static int setColor;
+        bool checkView = true;
 
         void dateView()
         {
+            buttonViewChange.Visible = false;
+            chartView.Series[0].ChartType = SeriesChartType.Column;
+            buttonViewChange.Text = "View as pie";
+            checkView = true;
             chartView.Series[0].Points.Clear();
             MySqlConnection conn = new MySqlConnection(connString);
             dateNumbers = FormLogs.listDates.Count;
@@ -67,6 +72,7 @@ namespace CameraDevice
 
         void topicView()
         {
+            buttonViewChange.Visible = true;
             chartView.Series[0].Points.Clear();
             MySqlConnection conn = new MySqlConnection(connString);
             topicNumbers = FormLogs.listTopics.Count;
@@ -89,16 +95,16 @@ namespace CameraDevice
                 chartView.Series[0].Points.AddXY(index2, addValue);
                 chartView.Series[0].Points[index].Label = addValue.ToString();
                 chartView.ChartAreas[0].AxisX.Interval = 1;
-                chartView.Series[0].Points[index].AxisLabel = index2.ToString();
-                if (index == 0)
+                chartView.Series[0].Points[index].AxisLabel = FormLogs.listTopics[index];
+                if (FormLogs.listTopics[index] == "0")
                 {
                     chartView.Series[0].Points[index].Color = Color.Green;
                 }
-                if (index == 1)
+                if (FormLogs.listTopics[index] == "1")
                 {
                     chartView.Series[0].Points[index].Color = Color.Yellow;
                 }
-                if (index == 2)
+                if (FormLogs.listTopics[index] == "2")
                 {
                     chartView.Series[0].Points[index].Color = Color.Red;
                 }
@@ -141,12 +147,16 @@ namespace CameraDevice
             {
                 if (e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
                 {
-                    var dataPoint = e.HitTestResult.Series.Points[e.HitTestResult.PointIndex];
-                    setValue = string.Format("{0}", FormLogs.listDates[(int)dataPoint.XValue - 1], dataPoint.YValues[0]);
+                    HitTestResult result = chartView.HitTest(e.X, e.Y);
+                    if (result.PointIndex >= 0)
+                    {
+                        setValue = chartView.Series[0].Points[result.PointIndex].AxisLabel;
+
+                    }
                     setString = "select * from cameralogs where datecreated like '" + setValue + "%';";
                     setColumn = "Date " + setValue + "is selected";
                     openForm = true;
-                    setColor = 4;
+                    setColor = 3;
                 }
                 else
                 {
@@ -157,10 +167,14 @@ namespace CameraDevice
             {
                 if (e.HitTestResult.ChartElementType == ChartElementType.DataPoint)
                 {
-                    var dataPoint = e.HitTestResult.Series.Points[e.HitTestResult.PointIndex];
-                    setValue = string.Format("{0}", dataPoint.XValue, dataPoint.YValues[0]);
-                    setString = "select * from cameralogs where infocode = '" + (Convert.ToInt32(setValue) - 1) + "';";
-                    setColumn = "Infocode " + (Convert.ToInt32(setValue) - 1) + " is selected";
+                    HitTestResult result = chartView.HitTest(e.X, e.Y);
+                    if (result.PointIndex >= 0)
+                    {
+                        setValue = chartView.Series[0].Points[result.PointIndex].AxisLabel;
+
+                    }
+                    setString = "select * from cameralogs where infocode = '" + (Convert.ToInt32(setValue)) + "';";
+                    setColumn = "Infocode " + (Convert.ToInt32(setValue)) + " is selected";
                     setColor = Convert.ToInt32(setValue);
                     openForm = true;
                 }
@@ -177,6 +191,23 @@ namespace CameraDevice
             {
                 FormLogscolumn logsColumn = new FormLogscolumn();
                 logsColumn.ShowDialog();
+            }
+        }
+
+        private void buttonViewChange_Click(object sender, EventArgs e)
+        {
+            if (checkView)
+            {
+                chartView.Series[0].ChartType = SeriesChartType.Pie;
+                buttonViewChange.Text = "View as column";
+                checkView = false;
+            }
+            else
+            {
+                chartView.Series[0].ChartType = SeriesChartType.Column;
+                buttonViewChange.Text = "View as pie";
+                checkView = true;
+                index = 0;
             }
         }
     }

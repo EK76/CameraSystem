@@ -654,5 +654,11 @@ namespace CameraDevice
                 MessageBox.Show("Device is shutdown, wait a minute before disconnecting the power!", "Camera Device");
             }
         }
+
+        private void updateDeviceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormUpdatedevice updatedevice = new FormUpdatedevice();
+            updatedevice.ShowDialog();
+        }
     }
 }

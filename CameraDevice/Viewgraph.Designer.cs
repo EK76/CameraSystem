@@ -34,6 +34,7 @@
             chartView = new System.Windows.Forms.DataVisualization.Charting.Chart();
             radioButtonShowDates = new RadioButton();
             radioButtonShowTopics = new RadioButton();
+            buttonViewChange = new Button();
             ((System.ComponentModel.ISupportInitialize)chartView).BeginInit();
             SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             chartView.Location = new Point(12, 43);
             chartView.Name = "chartView";
             series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
             series1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             series1.IsValueShownAsLabel = true;
             series1.IsVisibleInLegend = false;
@@ -89,11 +91,24 @@
             radioButtonShowTopics.UseVisualStyleBackColor = true;
             radioButtonShowTopics.CheckedChanged += radioButtonShowTopics_CheckedChanged;
             // 
+            // buttonViewChange
+            // 
+            buttonViewChange.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+            buttonViewChange.Location = new Point(627, 11);
+            buttonViewChange.Name = "buttonViewChange";
+            buttonViewChange.Size = new Size(166, 23);
+            buttonViewChange.TabIndex = 4;
+            buttonViewChange.Text = "View as pie";
+            buttonViewChange.UseVisualStyleBackColor = true;
+            buttonViewChange.Visible = false;
+            buttonViewChange.Click += buttonViewChange_Click;
+            // 
             // FormViewgraph
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(819, 541);
+            Controls.Add(buttonViewChange);
             Controls.Add(radioButtonShowTopics);
             Controls.Add(radioButtonShowDates);
             Controls.Add(chartView);
@@ -114,5 +129,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartView;
         private RadioButton radioButtonShowDates;
         private RadioButton radioButtonShowTopics;
+        private Button buttonViewChange;
     }
 }
