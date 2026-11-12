@@ -250,6 +250,12 @@ ExecStop=fusermount -u /home/camerauser/gdrive
 [Install]
 WantedBy=multi-user.target
 ```
+I have also created two small Bash scripts on the Raspberry Pi 5 device, checkupdates.sh and updatesystem.sh.
+These scripts allow me to check for available updates and update the Raspberry Pi 5 device's operating system remotely from a Visual Studio C# application via an SSH connection.
+These two Bash scripts can be found in the System folder of this GitHub project.
+- checkupdates.sh: This Bash script checks for available updates for the Raspberry Pi 5 operating system.
+- updatesystem.sh: This Bash script installs all available updates on the Raspberry Pi 5 operating system.
+
 This project also contains a PHP file called **updatesql**, which functions as a command-line (CLI) application. 
 Its purpose is to delete old rows from the **cameralogs** table while retaining the most recent entries based on the value stored in **$row[6]**.
 In addition, PHP must be installed on the operating system where the script is executed.
